@@ -7,11 +7,13 @@
   "scripts": {
     "build": "node scripts/build.mjs && tsc -p tsconfig.build.json",
     "prepack": "npm run build",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test:run": "vitest run"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.2",
+    "vitest": "4.1.7"
   },
   "publishConfig": {
     "access": "public"
