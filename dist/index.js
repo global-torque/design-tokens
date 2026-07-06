@@ -1,2 +1,2 @@
-export * from "./tokens.js";
+export * from './tokens.js';
 //# sourceMappingURL=index.js.map

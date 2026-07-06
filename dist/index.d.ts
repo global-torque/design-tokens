@@ -1,2 +1,2 @@
-export * from './tokens.ts';
+export * from './tokens.js';
 //# sourceMappingURL=index.d.ts.map
