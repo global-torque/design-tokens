@@ -45,3 +45,29 @@ Tailwind output.
 
 Prepare-next. Do not publish to npm until package-specific contracts,
 attribution, admin consumer validation, and visual verification gates pass.
+
+## Support
+
+Use GitHub issues on `global-torque/design-tokens` for token naming, export
+format, and compatibility requests. Product-specific theme decisions should stay
+in the consuming application unless they expose a reusable token gap.
+
+## Security
+
+Report suspected vulnerabilities through the repository security policy in
+`SECURITY.md`. This package should not contain secrets, private URLs, customer
+data, or environment-specific values.
+
+## Changelog And Versioning
+
+Release notes live in `CHANGELOG.md`. The package stays in `0.x` while token
+names, CSS variables, JSON output, and Tailwind theme exports are stabilized.
+Breaking token rename/removal work may ship as minor `0.x` releases before a
+stable `1.0` contract.
+
+## Ownership And Feedback
+
+Global Torque owns the public token contract and generated artifacts. Host apps
+own theme composition, product palettes, and final accessibility validation.
+Feedback should include the target consumer, export path, and whether the change
+is a new semantic token or an app-local theme decision.
