@@ -2,7 +2,7 @@
 
 ## 0.1.0-beta.2 - Unreleased
 
-- Moved the independently reviewed DTCG source and deterministic generator to
+- Prepared the independently reviewed DTCG source and deterministic generator for
   protected public `main` with SHA-pinned CI, public API governance,
   clean-source artifact manifests, and provenance workflow.
 - Supersedes the dirty-tree beta.1 implementation artifact; beta.1 remains
