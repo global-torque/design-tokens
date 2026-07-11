@@ -7,6 +7,8 @@
   clean-source artifact manifests, and provenance workflow.
 - Supersedes the dirty-tree beta.1 implementation artifact; beta.1 remains
   historical local evidence and must not be uploaded or retagged.
+- Kept protected-tag CI reproducible on locked Tailwind 4.2.1 and moved the
+  mutable latest-4.x compatibility probe to a scheduled informational job.
 
 ## 0.1.0-beta.1 - 2026-07-10
 

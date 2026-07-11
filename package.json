@@ -36,7 +36,7 @@
     "docs:check": "pnpm run api:check && node scripts/verify-api-docs.mjs",
     "package:lint": "publint && attw --pack . --profile esm-only",
     "content:check": "node scripts/verify-public-content.mjs",
-    "ci": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test:coverage && pnpm run test:tailwind:current && pnpm run build && pnpm run docs:check && pnpm run package:lint && pnpm run content:check"
+    "ci": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test:coverage && pnpm run build && pnpm run docs:check && pnpm run package:lint && pnpm run content:check"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

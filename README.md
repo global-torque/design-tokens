@@ -20,8 +20,10 @@ pnpm add @global-torque/design-tokens
 ```
 
 Node 22.x and 24.x are supported release targets; Node 26.x is informational.
-The generated Tailwind entrypoint is tested with Tailwind 4.2.1 and the pinned
-current 4.x compatibility target (4.3.2).
+Required and release-candidate CI test the generated Tailwind entrypoint with
+the exact lockfile version, Tailwind 4.2.1. A scheduled informational workflow
+tests npm's current 4.x release without making a protected tag depend on a
+mutable registry tag.
 The plain CSS contract targets browsers with CSS custom properties and `:is()`;
 the Tailwind entrypoint requires Tailwind CSS 4.2.1 or a verified later 4.x.
 
@@ -170,6 +172,9 @@ pnpm run package:lint
 `browser:install` installs the Chromium binary pinned to Playwright 1.61.1 and
 its Linux system dependencies. It is required on a clean CI/cache image before
 `test:run` or `test:coverage`.
+`test:tailwind:current` performs a mutable npm lookup and is intentionally
+limited to the scheduled informational compatibility workflow; release gates
+use only the exact lockfile dependency.
 The test matrix validates DTCG structure and aliases, deterministic generation,
 deep runtime freezing, CSS/JSON/JS/declaration/source-map parity, both explicit
 modes, browser theme activation, text and input-boundary contrast, and real

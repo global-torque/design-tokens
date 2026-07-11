@@ -74,7 +74,12 @@ try {
     ),
   );
 
-  const installSpecs = ['typescript@6.0.3', ...dependencySpecs, artifactPath];
+  const installSpecs = [
+    'typescript@6.0.3',
+    'tailwindcss@4.2.1',
+    ...dependencySpecs,
+    artifactPath,
+  ];
   if (manager === 'npm') {
     run(
       'npm',
@@ -117,25 +122,97 @@ try {
   const installedManifest = JSON.parse(
     fs.readFileSync(path.join(packageRoot, 'package.json'), 'utf8'),
   );
-  const specifiers = Object.entries(installedManifest.exports ?? {})
+  const exportEntries = Object.entries(installedManifest.exports ?? {});
+  const publicSpecifier = (subpath) =>
+    subpath === '.'
+      ? manifest.package
+      : `${manifest.package}/${subpath.replace(/^\.\//, '')}`;
+  const specifiers = exportEntries
     .filter(([, target]) => {
       const importTarget = typeof target === 'string' ? target : target?.import;
       return typeof importTarget === 'string' && importTarget.endsWith('.js');
     })
-    .map(([subpath]) =>
-      subpath === '.'
-        ? manifest.package
-        : `${manifest.package}/${subpath.replace(/^\.\//, '')}`,
+    .map(([subpath]) => publicSpecifier(subpath));
+  const jsonSpecifiers = exportEntries
+    .filter(
+      ([, target]) => typeof target === 'string' && target.endsWith('.json'),
+    )
+    .map(([subpath]) => publicSpecifier(subpath));
+  const cssResolutions = exportEntries.flatMap(([subpath, target]) => {
+    if (target === null || typeof target !== 'object') return [];
+    return ['style', 'default'].flatMap((condition) => {
+      const resolved = target[condition];
+      return typeof resolved === 'string' && resolved.endsWith('.css')
+        ? [
+            {
+              condition,
+              specifier: publicSpecifier(subpath),
+              target: resolved,
+            },
+          ]
+        : [];
+    });
+  });
+  if (jsonSpecifiers.length !== 2) {
+    throw new Error('Expected both installed JSON public subpaths');
+  }
+  if (cssResolutions.length !== 4) {
+    throw new Error(
+      'Expected style and default conditions for both CSS exports',
     );
+  }
 
-  const imports = specifiers
+  const javascriptImports = specifiers
     .map(
       (specifier, index) =>
         `import * as export${index} from ${JSON.stringify(specifier)}; void export${index};`,
     )
     .join('\n');
+  const jsonImports = jsonSpecifiers
+    .map(
+      (specifier, index) =>
+        `import json${index} from ${JSON.stringify(specifier)} with { type: 'json' }; void json${index};`,
+    )
+    .join('\n');
+  const imports = `${javascriptImports}\n${jsonImports}`;
   fs.writeFileSync(path.join(fixture, 'smoke.mts'), `${imports}\n`);
   fs.writeFileSync(path.join(fixture, 'runtime.mjs'), `${imports}\n`);
+  fs.writeFileSync(
+    path.join(fixture, 'css-smoke.mjs'),
+    `import fs from 'node:fs';
+import path from 'node:path';
+import { compile } from 'tailwindcss';
+
+const packageRoot = ${JSON.stringify(packageRoot)};
+const resolutions = ${JSON.stringify(cssResolutions)};
+for (const resolution of resolutions) {
+  let loaded = false;
+  const compiler = await compile(\`@import "\${resolution.specifier}";\`, {
+    base: process.cwd(),
+    async loadStylesheet(id) {
+      if (id !== resolution.specifier) {
+        throw new Error(\`Unexpected stylesheet request: \${id}\`);
+      }
+      loaded = true;
+      const filename = path.join(
+        packageRoot,
+        resolution.target.replace(/^\\.\\//, ''),
+      );
+      return {
+        content: fs.readFileSync(filename, 'utf8'),
+        base: path.dirname(filename),
+      };
+    },
+  });
+  compiler.build([]);
+  if (!loaded) {
+    throw new Error(
+      \`CSS \${resolution.condition} export was not loaded: \${resolution.specifier}\`,
+    );
+  }
+}
+`,
+  );
 
   const baseCompilerOptions = {
     target: 'ES2022',
@@ -144,6 +221,7 @@ try {
     noEmit: true,
     exactOptionalPropertyTypes: true,
     noUncheckedIndexedAccess: true,
+    resolveJsonModule: true,
   };
   for (const [name, compilerOptions] of [
     [
@@ -175,6 +253,9 @@ try {
     );
   }
   run(process.execPath, [path.join(fixture, 'runtime.mjs')], { cwd: fixture });
+  run(process.execPath, [path.join(fixture, 'css-smoke.mjs')], {
+    cwd: fixture,
+  });
 
   console.info(
     JSON.stringify({
@@ -182,7 +263,9 @@ try {
       version: manifest.version,
       manager,
       node: process.version,
-      imports: specifiers.length,
+      javascriptImports: specifiers.length,
+      jsonImports: jsonSpecifiers.length,
+      cssResolutions: cssResolutions.length,
       files: installedFiles.length,
     }),
   );
