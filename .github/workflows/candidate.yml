@@ -35,6 +35,8 @@ jobs:
           set -euo pipefail
           test "v$(node -p "require('./package.json').version")" = "${GITHUB_REF_NAME}"
           pnpm install --frozen-lockfile
+      - name: Install browser test runtime
+        run: pnpm run browser:install
       - name: Run package gates
         run: pnpm run ci
       - name: Build and pack final candidate once
