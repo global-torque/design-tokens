@@ -5,6 +5,11 @@ import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
 
+import {
+  collectInstalledExportCoverage,
+  verifyInstallDependencySpecs,
+} from './installed-export-policy.mjs';
+
 const releaseDirectory = path.resolve(process.argv[2] ?? 'release');
 const manager = process.argv[3];
 if (manager !== 'npm' && manager !== 'pnpm') {
@@ -29,6 +34,7 @@ const dependencySpecs = JSON.parse(
     'utf8',
   ),
 );
+verifyInstallDependencySpecs(manifest.package, dependencySpecs);
 
 const run = (command, commandArguments, options = {}) => {
   const result = spawnSync(command, commandArguments, {
@@ -125,22 +131,17 @@ try {
   const installedManifest = JSON.parse(
     fs.readFileSync(path.join(packageRoot, 'package.json'), 'utf8'),
   );
+  const { jsonSpecifiers, runtimeSpecifiers } = collectInstalledExportCoverage(
+    installedManifest,
+    manifest.package,
+    packageRoot,
+  );
   const exportEntries = Object.entries(installedManifest.exports ?? {});
   const publicSpecifier = (subpath) =>
     subpath === '.'
       ? manifest.package
       : `${manifest.package}/${subpath.replace(/^\.\//, '')}`;
-  const specifiers = exportEntries
-    .filter(([, target]) => {
-      const importTarget = typeof target === 'string' ? target : target?.import;
-      return typeof importTarget === 'string' && importTarget.endsWith('.js');
-    })
-    .map(([subpath]) => publicSpecifier(subpath));
-  const jsonSpecifiers = exportEntries
-    .filter(
-      ([, target]) => typeof target === 'string' && target.endsWith('.json'),
-    )
-    .map(([subpath]) => publicSpecifier(subpath));
+  const specifiers = runtimeSpecifiers;
   const cssResolutions = exportEntries.flatMap(([subpath, target]) => {
     if (target === null || typeof target !== 'object') return [];
     return ['style', 'default'].flatMap((condition) => {
