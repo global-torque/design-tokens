@@ -1,5 +1,11 @@
 # @global-torque/design-tokens
 
+> [!CAUTION]
+> This default-branch source is a quarantined pre-0.2 bridge, not an approved
+> release candidate. Do not install it from GitHub, a branch, or npm. Use only
+> a future immutable prerelease asset after its checksum, consumer evidence,
+> and public release review are complete.
+
 Prepare-next design token package for Global Torque admin and site consumers.
 
 This package is reserved for public design tokens. It provides plain CSS custom
@@ -7,11 +13,11 @@ properties, a Tailwind CSS v4 `@theme` entrypoint, a JSON token map, and a typed
 TS token map. It does not depend on Vue, Pinia, router state, app routes,
 investment packages, or private runtime config.
 
-## Install
+## Installation Status
 
-```sh
-pnpm add @global-torque/design-tokens
-```
+There is no supported installation command for this source revision. Mutable
+GitHub dependencies and default-branch installs are prohibited. Wait for an
+approved immutable prerelease asset and its published integrity evidence.
 
 ## Plain CSS
 
@@ -31,8 +37,8 @@ pnpm add @global-torque/design-tokens
 @import '@global-torque/design-tokens/theme';
 ```
 
-`../i-djadmin-web/assets/frontend/src/styles.css` should import both files when
-the admin pilot validates Tailwind output.
+Host applications should import both files only after validating the approved
+immutable artifact in their own Tailwind build.
 
 ## Exports
 
