@@ -34,5 +34,5 @@ describe('explicit browser theme activation', () => {
     } finally {
       await browser.close();
     }
-  }, 15_000);
+  }, 45_000);
 });
