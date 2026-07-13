@@ -1,10 +1,13 @@
 # Changelog
 
-## Unreleased
+## 0.1.0-beta.3 - 2026-07-13
 
-- Quarantined the unsupported pre-0.2 default-branch bridge, removed install
-  guidance and private consumer paths, and disabled publication.
-## 0.1.0-beta.2 - Unreleased
+- Restored the independently reviewed public source after the temporary
+  default-branch quarantine and repinned CI to the current governance workflow.
+- Minted a new prerelease identity so the superseded beta.2 candidate bytes are
+  never reused for npm publication.
+
+## 0.1.0-beta.2 - Superseded local candidate
 
 - Prepared the independently reviewed DTCG source and deterministic generator for
   protected public `main` with SHA-pinned CI, public API governance,

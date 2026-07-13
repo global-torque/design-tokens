@@ -1,7 +1,7 @@
 {
   "name": "@global-torque/design-tokens",
   "private": false,
-  "version": "0.1.0-beta.2",
+  "version": "0.1.0-beta.3",
   "description": "Neutral design tokens generated deterministically from one DTCG source.",
   "keywords": [
     "design-tokens",

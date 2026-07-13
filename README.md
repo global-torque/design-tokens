@@ -1,15 +1,7 @@
 # @global-torque/design-tokens
 
-> [!CAUTION]
-> This default-branch source is a quarantined pre-0.2 bridge, not an approved
-> release candidate. Do not install it from GitHub, a branch, or npm. Use only
-> a future immutable prerelease asset after its checksum, consumer evidence,
-> and public release review are complete.
-
-Prepare-next design token package for Global Torque admin and site consumers.
-> **Public 0.1 beta candidate:** the source is under review. Do not install a
-> mutable branch or reuse the earlier dirty-tree beta.1 artifact. Promotion
-> requires the protected-tag beta.2 asset and the exact i-djadmin gate.
+> **Public prerelease:** `0.1.0-beta.3` is the first npm-published candidate.
+> Pin the exact version while the 0.1 contract remains in beta.
 
 Neutral institutional design tokens for administrative and content interfaces.
 One DTCG 2025.10 source generates the typed JavaScript API, declarations,
@@ -20,11 +12,11 @@ foreground/background pairs below 4.5:1.
 The package contains no Vue code, runtime mode detection, media-query theme
 activation, product palette, routes, environment reads, or private URLs.
 
-## Installation Status
+## Install
 
-There is no supported installation command for this source revision. Mutable
-GitHub dependencies and default-branch installs are prohibited. Wait for an
-approved immutable prerelease asset and its published integrity evidence.
+```sh
+pnpm add @global-torque/design-tokens@0.1.0-beta.3
+```
 
 Node 22.x and 24.x are supported release targets; Node 26.x is informational.
 Required and release-candidate CI test the generated Tailwind entrypoint with
