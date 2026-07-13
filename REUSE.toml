@@ -1,0 +1,13 @@
+version = 1
+
+[[annotations]]
+path = ["**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Global Torque"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["schemas/dtcg-2025.10-format.schema.json"]
+precedence = "override"
+SPDX-FileCopyrightText = "2025 World Wide Web Consortium and schema contributors"
+SPDX-License-Identifier = "BSD-3-Clause"
