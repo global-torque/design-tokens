@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Quarantined the unsupported pre-0.2 default-branch bridge, removed install
+  guidance and private consumer paths, and disabled publication.
 ## 0.1.0-beta.2 - Unreleased
 
 - Prepared the independently reviewed DTCG source and deterministic generator for
