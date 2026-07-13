@@ -8,9 +8,7 @@ const SUPPORTED_CONDITIONS = new Set(['types', 'import', 'style', 'default']);
 const EXPECTED_INSTALL_DEPENDENCIES = new Map([
   [
     '@global-torque/admin-toolkit',
-    [
-      '@global-torque/design-tokens@https://github.com/global-torque/design-tokens/releases/download/v0.1.0-beta.2/global-torque-design-tokens-0.1.0-beta.2.tgz',
-    ],
+    ['@global-torque/design-tokens@0.1.0-beta.3'],
   ],
   ['@global-torque/client-error-handling', []],
   ['@global-torque/content-toolkit', []],
