@@ -1,6 +1,6 @@
 # @global-torque/design-tokens
 
-> **Public prerelease:** `0.1.0-beta.3` is the first npm-published candidate.
+> **Public prerelease:** `0.1.0-beta.4` is the current security-maintenance candidate.
 > Pin the exact version while the 0.1 contract remains in beta.
 
 Neutral institutional design tokens for administrative and content interfaces.
@@ -15,16 +15,16 @@ activation, product palette, routes, environment reads, or private URLs.
 ## Install
 
 ```sh
-pnpm add @global-torque/design-tokens@0.1.0-beta.3
+pnpm add @global-torque/design-tokens@0.1.0-beta.4
 ```
 
 Node 22.x and 24.x are supported release targets; Node 26.x is informational.
 Required and release-candidate CI test the generated Tailwind entrypoint with
-the exact lockfile version, Tailwind 4.2.1. A scheduled informational workflow
+the exact lockfile version, Tailwind 4.3.3. A scheduled informational workflow
 tests npm's current 4.x release without making a protected tag depend on a
 mutable registry tag.
 The plain CSS contract targets browsers with CSS custom properties and `:is()`;
-the Tailwind entrypoint requires Tailwind CSS 4.2.1 or a verified later 4.x.
+the Tailwind entrypoint requires Tailwind CSS 4.3.3 or a verified later 4.x.
 
 ## Plain CSS
 
@@ -170,7 +170,7 @@ pnpm run docs:check
 pnpm run package:lint
 ```
 
-`browser:install` installs the Chromium binary pinned to Playwright 1.61.1 and
+`browser:install` installs the Chromium binary pinned to Playwright 1.62.1 and
 its Linux system dependencies. It is required on a clean CI/cache image before
 `test:run` or `test:coverage`.
 `test:tailwind:current` performs a mutable npm lookup and is intentionally

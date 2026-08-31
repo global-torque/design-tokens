@@ -158,7 +158,7 @@ const EXPECTED_PACKAGE_VERSIONS = new Map([
   ['@global-torque/admin-toolkit', '0.2.0-beta.2'],
   ['@global-torque/client-error-handling', '0.1.0-beta.3'],
   ['@global-torque/content-toolkit', '0.2.0-beta.7'],
-  ['@global-torque/design-tokens', '0.1.0-beta.3'],
+  ['@global-torque/design-tokens', '0.1.0-beta.4'],
   ['@global-torque/markdown-it-wikilinks', '0.2.0-beta.3'],
   ['@global-torque/vitepress-toolkit', '0.2.0-beta.6'],
 ]);
@@ -580,8 +580,8 @@ function validateManifest(root, options) {
   if (manifest.engines?.node !== '>=22') {
     errors.push('package.json must declare engines.node as >=22');
   }
-  if (!options.packed && manifest.packageManager !== 'pnpm@10.33.0') {
-    errors.push('package.json must pin packageManager to pnpm@10.33.0');
+  if (!options.packed && manifest.packageManager !== 'pnpm@10.34.5') {
+    errors.push('package.json must pin packageManager to pnpm@10.34.5');
   }
   if (
     JSON.stringify(manifest.sideEffects) !==
@@ -702,9 +702,12 @@ function validateManifest(root, options) {
     const workspace = fs
       .readFileSync(workspacePath, 'utf8')
       .replaceAll('\r\n', '\n');
-    const expectedWorkspace = WORKSPACE_OVERRIDE_PACKAGES.has(manifest.name)
-      ? /^packages:\n {2}- \.\noverrides:\n {2}(?:'js-yaml@4\.1\.1'|"js-yaml@4\.1\.1"|js-yaml@4\.1\.1): 4\.3\.0\n?$/
-      : /^packages:\n {2}- \.\n?$/;
+    const expectedWorkspace =
+      manifest.name === '@global-torque/design-tokens'
+        ? /^packages:\n {2}- \.\noverrides:\n {2}'brace-expansion@>=5\.0\.0 <5\.0\.9': 5\.0\.9\n {2}'fast-uri@>=3\.0\.0 <3\.1\.5': 3\.1\.5\n {2}'js-yaml@>=4\.0\.0 <4\.3\.1': 4\.3\.1\n {2}'nanoid@>=3\.0\.0 <3\.3\.18': 3\.3\.18\n {2}'postcss@>=8\.0\.0 <8\.5\.25': 8\.5\.25\n?$/
+        : WORKSPACE_OVERRIDE_PACKAGES.has(manifest.name)
+          ? /^packages:\n {2}- \.\noverrides:\n {2}(?:'js-yaml@4\.1\.1'|"js-yaml@4\.1\.1"|js-yaml@4\.1\.1): 4\.3\.0\n?$/
+          : /^packages:\n {2}- \.\n?$/;
     if (!expectedWorkspace.test(workspace)) {
       throw new Error(
         'pnpm-workspace.yaml contains unapproved resolution policy',
