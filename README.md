@@ -1,6 +1,6 @@
 # @global-torque/design-tokens
 
-> **Public prerelease:** `0.1.0-beta.4` is the current security-maintenance candidate.
+> **Public prerelease:** `0.1.0-beta.5` is the current security-maintenance candidate.
 > Pin the exact version while the 0.1 contract remains in beta.
 
 Neutral institutional design tokens for administrative and content interfaces.
@@ -15,7 +15,7 @@ activation, product palette, routes, environment reads, or private URLs.
 ## Install
 
 ```sh
-pnpm add @global-torque/design-tokens@0.1.0-beta.4
+pnpm add @global-torque/design-tokens@0.1.0-beta.5
 ```
 
 Node 22.x and 24.x are supported release targets; Node 26.x is informational.
