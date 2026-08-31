@@ -1,7 +1,7 @@
 # RFC 0001: Public 0.2 contract
 
-- Status: Proposed
-- Target: `0.1.0-beta.5`
+- Status: Accepted
+- Target: `0.2.0`
 - Last updated: 2026-08-31
 
 ## External problem
@@ -28,6 +28,6 @@ version; no tag or asset is replaced.
 
 ## Decision
 
-Accept this contract only after the source pull request, API report, package
-tests, clean rooms, and named-consumer evidence have no unresolved actionable
-findings.
+Accepted after the source pull request, API report, package tests, npm and pnpm
+clean rooms, and the exact-artifact `admin-toolkit` named-consumer verification
+completed without unresolved actionable findings for `0.1.0-beta.5`.
