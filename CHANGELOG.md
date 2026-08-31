@@ -1,13 +1,21 @@
 # Changelog
 
-## 0.1.0-beta.4 - 2026-08-31
+## 0.1.0-beta.5 - 2026-08-31
 
 - Fixed development-tooling advisories for PostCSS source-map disclosure,
   js-yaml and brace-expansion denial of service, fast-uri host confusion, and
   nanoid non-terminating custom generator inputs.
 - Updated the supported lint, type, test, browser, Tailwind, API documentation,
   package-validation, package-manager, and GitHub Actions toolchain.
+- Normalized the offline GitHub attestation bundle filename before artifact
+  retention so the immutable candidate is portable across filesystems.
 - Kept the generated design-token values and public package API unchanged.
+
+## 0.1.0-beta.4 - Failed immutable candidate (2026-08-31)
+
+- Passed package gates and attestation verification, then failed artifact
+  retention because the downloaded attestation bundle contained a colon in its
+  filename. This candidate must not be published or retagged.
 
 ## 0.1.0-beta.3 - 2026-07-13
 
