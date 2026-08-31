@@ -1,8 +1,8 @@
 # RFC 0001: Public 0.2 contract
 
 - Status: Proposed
-- Target: `0.1.0-beta.3`
-- Last updated: 2026-07-13
+- Target: `0.1.0-beta.4`
+- Last updated: 2026-08-31
 
 ## External problem
 
