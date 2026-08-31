@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0 - 2026-08-31
+
+- Promoted the verified `0.1.0-beta.5` contract to the first stable `0.2`
+  release.
+- Kept generated design-token values, supported imports, and runtime behavior
+  unchanged from `0.1.0-beta.5`.
+- Retained the security-remediated development toolchain and portable offline
+  attestation workflow validated by the beta candidate.
+
 ## 0.1.0-beta.5 - 2026-08-31
 
 - Fixed development-tooling advisories for PostCSS source-map disclosure,

@@ -1,7 +1,7 @@
 # @global-torque/design-tokens
 
-> **Public prerelease:** `0.1.0-beta.5` is the current security-maintenance candidate.
-> Pin the exact version while the 0.1 contract remains in beta.
+> **Stable release:** `0.2.0` promotes the verified `0.1.0-beta.5` contract
+> without changing token values or public APIs.
 
 Neutral institutional design tokens for administrative and content interfaces.
 One DTCG 2025.10 source generates the typed JavaScript API, declarations,
@@ -15,7 +15,7 @@ activation, product palette, routes, environment reads, or private URLs.
 ## Install
 
 ```sh
-pnpm add @global-torque/design-tokens@0.1.0-beta.5
+pnpm add https://github.com/global-torque/design-tokens/releases/download/v0.2.0/global-torque-design-tokens-0.2.0.tgz
 ```
 
 Node 22.x and 24.x are supported release targets; Node 26.x is informational.

@@ -158,7 +158,7 @@ const EXPECTED_PACKAGE_VERSIONS = new Map([
   ['@global-torque/admin-toolkit', '0.2.0-beta.2'],
   ['@global-torque/client-error-handling', '0.1.0-beta.3'],
   ['@global-torque/content-toolkit', '0.2.0-beta.7'],
-  ['@global-torque/design-tokens', '0.1.0-beta.5'],
+  ['@global-torque/design-tokens', '0.2.0'],
   ['@global-torque/markdown-it-wikilinks', '0.2.0-beta.3'],
   ['@global-torque/vitepress-toolkit', '0.2.0-beta.6'],
 ]);

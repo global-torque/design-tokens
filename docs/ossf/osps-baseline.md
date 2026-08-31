@@ -2,7 +2,7 @@
 
 Review date: 2026-07-11
 
-This prerelease source applies the OSPS baseline proportionately to a small
+This stable source applies the OSPS baseline proportionately to a small
 ESM-only TypeScript library.
 
 Implemented controls:
@@ -17,7 +17,8 @@ Implemented controls:
 - explicit package contents, API reports, coverage thresholds, source maps,
   clean-room verification, SHA-512 manifests, and build provenance.
 
-Release-blocking controls are the package's exact named-consumer gate and
-reviewed candidate release issue. npm trusted publishing and registry
-provenance remain blocked until the organization owner configures npm access.
-No exception permits publishing a registry version without those controls.
+The package's exact named-consumer gate and reviewed candidate release issue
+were completed before stable GitHub promotion. npm trusted publishing and
+registry provenance remain blocked until the organization owner configures npm
+access. No exception permits publishing a registry version without those
+controls.
