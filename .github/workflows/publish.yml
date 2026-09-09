@@ -90,7 +90,7 @@ jobs:
             --deny-self-hosted-runners \
             --format json > /dev/null
           {
-            printf 'artifact=%s\n' "${artifacts[0]}"
+            printf 'artifact=%s\n' "$(realpath "${artifacts[0]}")"
             printf 'package_version=%s\n' "${package_version}"
             printf 'sha512=%s\n' "${manifest_sha512}"
           } >> "${GITHUB_OUTPUT}"
