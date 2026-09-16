@@ -21,7 +21,7 @@
   "scripts": {
     "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
     "build": "node scripts/build.mjs",
-    "lint": "eslint --max-warnings=0 scripts vitest.config.mjs",
+    "lint": "eslint --max-warnings=0 scripts src vitest.config.mjs",
     "format:check": "prettier --check \"scripts/**/*.mjs\" \"test-d/**/*.ts\" \"src/**/*.json\" \".github/**/*.{yml,json,md}\" \"docs/{rfcs,ossf}/**/*.md\" \"*.{json,md,yaml}\"",
     "format:write": "prettier --write \"scripts/**/*.mjs\" \"test-d/**/*.ts\" \"src/**/*.json\" \".github/**/*.{yml,json,md}\" \"docs/{rfcs,ossf}/**/*.md\" \"*.{json,md,yaml}\"",
     "test:run": "pnpm run build && vitest run",
@@ -36,7 +36,8 @@
     "docs:check": "pnpm run api:check && node scripts/verify-api-docs.mjs",
     "package:lint": "publint && attw --pack . --profile esm-only",
     "content:check": "node scripts/verify-public-content.mjs",
-    "ci": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test:coverage && pnpm run build && pnpm run docs:check && pnpm run package:lint && pnpm run content:check"
+    "ci": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test:coverage && pnpm run build && pnpm run docs:check && pnpm run package:lint && pnpm run content:check",
+    "tokens:derive": "node scripts/derive-tokens.mjs && prettier --write src/tokens.tokens.json"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -105,6 +106,10 @@
       "style": "./dist/theme.css",
       "import": "./dist/theme.js",
       "default": "./dist/theme.css"
+    },
+    "./derive": {
+      "types": "./dist/derive.d.ts",
+      "import": "./dist/derive.js"
     },
     "./tokens.json": "./dist/tokens.json",
     "./source": "./dist/tokens.tokens.json"

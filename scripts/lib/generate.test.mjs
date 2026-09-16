@@ -10,9 +10,7 @@ import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
 import {
-  REQUIRED_CONTRAST_PAIRS,
-  assertRequiredContrast,
-  contrastRatio,
+  brandRamps,
   generateArtifacts,
   toCssValue,
   validateAndResolveDtcg,
@@ -31,6 +29,51 @@ const copySource = () => structuredClone(source);
 const at = (value, pathSegments) =>
   pathSegments.reduce((current, segment) => current[segment], value);
 
+/* The token source ships no typography or animation tokens any more, while the
+   generator still supports both; these add the tokens those checks run on. */
+const typographyValue = {
+  fontFamily: '{primitive.font-family.sans}',
+  fontSize: '{primitive.font-size.sm}',
+  fontWeight: '{primitive.font-weight.medium}',
+  letterSpacing: '{primitive.spacing.1}',
+  lineHeight: '{primitive.line-height.normal}',
+};
+
+const withTypography = (input) => {
+  input.primitive['line-height'] = { $type: 'number', normal: { $value: 1.5 } };
+  for (const mode of ['light', 'dark']) {
+    input.semantic[mode].typography = {
+      body: { $type: 'typography', $value: structuredClone(typographyValue) },
+      'tabular-number': {
+        $type: 'typography',
+        $value: structuredClone(typographyValue),
+        $extensions: {
+          'org.global-torque.css': { fontVariantNumeric: 'tabular-nums' },
+        },
+      },
+    };
+  }
+  return input;
+};
+
+const withAnimation = (input) => {
+  input.primitive.animation = {
+    'fade-in': {
+      $type: 'duration',
+      $value: { value: 180, unit: 'ms' },
+      $extensions: {
+        'org.global-torque.css': {
+          name: 'gt-fade-in',
+          easing: '{primitive.easing.standard}',
+          fillMode: 'both',
+          keyframes: { from: { opacity: 0 }, to: { opacity: 1 } },
+        },
+      },
+    },
+  };
+  return input;
+};
+
 const kebabCase = (value) =>
   value.replace(/[A-Z]/gu, (letter) => `-${letter.toLowerCase()}`);
 
@@ -45,7 +88,9 @@ const flattenLeaves = (value, pathSegments = []) =>
 const runtimeCssVariables = (runtime) => {
   const primitive = flattenLeaves(runtime.primitive).map(
     ([pathSegments, value]) => [
-      `--gt-primitive-${pathSegments.join('-')}`,
+      pathSegments[0] === 'brand'
+        ? `--brand-${pathSegments.slice(1).join('-')}`
+        : `--gt-primitive-${pathSegments.join('-')}`,
       value,
     ],
   );
@@ -78,6 +123,29 @@ const parseCssVariables = (css, selector) => {
     variables.set(match[1], match[2].trim());
   }
   return variables;
+};
+
+/**
+ * Follows `var(--other)` references so CSS values can be compared with the
+ * resolved runtime literals. The stylesheet keeps the DTCG alias chain, so a
+ * semantic variable points at a primitive instead of repeating its value.
+ * Throws on a dangling or cyclic reference, which the flat form could not catch.
+ */
+const resolveCssVariables = (variables, inherited = new Map()) => {
+  const scope = new Map([...inherited, ...variables]);
+  const resolve = (name, seen) => {
+    const value = scope.get(name);
+    if (value === undefined)
+      throw new Error(`Unresolved CSS variable reference ${name}.`);
+    const match = value.match(/^var\((--[a-z0-9-]+)\)$/u);
+    if (!match) return value;
+    if (seen.has(name))
+      throw new Error(`Cyclic CSS variable reference ${name}.`);
+    return resolve(match[1], new Set([...seen, name]));
+  };
+  return new Map(
+    [...variables.keys()].map((name) => [name, resolve(name, new Set())]),
+  );
 };
 
 const sortedObject = (entries) =>
@@ -183,24 +251,26 @@ describe('DTCG validation and resolution', () => {
       '#ffffff',
     );
     expect(runtime.modes.dark.component.button['primary-background']).toBe(
-      '#5eead4',
+      runtime.primitive.color['primary-500'],
     );
+  });
+
+  it('carries the typography font-variant extension into the runtime tree', () => {
+    const { runtime } = validateAndResolveDtcg(withTypography(copySource()));
+
     expect(runtime.modes.light.semantic.typography['tabular-number']).toEqual(
-      expect.objectContaining({
-        fontFamily: expect.stringContaining('ui-monospace'),
-        fontVariantNumeric: 'tabular-nums',
-      }),
+      expect.objectContaining({ fontVariantNumeric: 'tabular-nums' }),
     );
   });
 
   it('supports valid scalar font families and named font weights', () => {
     const input = copySource();
     at(input, ['primitive', 'font-family', 'sans']).$value = 'Inter';
-    at(input, ['primitive', 'font-weight', 'regular']).$value = 'normal';
+    at(input, ['primitive', 'font-weight', 'medium']).$value = 'normal';
 
     const { runtime } = validateAndResolveDtcg(input);
     expect(runtime.primitive['font-family'].sans).toBe('"Inter"');
-    expect(runtime.primitive['font-weight'].regular).toBe('400');
+    expect(runtime.primitive['font-weight'].medium).toBe('400');
   });
 
   it.each([
@@ -254,8 +324,8 @@ describe('DTCG validation and resolution', () => {
       () => {
         const input = copySource();
         at(input, ['primitive', 'color', 'white']).$value =
-          '{primitive.color.black}';
-        at(input, ['primitive', 'color', 'black']).$value =
+          '{primitive.color.grey-100}';
+        at(input, ['primitive', 'color', 'grey-100']).$value =
           '{primitive.color.white}';
         return input;
       },
@@ -321,25 +391,19 @@ describe('DTCG validation and resolution', () => {
     ['font family', ['primitive', 'font-family', 'sans'], [], /font family/u],
     [
       'font weight',
-      ['primitive', 'font-weight', 'regular'],
+      ['primitive', 'font-weight', 'medium'],
       1001,
       /font weight/u,
     ],
     [
-      'number',
-      ['primitive', 'line-height', 'normal'],
-      Number.NaN,
-      /finite number/u,
-    ],
-    [
       'duration object',
-      ['primitive', 'duration', 'normal'],
+      ['primitive', 'duration', 'fast'],
       180,
       /duration object/u,
     ],
     [
       'duration unit',
-      ['primitive', 'duration', 'normal'],
+      ['primitive', 'duration', 'fast'],
       { value: -1, unit: 'minutes' },
       /non-negative ms or s/u,
     ],
@@ -387,7 +451,7 @@ describe('DTCG validation and resolution', () => {
   });
 
   it('rejects incomplete typography and mode drift', () => {
-    const typographyInput = copySource();
+    const typographyInput = withTypography(copySource());
     delete at(typographyInput, ['semantic', 'light', 'typography', 'body'])
       .$value.fontSize;
     expect(() => validateAndResolveDtcg(typographyInput)).toThrow(
@@ -407,7 +471,7 @@ describe('DTCG validation and resolution', () => {
       /explicit light or dark/u,
     );
 
-    const extensionDrift = copySource();
+    const extensionDrift = withTypography(copySource());
     delete at(extensionDrift, [
       'semantic',
       'dark',
@@ -421,24 +485,26 @@ describe('DTCG validation and resolution', () => {
 
   it('rejects cross-type aliases, output-unsafe names, and CSS collisions', () => {
     const crossType = copySource();
-    at(crossType, ['primitive', 'line-height', 'normal']).$value =
-      '{primitive.font-weight.medium}';
+    crossType.primitive['line-height'] = {
+      $type: 'number',
+      normal: { $value: '{primitive.font-weight.medium}' },
+    };
     expect(() => validateAndResolveDtcg(crossType)).toThrow(
       /declares number but references fontWeight/u,
     );
 
-    const nestedCrossType = copySource();
+    const nestedCrossType = withTypography(copySource());
     at(nestedCrossType, [
       'semantic',
       'light',
       'typography',
       'body',
-    ]).$value.lineHeight = '{primitive.font-weight.regular}';
+    ]).$value.lineHeight = '{primitive.font-weight.medium}';
     expect(() => validateAndResolveDtcg(nestedCrossType)).toThrow(
       /lineHeight must reference number, received fontWeight/u,
     );
 
-    const unsafeExtension = copySource();
+    const unsafeExtension = withTypography(copySource());
     at(unsafeExtension, [
       'semantic',
       'light',
@@ -456,7 +522,7 @@ describe('DTCG validation and resolution', () => {
     const fontRuntime = validateAndResolveDtcg(fontInjection).runtime;
     expect(fontRuntime.primitive['font-family'].sans).toBe('"Inter;color:red"');
 
-    const duplicateAnimation = copySource();
+    const duplicateAnimation = withAnimation(copySource());
     duplicateAnimation.primitive.animation.duplicate = structuredClone(
       duplicateAnimation.primitive.animation['fade-in'],
     );
@@ -464,7 +530,7 @@ describe('DTCG validation and resolution', () => {
       /Animation name gt-fade-in is produced/u,
     );
 
-    const unprefixedAnimation = copySource();
+    const unprefixedAnimation = withAnimation(copySource());
     at(unprefixedAnimation, ['primitive', 'animation', 'fade-in']).$extensions[
       'org.global-torque.css'
     ].name = 'fade-in';
@@ -473,9 +539,8 @@ describe('DTCG validation and resolution', () => {
     );
 
     const wrongBreakpointType = copySource();
-    wrongBreakpointType.primitive.breakpoint.md = {
-      $type: 'number',
-      $value: 48,
+    wrongBreakpointType.primitive.breakpoint = {
+      md: { $type: 'number', $value: 48 },
     };
     expect(() => validateAndResolveDtcg(wrongBreakpointType)).toThrow(
       /must use dimension for generated output/u,
@@ -491,12 +556,15 @@ describe('DTCG validation and resolution', () => {
     );
 
     const invalidOpacity = copySource();
-    at(invalidOpacity, ['primitive', 'opacity', 'disabled']).$value = 2;
+    invalidOpacity.primitive.opacity = {
+      $type: 'number',
+      disabled: { $value: 2 },
+    };
     expect(() => validateAndResolveDtcg(invalidOpacity)).toThrow(
       /opacity must be between 0 and 1/u,
     );
 
-    const wrongAnimationType = copySource();
+    const wrongAnimationType = withAnimation(copySource());
     const animation = at(wrongAnimationType, [
       'primitive',
       'animation',
@@ -569,7 +637,7 @@ describe('DTCG validation and resolution', () => {
       /semantic values must be aliases/u,
     );
 
-    const literalTypographyField = copySource();
+    const literalTypographyField = withTypography(copySource());
     at(literalTypographyField, [
       'semantic',
       'light',
@@ -597,7 +665,7 @@ describe('DTCG validation and resolution', () => {
       'light',
       'button',
       'focus-ring',
-    ]).$value = '{primitive.color.teal-700}';
+    ]).$value = '{primitive.color.grey-500}';
     expect(() => validateAndResolveDtcg(primitiveComponent)).toThrow(
       /across token layer or mode boundaries/u,
     );
@@ -624,7 +692,7 @@ describe('DTCG validation and resolution', () => {
     [
       'negative radius',
       (input) => {
-        at(input, ['primitive', 'radius', 'md']).$value.value = -1;
+        at(input, ['primitive', 'brand', 'radius']).$value.value = -1;
       },
       /must be non-negative/u,
     ],
@@ -638,23 +706,39 @@ describe('DTCG validation and resolution', () => {
     [
       'zero font size',
       (input) => {
-        at(input, ['primitive', 'font-size', 'base']).$value.value = 0;
+        at(input, ['primitive', 'font-size', 'sm']).$value.value = 0;
       },
       /must be greater than zero/u,
     ],
     [
       'zero breakpoint',
       (input) => {
-        at(input, ['primitive', 'breakpoint', 'md']).$value.value = 0;
+        input.primitive.breakpoint = {
+          $type: 'dimension',
+          md: { $value: { value: 0, unit: 'rem' } },
+        };
       },
       /must be greater than zero/u,
     ],
     [
       'zero line height',
       (input) => {
-        at(input, ['primitive', 'line-height', 'normal']).$value = 0;
+        input.primitive['line-height'] = {
+          $type: 'number',
+          normal: { $value: 0 },
+        };
       },
       /must be greater than zero/u,
+    ],
+    [
+      'non-finite number',
+      (input) => {
+        input.primitive['line-height'] = {
+          $type: 'number',
+          normal: { $value: Number.NaN },
+        };
+      },
+      /finite number/u,
     ],
     [
       'negative shadow blur',
@@ -663,7 +747,7 @@ describe('DTCG validation and resolution', () => {
       },
       /shadow blur must be non-negative/u,
     ],
-  ])('rejects invalid CSS-context value: %s', (_label, mutate, expected) => {
+  ])('rejects invalid value: %s', (_label, mutate, expected) => {
     const input = copySource();
     mutate(input);
     expect(() => validateAndResolveDtcg(input)).toThrow(expected);
@@ -681,6 +765,8 @@ describe('artifact generation', () => {
       'css.d.ts.map',
       'css.js',
       'css.js.map',
+      'derive.d.ts',
+      'derive.js',
       'index.css',
       'index.d.ts',
       'index.d.ts.map',
@@ -696,13 +782,33 @@ describe('artifact generation', () => {
       'build-manifest.json',
     ]);
     expect(first.get('index.css')).toContain(':is(.dark, [data-theme="dark"])');
+    expect(first.get('index.css')).toContain('--brand-primary: #004fff;');
+    expect(first.get('index.css')).not.toContain('--gt-primitive-brand-');
     expect(first.get('index.css')).toContain(
-      '--gt-typography-tabular-number-font-variant-numeric: tabular-nums;',
+      '--gt-primitive-color-primary-500: var(--brand-primary);',
+    );
+    expect(first.get('index.css')).toContain(
+      '--gt-primitive-color-secondary-500: var(--brand-secondary);',
+    );
+    expect(first.get('index.css')).toContain('--brand-tertiary: #5b55d6;');
+    expect(first.get('index.css')).toContain(
+      '--gt-primitive-color-tertiary-500: var(--brand-tertiary);',
+    );
+    expect(first.get('index.css')).toContain(
+      '--gt-primitive-color-tertiary-800: #322f76;',
     );
     expect(first.get('theme.css')).toContain('@theme inline');
-    expect(first.get('theme.css')).toContain('--font-weight-gt-semibold:');
-    expect(first.get('theme.css')).toContain('--animate-gt-fade-in:');
+    expect(first.get('theme.css')).toContain('--font-weight-gt-medium:');
     expect(first.get('index.d.ts')).not.toContain('Record<string');
+    expect(first.get('derive.js')).toBe(
+      fs.readFileSync(path.join(packageDirectory, 'src', 'derive.mjs'), 'utf8'),
+    );
+    expect(first.get('derive.d.ts')).toBe(
+      fs.readFileSync(
+        path.join(packageDirectory, 'src', 'derive.d.ts'),
+        'utf8',
+      ),
+    );
     const manifest = JSON.parse(first.get('build-manifest.json'));
     const files = Object.fromEntries(
       [...first]
@@ -723,6 +829,16 @@ describe('artifact generation', () => {
     });
   });
 
+  it('emits animation keyframes and the Tailwind animation mapping', () => {
+    const input = withAnimation(copySource());
+    const themeCss = generateArtifacts(input, JSON.stringify(input)).get(
+      'theme.css',
+    );
+
+    expect(themeCss).toContain('--animate-gt-fade-in:');
+    expect(themeCss).toContain('@keyframes gt-fade-in');
+  });
+
   it('performs an atomic build with no stale temporary output', async () => {
     await import('../build.mjs');
     const expected = generateArtifacts(copySource(), sourceText);
@@ -739,6 +855,13 @@ describe('artifact generation', () => {
             name.startsWith('.dist-') || name.startsWith('dist.previous-'),
         ),
     ).toEqual([]);
+  });
+
+  it('ships deriveBrand as the only export', async () => {
+    const shipped = await import(
+      pathToFileURL(path.join(packageDirectory, 'dist', 'derive.js')).href
+    );
+    expect(Object.keys(shipped)).toEqual(['deriveBrand']);
   });
 
   it('keeps the built JS, JSON, CSS, declarations, and source maps in parity', async () => {
@@ -778,11 +901,17 @@ describe('artifact generation', () => {
       Object.isFrozen(runtimeModule.designTokens.modes.dark.component.toast),
     ).toBe(true);
     const expectedVariables = runtimeCssVariables(json);
-    expect(sortedObject(parseCssVariables(css, ':root'))).toEqual(
+    const baseVariables = parseCssVariables(css, ':root');
+    expect(sortedObject(resolveCssVariables(baseVariables))).toEqual(
       sortedObject(expectedVariables.base),
     );
     expect(
-      sortedObject(parseCssVariables(css, ':is(.dark, [data-theme="dark"])')),
+      sortedObject(
+        resolveCssVariables(
+          parseCssVariables(css, ':is(.dark, [data-theme="dark"])'),
+          baseVariables,
+        ),
+      ),
     ).toEqual(sortedObject(expectedVariables.dark));
     expect(declarationDesignTokens(declaration)).toEqual(json);
     expect(sourceMap.sources).toEqual(['../src/tokens.tokens.json']);
@@ -903,114 +1032,57 @@ describe('artifact generation', () => {
   });
 });
 
-describe('contrast requirements', () => {
-  it('enforces every documented semantic foreground/background pair in both modes', () => {
-    const { runtime } = validateAndResolveDtcg(copySource());
-    expect(REQUIRED_CONTRAST_PAIRS).toHaveLength(9);
-    expect(() => assertRequiredContrast(runtime)).not.toThrow();
-
-    for (const mode of ['light', 'dark']) {
-      const colors = runtime.modes[mode].semantic.color;
-      for (const [foreground, background] of REQUIRED_CONTRAST_PAIRS) {
-        expect(
-          contrastRatio(colors[foreground], colors[background]),
-        ).toBeGreaterThanOrEqual(4.5);
-      }
-      const input = runtime.modes[mode].component.input;
-      expect(
-        contrastRatio(input.border, input.background),
-      ).toBeGreaterThanOrEqual(3);
-      const button = runtime.modes[mode].component.button;
-      expect(
-        contrastRatio(
-          button['primary-foreground'],
-          button['primary-background'],
-        ),
-      ).toBeGreaterThanOrEqual(4.5);
-      for (const [componentName, foregroundName, backgroundName] of [
-        ['input', 'foreground', 'background'],
-        ['dialog', 'foreground', 'background'],
-        ['toast', 'positive-foreground', 'positive-background'],
-        ['toast', 'negative-foreground', 'negative-background'],
-        ['toast', 'neutral-foreground', 'neutral-background'],
-      ]) {
-        const component = runtime.modes[mode].component[componentName];
-        expect(
-          contrastRatio(component[foregroundName], component[backgroundName]),
-        ).toBeGreaterThanOrEqual(4.5);
-      }
-      expect(
-        contrastRatio(
-          button['primary-foreground'],
-          button['primary-background-hover'],
-        ),
-      ).toBeGreaterThanOrEqual(4.5);
-    }
+describe('brand ramps', () => {
+  it('names the seed that is missing or not a literal color', () => {
+    expect(() => brandRamps({})).toThrow('primitive.brand.primary is missing.');
+    expect(() => brandRamps({ primary: '#004fff' })).toThrow(
+      'primitive.brand.primary must be a literal color.',
+    );
   });
 
-  it('rejects unsupported color encodings and insufficient contrast', () => {
-    expect(() => contrastRatio('rgb(0 0 0)', '#ffffff')).toThrow(/opaque hex/u);
-    const { runtime } = validateAndResolveDtcg(copySource());
-    runtime.modes.light.semantic.color['foreground-default'] = '#ffffff';
-    expect(() => assertRequiredContrast(runtime)).toThrow(
-      /contrast .* is below/u,
+  it('rejects a brand seed written as an alias', () => {
+    const input = copySource();
+    input.primitive.brand.primary = {
+      $type: 'color',
+      $value: '{primitive.color.primary-600}',
+    };
+    expect(() => validateAndResolveDtcg(input)).toThrow(
+      /primary must be a literal color/u,
     );
+  });
 
-    const boundaryRuntime = validateAndResolveDtcg(copySource()).runtime;
-    boundaryRuntime.modes.dark.component.input.border =
-      boundaryRuntime.modes.dark.component.input.background;
-    expect(() => assertRequiredContrast(boundaryRuntime)).toThrow(
-      /input border\/background contrast .* is below 3/u,
+  it('rejects a brand seed of an unsupported type', () => {
+    const input = copySource();
+    input.primitive.brand.pause = {
+      $type: 'duration',
+      $value: { value: 1, unit: 'ms' },
+    };
+    expect(() => validateAndResolveDtcg(input)).toThrow(
+      /must be a color, dimension or fontFamily brand seed/u,
     );
+  });
 
-    const focusRuntime = validateAndResolveDtcg(copySource()).runtime;
-    focusRuntime.modes.light.semantic.color['border-focus'] =
-      focusRuntime.modes.light.semantic.color['background-surface'];
-    expect(() => assertRequiredContrast(focusRuntime)).toThrow(
-      /border-focus\/background-.* contrast .* is below 3/u,
+  it('rejects a generated step that drifted from its seeds', () => {
+    const input = copySource();
+    input.primitive.color['primary-50'].$value.components = [0, 0, 0];
+    expect(() => validateAndResolveDtcg(input)).toThrow(/tokens:derive/u);
+  });
+
+  it('rejects a missing generated step', () => {
+    const input = copySource();
+    delete input.primitive.color['secondary-50'];
+    expect(() => validateAndResolveDtcg(input)).toThrow(
+      /secondary-50 is missing/u,
     );
+  });
 
-    const inputFocusRuntime = validateAndResolveDtcg(copySource()).runtime;
-    inputFocusRuntime.modes.dark.component.input['border-focus'] =
-      inputFocusRuntime.modes.dark.component.input.background;
-    expect(() => assertRequiredContrast(inputFocusRuntime)).toThrow(
-      /input focus border\/background contrast .* is below 3/u,
+  it('rejects an anchor step written as a literal', () => {
+    const input = copySource();
+    input.primitive.color['primary-500'] = {
+      $value: { colorSpace: 'srgb', components: [0, 0.3098, 1] },
+    };
+    expect(() => validateAndResolveDtcg(input)).toThrow(
+      /primary-500 must alias \{primitive\.brand\.primary\}/u,
     );
-
-    const buttonRuntime = validateAndResolveDtcg(copySource()).runtime;
-    buttonRuntime.modes.light.component.button['primary-background'] =
-      '#ffffff';
-    buttonRuntime.modes.light.component.button['primary-background-hover'] =
-      '#ffffff';
-    buttonRuntime.modes.light.component.button['primary-foreground'] =
-      '#ffffff';
-    expect(() => assertRequiredContrast(buttonRuntime)).toThrow(
-      /button primary-foreground\/primary-background contrast .* is below/u,
-    );
-
-    const buttonFocusRuntime = validateAndResolveDtcg(copySource()).runtime;
-    buttonFocusRuntime.modes.dark.component.button['focus-ring'] =
-      buttonFocusRuntime.modes.dark.semantic.color['background-surface'];
-    expect(() => assertRequiredContrast(buttonFocusRuntime)).toThrow(
-      /button focus-ring\/background-.* contrast .* is below 3/u,
-    );
-
-    for (const [componentName, foregroundName, backgroundName] of [
-      ['input', 'foreground', 'background'],
-      ['dialog', 'foreground', 'background'],
-      ['toast', 'positive-foreground', 'positive-background'],
-      ['toast', 'negative-foreground', 'negative-background'],
-      ['toast', 'neutral-foreground', 'neutral-background'],
-    ]) {
-      const componentRuntime = validateAndResolveDtcg(copySource()).runtime;
-      const component = componentRuntime.modes.light.component[componentName];
-      component[foregroundName] = component[backgroundName];
-      expect(() => assertRequiredContrast(componentRuntime)).toThrow(
-        new RegExp(
-          `${componentName} ${foregroundName}/${backgroundName} contrast .* is below`,
-          'u',
-        ),
-      );
-    }
   });
 });

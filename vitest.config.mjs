@@ -9,6 +9,8 @@ export default defineConfig({
         'scripts/build.mjs',
         'scripts/lib/generate.mjs',
         'scripts/lib/tailwindFixture.mjs',
+        'scripts/lib/deriveTokens.mjs',
+        'src/derive.mjs',
       ],
       thresholds: {
         statements: 90,

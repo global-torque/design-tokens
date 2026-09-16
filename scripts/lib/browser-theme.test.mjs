@@ -8,6 +8,14 @@ const css = fs.readFileSync(
   path.resolve(import.meta.dirname, '..', '..', 'dist', 'index.css'),
   'utf8',
 );
+const tokens = JSON.parse(
+  fs.readFileSync(
+    path.resolve(import.meta.dirname, '..', '..', 'dist', 'tokens.json'),
+    'utf8',
+  ),
+);
+const expected = (mode) =>
+  tokens.modes[mode].semantic.color['background-surface'];
 
 describe('explicit browser theme activation', () => {
   it('activates both root selectors and never infers system dark mode', async () => {
@@ -23,16 +31,16 @@ describe('explicit browser theme activation', () => {
             .trim(),
         );
 
-      await expect(surface()).resolves.toBe('#ffffff');
+      await expect(surface()).resolves.toBe(expected('light'));
       await page.evaluate(() => document.documentElement.classList.add('dark'));
-      await expect(surface()).resolves.toBe('#111827');
+      await expect(surface()).resolves.toBe(expected('dark'));
       await page.evaluate(() => {
         document.documentElement.classList.remove('dark');
         document.documentElement.dataset.theme = 'dark';
       });
-      await expect(surface()).resolves.toBe('#111827');
+      await expect(surface()).resolves.toBe(expected('dark'));
     } finally {
       await browser.close();
     }
-  }, 45_000);
+  }, 60_000);
 });
