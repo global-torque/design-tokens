@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import fs from 'node:fs';
 import {
   GenMapping,
   addSegment,
@@ -6,6 +7,17 @@ import {
   toEncodedMap,
 } from '@jridgewell/gen-mapping';
 import { findNodeAtLocation, parseTree } from 'jsonc-parser';
+import { deriveBrand } from '../../src/derive.mjs';
+
+/* The derivation ships verbatim, so a runtime rebrand computes the same ramps. */
+const deriveModule = fs.readFileSync(
+  new URL('../../src/derive.mjs', import.meta.url),
+  'utf8',
+);
+const deriveDeclaration = fs.readFileSync(
+  new URL('../../src/derive.d.ts', import.meta.url),
+  'utf8',
+);
 
 const TOKEN_REFERENCE = /^\{([^{}]+)\}$/;
 const KNOWN_TYPES = new Set([
@@ -656,21 +668,43 @@ const assertModeParity = (resolved) => {
 
 const variableName = (token) => {
   const [layer, mode, ...rest] = token.path;
+  if (layer === 'primitive' && mode === 'brand')
+    return `--brand-${rest.join('-')}`;
   if (layer === 'primitive')
     return `--gt-primitive-${[mode, ...rest].join('-')}`;
   if (layer === 'semantic') return `--gt-${rest.join('-')}`;
   return `--gt-component-${rest.join('-')}`;
 };
 
+/**
+ * Renders a DTCG alias as a CSS `var()` reference to the token it points at, so
+ * the primitive -> semantic -> component chain survives into the stylesheet.
+ * Returns undefined for literal values, which are emitted as-is.
+ */
+const aliasReference = (rawValue) => {
+  const match =
+    typeof rawValue === 'string' ? rawValue.match(TOKEN_REFERENCE) : null;
+  return match
+    ? `var(${variableName({ path: match[1].split('.') })})`
+    : undefined;
+};
+
 const cssDeclarations = (token) => {
   const name = variableName(token);
   if (token.type !== 'typography') {
-    return [[name, toCssValue(token.type, token.value)]];
+    return [
+      [
+        name,
+        aliasReference(token.node.$value) ??
+          toCssValue(token.type, token.value),
+      ],
+    ];
   }
   const value = typographyToRuntime(token.value, token.node);
+  const fields = isRecord(token.node.$value) ? token.node.$value : {};
   const declarations = sortedEntries(value).map(([property, propertyValue]) => [
     `${name}-${property.replace(/[A-Z]/gu, (letter) => `-${letter.toLowerCase()}`)}`,
-    propertyValue,
+    aliasReference(fields[property]) ?? propertyValue,
   ]);
   return declarations;
 };
@@ -712,6 +746,8 @@ const assertPrimitiveOutputTypes = (resolved) => {
     shadow: 'shadow',
     spacing: 'dimension',
   };
+  // The brand group mixes types; a seed may be any of these.
+  const brandSeedTypes = new Set(['color', 'dimension', 'fontFamily']);
   for (const token of resolved.values()) {
     if (token.path[0] !== 'primitive') continue;
     if (token.path.length < 3) {
@@ -720,10 +756,17 @@ const assertPrimitiveOutputTypes = (resolved) => {
       );
     }
     const category = token.path[1];
-    const expected = expectedTypes[category];
+    const expected =
+      category === 'brand'
+        ? brandSeedTypes.has(token.type)
+          ? token.type
+          : undefined
+        : expectedTypes[category];
     if (!expected) {
       throw new Error(
-        `${token.path.join('.')} uses an unsupported primitive output category.`,
+        category === 'brand'
+          ? `${token.path.join('.')} must be a color, dimension or fontFamily brand seed.`
+          : `${token.path.join('.')} uses an unsupported primitive output category.`,
       );
     }
     if (token.type !== expected) {
@@ -1215,146 +1258,82 @@ const makeSourceMap = (
   return `${JSON.stringify(toEncodedMap(mapping), null, 2)}\n`;
 };
 
-const parseHexColor = (value) => {
-  const match = /^#([0-9a-f]{6})$/iu.exec(value);
-  if (!match)
-    throw new Error(
-      `Contrast checks require an opaque hex color, received ${value}.`,
-    );
-  const integer = Number.parseInt(match[1], 16);
-  return [(integer >> 16) & 255, (integer >> 8) & 255, integer & 255];
+/** Color families whose steps are derived from the brand seeds. */
+export const GENERATED_RAMPS = ['primary', 'secondary', 'tertiary'];
+
+/* Generated steps that alias a brand seed instead of holding a derived value. */
+export const ANCHORS = {
+  primary: { 500: 'primary' },
+  secondary: { 500: 'secondary' },
+  tertiary: { 500: 'tertiary' },
 };
 
-const luminance = (color) => {
-  const channels = parseHexColor(color).map((channel) => {
-    const normalized = channel / 255;
-    return normalized <= 0.04045
-      ? normalized / 12.92
-      : ((normalized + 0.055) / 1.055) ** 2.4;
+/**
+ * Derives the generated ramps from the brand seed values, given as DTCG color
+ * objects keyed by seed name.
+ */
+export const brandRamps = (seeds) => {
+  const hexOf = (name) => {
+    if (seeds[name] === undefined) {
+      throw new Error(`primitive.brand.${name} is missing.`);
+    }
+    if (!isRecord(seeds[name])) {
+      throw new Error(`primitive.brand.${name} must be a literal color.`);
+    }
+    return colorToCss(seeds[name]);
+  };
+  return deriveBrand({
+    primary: hexOf('primary'),
+    secondary: hexOf('secondary'),
+    tertiary: hexOf('tertiary'),
+    surfaceLight: hexOf('surface-light'),
+    surfaceDark: hexOf('surface-dark'),
   });
-  return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
 };
 
-export const contrastRatio = (foreground, background) => {
-  const first = luminance(foreground);
-  const second = luminance(background);
-  const lighter = Math.max(first, second);
-  const darker = Math.min(first, second);
-  return (lighter + 0.05) / (darker + 0.05);
-};
-
-export const REQUIRED_CONTRAST_PAIRS = Object.freeze([
-  ['foreground-default', 'background-surface'],
-  ['foreground-muted', 'background-surface'],
-  ['foreground-disabled', 'background-surface'],
-  ['accent-foreground', 'accent-background'],
-  ['positive-foreground', 'positive-background'],
-  ['negative-foreground', 'negative-background'],
-  ['neutral-foreground', 'neutral-background'],
-  ['warning-foreground', 'warning-background'],
-  ['info-foreground', 'info-background'],
-]);
-
-export const assertRequiredContrast = (runtime, minimum = 4.5) => {
-  for (const mode of ['light', 'dark']) {
-    const colors = runtime.modes[mode].semantic.color;
-    for (const [foregroundName, backgroundName] of REQUIRED_CONTRAST_PAIRS) {
-      const ratio = contrastRatio(
-        colors[foregroundName],
-        colors[backgroundName],
-      );
-      if (ratio < minimum) {
+/* The generated ramp steps are committed to the source like any other token;
+   the build only checks that they still match what the seeds derive. */
+const assertBrandRamps = (resolved) => {
+  const seedNames = [
+    'primary',
+    'secondary',
+    'tertiary',
+    'surface-light',
+    'surface-dark',
+  ];
+  if (!seedNames.some((name) => resolved.has(`primitive.brand.${name}`))) {
+    return;
+  }
+  const seeds = Object.fromEntries(
+    seedNames.map((name) => {
+      const token = resolved.get(`primitive.brand.${name}`);
+      if (!token) {
+        throw new Error(`primitive.brand.${name} is missing.`);
+      }
+      if (!isRecord(token.node.$value)) {
+        throw new Error(`primitive.brand.${name} must be a literal color.`);
+      }
+      return [name, token.value];
+    }),
+  );
+  const ramps = brandRamps(seeds);
+  for (const family of GENERATED_RAMPS) {
+    for (const [step, expected] of Object.entries(ramps[family])) {
+      const tokenPath = `primitive.color.${family}-${step}`;
+      const token = resolved.get(tokenPath);
+      if (!token) {
+        throw new Error(`${tokenPath} is missing; run pnpm run tokens:derive.`);
+      }
+      const seedName = ANCHORS[family]?.[step];
+      if (seedName && token.node.$value !== `{primitive.brand.${seedName}}`) {
         throw new Error(
-          `${mode} ${foregroundName}/${backgroundName} contrast ${ratio.toFixed(2)} is below ${minimum}.`,
+          `${tokenPath} must alias {primitive.brand.${seedName}}; run pnpm run tokens:derive.`,
         );
       }
-    }
-    for (const component of ['button', 'input']) {
-      const colors = runtime.modes[mode].component[component];
-      const ratio = contrastRatio(
-        colors['disabled-foreground'],
-        colors['disabled-background'],
-      );
-      if (ratio < minimum) {
+      const actual = colorToCss(token.value);
+      if (actual !== expected) {
         throw new Error(
-          `${mode} ${component} disabled foreground/background contrast ${ratio.toFixed(2)} is below ${minimum}.`,
-        );
-      }
-    }
-    const input = runtime.modes[mode].component.input;
-    const boundaryRatio = contrastRatio(input.border, input.background);
-    if (boundaryRatio < 3) {
-      throw new Error(
-        `${mode} input border/background contrast ${boundaryRatio.toFixed(2)} is below 3.`,
-      );
-    }
-    const focus = runtime.modes[mode].semantic.color['border-focus'];
-    for (const backgroundName of [
-      'background-canvas',
-      'background-elevated',
-      'background-surface',
-    ]) {
-      const focusRatio = contrastRatio(focus, colors[backgroundName]);
-      if (focusRatio < 3) {
-        throw new Error(
-          `${mode} border-focus/${backgroundName} contrast ${focusRatio.toFixed(2)} is below 3.`,
-        );
-      }
-    }
-    const inputFocusRatio = contrastRatio(
-      input['border-focus'],
-      input.background,
-    );
-    if (inputFocusRatio < 3) {
-      throw new Error(
-        `${mode} input focus border/background contrast ${inputFocusRatio.toFixed(2)} is below 3.`,
-      );
-    }
-    const button = runtime.modes[mode].component.button;
-    for (const backgroundName of [
-      'primary-background',
-      'primary-background-hover',
-    ]) {
-      const buttonRatio = contrastRatio(
-        button['primary-foreground'],
-        button[backgroundName],
-      );
-      if (buttonRatio < minimum) {
-        throw new Error(
-          `${mode} button primary-foreground/${backgroundName} contrast ${buttonRatio.toFixed(2)} is below ${minimum}.`,
-        );
-      }
-    }
-    for (const backgroundName of [
-      'background-canvas',
-      'background-elevated',
-      'background-surface',
-    ]) {
-      const buttonFocusRatio = contrastRatio(
-        button['focus-ring'],
-        colors[backgroundName],
-      );
-      if (buttonFocusRatio < 3) {
-        throw new Error(
-          `${mode} button focus-ring/${backgroundName} contrast ${buttonFocusRatio.toFixed(2)} is below 3.`,
-        );
-      }
-    }
-    for (const [componentName, foregroundName, backgroundName] of [
-      ['input', 'foreground', 'background'],
-      ['dialog', 'foreground', 'background'],
-      ['toast', 'positive-foreground', 'positive-background'],
-      ['toast', 'negative-foreground', 'negative-background'],
-      ['toast', 'neutral-foreground', 'neutral-background'],
-    ]) {
-      const componentColors = runtime.modes[mode].component[componentName];
-      const componentRatio = contrastRatio(
-        componentColors[foregroundName],
-        componentColors[backgroundName],
-      );
-      if (componentRatio < minimum) {
-        throw new Error(
-          `${mode} ${componentName} ${foregroundName}/${backgroundName} contrast ${componentRatio.toFixed(2)} is below ${minimum}.`,
+          `${tokenPath} is ${actual} but the brand seeds derive ${expected}; run pnpm run tokens:derive.`,
         );
       }
     }
@@ -1367,11 +1346,11 @@ export const validateAndResolveDtcg = (source) => {
   assertModeParity(resolved);
   assertNoOutputCollisions(resolved);
   assertPrimitiveOutputTypes(resolved);
+  assertBrandRamps(resolved);
   assertLayerOutputTypes(resolved);
   assertLayerAliasContracts(resolved);
   assertAnimationNames(resolved);
   const runtime = makeRuntimeTree(resolved);
-  assertRequiredContrast(runtime);
   return { resolved, runtime };
 };
 
@@ -1395,6 +1374,8 @@ export const generateArtifacts = (source, sourceText) => {
     ],
     ['css.js', cssModule],
     ['css.js.map', makeSourceMap('css.js', sourceText, cssModule, runtimeJson)],
+    ['derive.d.ts', deriveDeclaration],
+    ['derive.js', deriveModule],
     ['index.css', indexCss],
     ['index.d.ts', declaration],
     [

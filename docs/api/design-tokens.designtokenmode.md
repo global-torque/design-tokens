@@ -12,3 +12,4 @@ Supported explicit color modes.
 export type DesignTokenMode = keyof ResolvedDesignTokens['modes'];
 ```
 **References:** [ResolvedDesignTokens](./design-tokens.resolveddesigntokens.md)
+

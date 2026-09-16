@@ -9,6 +9,7 @@ import {
   compileTailwindFixture,
 } from './lib/tailwindFixture.mjs';
 
+const expectedVersion = '4.3.2';
 const temporaryDirectory = fs.mkdtempSync(
   path.join(os.tmpdir(), 'design-tokens-tailwind-current-'),
 );
@@ -29,9 +30,9 @@ const run = (command, args) => {
 
 try {
   const latestVersion = run('npm', ['view', 'tailwindcss', 'dist-tags.latest']);
-  if (!latestVersion.startsWith('4.')) {
+  if (latestVersion !== expectedVersion || !latestVersion.startsWith('4.')) {
     throw new Error(
-      `Tailwind latest moved outside the supported 4.x line: ${latestVersion}.`,
+      `Expected current Tailwind 4.x ${expectedVersion}, registry reports ${latestVersion}.`,
     );
   }
   fs.writeFileSync(

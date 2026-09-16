@@ -5,7 +5,7 @@ export default [
     ignores: ['coverage/**', 'dist/**', 'docs/api/**', 'temp/**'],
   },
   {
-    files: ['scripts/**/*.mjs', 'vitest.config.mjs'],
+    files: ['scripts/**/*.mjs', 'src/**/*.mjs', 'vitest.config.mjs'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',

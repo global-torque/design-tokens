@@ -8,110 +8,257 @@
   },
   "primitive": {
     "$description": "Raw values. Product meaning must be expressed through semantic aliases.",
+    "brand": {
+      "$description": "Brand seed values, emitted as --brand-* custom properties.",
+      "primary": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0.3098, 1]
+        }
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.2392, 0.8627, 0.5922]
+        }
+      },
+      "tertiary": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.3569, 0.3333, 0.8392]
+        }
+      },
+      "surface-light": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1]
+        }
+      },
+      "surface-dark": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.0706, 0.0863, 0.1216]
+        }
+      },
+      "radius": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.5,
+          "unit": "rem"
+        }
+      },
+      "font-sans": {
+        "$type": "fontFamily",
+        "$value": [
+          "Avenir",
+          "Avenir Next",
+          "system-ui",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica Neue",
+          "Arial",
+          "sans-serif"
+        ]
+      }
+    },
     "color": {
       "$type": "color",
-      "white": { "$value": { "colorSpace": "srgb", "components": [1, 1, 1] } },
-      "black": { "$value": { "colorSpace": "srgb", "components": [0, 0, 0] } },
-      "neutral-25": {
+      "white": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9725, 0.9804, 0.9882]
+          "components": [1, 1, 1]
         }
       },
-      "neutral-50": {
+      "grey-100": {
+        "$description": "grey-100 to grey-800 are the grey scale of the fixed system palette, ordered by lightness.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9451, 0.9608, 0.9765]
+          "components": [0.9725, 0.9765, 0.9804]
         }
       },
-      "neutral-100": {
+      "grey-200": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9137, 0.9255, 0.9373]
+        }
+      },
+      "grey-300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8706, 0.8863, 0.902]
+        }
+      },
+      "grey-400": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8078, 0.8314, 0.8549]
+        }
+      },
+      "grey-500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.6784, 0.7098, 0.7412]
+        }
+      },
+      "grey-600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.4235, 0.4588, 0.4902]
+        }
+      },
+      "grey-700": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.2863, 0.3137, 0.3412]
+        }
+      },
+      "grey-800": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.2039, 0.2275, 0.251]
+        }
+      },
+      "navy-800": {
+        "$description": "Dark surfaces of the fixed system palette.",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.1412, 0.1882, 0.2745]
+        }
+      },
+      "navy-900": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.102, 0.1255, 0.1765]
+        }
+      },
+      "steel-100": {
+        "$description": "steel-100 to steel-700 are the cool blue-greys of data-dense dashboard surfaces, ordered by lightness.",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8863, 0.902, 0.9373]
+        }
+      },
+      "steel-200": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.7843, 0.7961, 0.8157]
+        }
+      },
+      "steel-300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.5294, 0.5647, 0.6314]
+        }
+      },
+      "steel-400": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.4824, 0.5176, 0.5843]
+        }
+      },
+      "steel-500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.4196, 0.4588, 0.5373]
+        }
+      },
+      "steel-600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.3647, 0.4078, 0.4902]
+        }
+      },
+      "steel-700": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.0902, 0.1373, 0.2353]
+        }
+      },
+      "slate-200": {
+        "$description": "slate-200 and slate-950 carry the sRGB values of Tailwind's slate steps, used for navigation rules and overlays.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0.8863, 0.9098, 0.9412]
         }
       },
-      "neutral-200": {
+      "slate-950": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.7961, 0.8353, 0.8824]
+          "components": [0.0078, 0.0235, 0.0941]
+        }
+      },
+      "neutral-25": {
+        "$value": "{primitive.brand.surface-light}"
+      },
+      "neutral-50": {
+        "$description": "Fixed value; not derived from the brand seeds.",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9804, 0.9804, 0.9804]
+        }
+      },
+      "neutral-100": {
+        "$description": "Fixed value; not derived from the brand seeds.",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9255, 0.9255, 0.9294]
         }
       },
       "neutral-400": {
+        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.5804, 0.6392, 0.7216]
+          "components": [0.6392, 0.6471, 0.6627]
+        }
+      },
+      "neutral-450": {
+        "$description": "Fixed value; not derived from the brand seeds.",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.6078, 0.6078, 0.6078]
         }
       },
       "neutral-500": {
+        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.3922, 0.4549, 0.5451]
+          "components": [0.4588, 0.4588, 0.4588]
         }
       },
       "neutral-600": {
+        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.2784, 0.3333, 0.4118]
+          "components": [0.3176, 0.3333, 0.3608]
         }
       },
       "neutral-700": {
-        "$value": { "colorSpace": "srgb", "components": [0.2, 0.2549, 0.3333] }
-      },
-      "neutral-800": {
+        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.1176, 0.1608, 0.2314]
+          "components": [0.2314, 0.2471, 0.2824]
         }
       },
-      "neutral-900": {
+      "neutral-800": {
+        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.0667, 0.0941, 0.1529]
+          "components": [0.1373, 0.1529, 0.1882]
         }
       },
       "neutral-950": {
+        "$value": "{primitive.brand.surface-dark}"
+      },
+      "charcoal-500": {
+        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.0588, 0.0902, 0.1647]
-        }
-      },
-      "teal-200": {
-        "$value": { "colorSpace": "srgb", "components": [0.6, 0.9647, 0.9294] }
-      },
-      "teal-300": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.3686, 0.9176, 0.8314]
-        }
-      },
-      "teal-500": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.0784, 0.7216, 0.651]
-        }
-      },
-      "teal-600": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.051, 0.5804, 0.5333]
-        }
-      },
-      "teal-700": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.0588, 0.4627, 0.4314]
-        }
-      },
-      "teal-800": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.0667, 0.3686, 0.349]
-        }
-      },
-      "teal-950": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.0157, 0.1843, 0.1804]
+          "components": [0.2, 0.2, 0.2]
         }
       },
       "green-50": {
@@ -145,7 +292,10 @@
         }
       },
       "red-50": {
-        "$value": { "colorSpace": "srgb", "components": [0.9961, 0.949, 0.949] }
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9961, 0.949, 0.949]
+        }
       },
       "red-300": {
         "$value": {
@@ -153,8 +303,17 @@
           "components": [0.9882, 0.6471, 0.6471]
         }
       },
+      "red-500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9373, 0.2667, 0.2667]
+        }
+      },
       "red-800": {
-        "$value": { "colorSpace": "srgb", "components": [0.6, 0.1059, 0.1059] }
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.6, 0.1059, 0.1059]
+        }
       },
       "red-950": {
         "$value": {
@@ -163,7 +322,10 @@
         }
       },
       "amber-50": {
-        "$value": { "colorSpace": "srgb", "components": [1, 0.9843, 0.9216] }
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.9843, 0.9216]
+        }
       },
       "amber-200": {
         "$value": {
@@ -183,25 +345,23 @@
           "components": [0.2706, 0.102, 0.0118]
         }
       },
-      "blue-50": {
-        "$value": { "colorSpace": "srgb", "components": [0.9373, 0.9647, 1] }
-      },
-      "blue-200": {
+      "emerald-500": {
+        "$description": "emerald-500, yellow-500, red-500 and blue-500 carry Tailwind's values for four-step rating indicators.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.749, 0.8588, 0.9961]
+          "components": [0.0627, 0.7255, 0.5059]
         }
       },
-      "blue-800": {
+      "yellow-500": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.1176, 0.251, 0.6863]
+          "components": [0.9176, 0.702, 0.0314]
         }
       },
-      "blue-950": {
+      "blue-500": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.0902, 0.1451, 0.3294]
+          "components": [0.2314, 0.5098, 0.9647]
         }
       },
       "overlay": {
@@ -210,101 +370,373 @@
           "components": [0, 0, 0],
           "alpha": 0.64
         }
+      },
+      "scrim": {
+        "$description": "Translucent black for a loading layer over an image.",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0],
+          "alpha": 0.3
+        }
+      },
+      "primary-50": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9412, 0.9569, 1]
+        }
+      },
+      "primary-200": {
+        "$description": "Fixed value; not derived from the brand seeds.",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.7216, 0.8196, 1]
+        }
+      },
+      "primary-500": {
+        "$value": "{primitive.brand.primary}"
+      },
+      "primary-600": {
+        "$description": "Fixed value; not derived from the brand seeds.",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0.2588, 0.8314]
+        }
+      },
+      "primary-foreground": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1]
+        }
+      },
+      "secondary-50": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9529, 0.9922, 0.9765]
+        }
+      },
+      "secondary-100": {
+        "$description": "Fixed value; not derived from the brand seeds.",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.851, 1, 0.9333]
+        }
+      },
+      "secondary-500": {
+        "$value": "{primitive.brand.secondary}"
+      },
+      "secondary-600": {
+        "$description": "Fixed value; not derived from the brand seeds.",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.2118, 0.7451, 0.5137]
+        }
+      },
+      "secondary-foreground": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.0706, 0.0863, 0.1216]
+        }
+      },
+      "tertiary-50": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9608, 0.9608, 0.9922]
+        }
+      },
+      "tertiary-100": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9373, 0.9333, 0.9843]
+        }
+      },
+      "tertiary-200": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8706, 0.8667, 0.9686]
+        }
+      },
+      "tertiary-300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8078, 0.8, 0.9529]
+        }
+      },
+      "tertiary-500": {
+        "$value": "{primitive.brand.tertiary}"
+      },
+      "tertiary-600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.3216, 0.302, 0.7569]
+        }
+      },
+      "tertiary-800": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.1961, 0.1843, 0.4627]
+        }
+      },
+      "tertiary-foreground": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1]
+        }
+      },
+      "gold-50": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.9686, 0.9098]
+        }
+      },
+      "gold-400": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.7608, 0.302]
+        }
+      },
+      "gold-500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9451, 0.6863, 0.1961]
+        }
+      },
+      "grape-50": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9725, 0.9608, 1]
+        }
+      },
+      "grape-500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.4353, 0.2392, 0.9922]
+        }
+      },
+      "grape-700": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.3137, 0.0784, 0.8157]
+        }
+      },
+      "scarlet-50": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.9451, 0.9451]
+        }
+      },
+      "scarlet-300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9373, 0.698, 0.698]
+        }
+      },
+      "scarlet-400": {
+        "$description": "Light destructive fill of the fixed system palette.",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.4392, 0.4392]
+        }
+      },
+      "scarlet-500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.2314, 0.2314]
+        }
+      },
+      "scarlet-600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8118, 0.2471, 0.2471]
+        }
+      },
+      "scarlet-700": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.7725, 0.1882, 0.1882]
+        }
+      },
+      "scarlet-800": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.5569, 0.149, 0.149]
+        }
+      },
+      "scarlet-900": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.5176, 0.1686, 0.1686]
+        }
+      },
+      "iris-tint": {
+        "$description": "Translucent tint for a text highlight.",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.2667, 0.3098, 0.898],
+          "alpha": 0.1255
+        }
+      },
+      "azure-tint-100": {
+        "$description": "azure-tint-100 and azure-tint-200 are the translucent blue tints of the loading shimmer. Fixed values; not derived from the brand seeds.",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9216, 0.9529, 1],
+          "alpha": 0.34
+        }
+      },
+      "azure-tint-200": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8118, 0.8588, 1],
+          "alpha": 0.34
+        }
+      },
+      "coral-500": {
+        "$description": "coral-500, citrine-500, chartreuse-500 and jade-500 are the four steps of the password-strength meter.",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.3216, 0.3216]
+        }
+      },
+      "citrine-50": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.9922, 0.9216]
+        }
+      },
+      "citrine-300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8471, 0.8314, 0.6471]
+        }
+      },
+      "citrine-500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9333, 0.7647, 0.1765]
+        }
+      },
+      "citrine-800": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.3843, 0.3647, 0.1294]
+        }
+      },
+      "chartreuse-500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.651, 0.8039, 0.0471]
+        }
+      },
+      "jade-50": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9451, 0.9843, 0.9686]
+        }
+      },
+      "jade-100": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9059, 0.9725, 0.9451]
+        }
+      },
+      "jade-300": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.6627, 0.8667, 0.7882]
+        }
+      },
+      "jade-500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0.8275, 0.5843]
+        }
+      },
+      "jade-600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.1686, 0.6078, 0.4431]
+        }
+      },
+      "jade-700": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.1255, 0.4627, 0.3333]
+        }
       }
     },
     "spacing": {
-      "$type": "dimension",
-      "0": { "$value": { "value": 0, "unit": "px" } },
-      "1": { "$value": { "value": 0.25, "unit": "rem" } },
-      "2": { "$value": { "value": 0.5, "unit": "rem" } },
-      "3": { "$value": { "value": 0.75, "unit": "rem" } },
-      "4": { "$value": { "value": 1, "unit": "rem" } },
-      "6": { "$value": { "value": 1.5, "unit": "rem" } },
-      "8": { "$value": { "value": 2, "unit": "rem" } },
-      "12": { "$value": { "value": 3, "unit": "rem" } }
+      "1": {
+        "$value": {
+          "value": 0.25,
+          "unit": "rem"
+        }
+      },
+      "2": {
+        "$value": {
+          "value": 0.5,
+          "unit": "rem"
+        }
+      },
+      "3": {
+        "$value": {
+          "value": 0.75,
+          "unit": "rem"
+        }
+      },
+      "4": {
+        "$value": {
+          "value": 1,
+          "unit": "rem"
+        }
+      },
+      "$type": "dimension"
     },
     "radius": {
       "$type": "dimension",
-      "none": { "$value": { "value": 0, "unit": "px" } },
-      "sm": { "$value": { "value": 0.25, "unit": "rem" } },
-      "md": { "$value": { "value": 0.5, "unit": "rem" } },
-      "lg": { "$value": { "value": 0.75, "unit": "rem" } },
-      "full": { "$value": { "value": 9999, "unit": "px" } }
+      "md": {
+        "$value": "{primitive.brand.radius}"
+      },
+      "full": {
+        "$value": {
+          "value": 9999,
+          "unit": "px"
+        }
+      }
     },
     "font-family": {
       "$type": "fontFamily",
       "sans": {
-        "$value": ["Inter", "ui-sans-serif", "system-ui", "sans-serif"]
-      },
-      "mono": {
-        "$value": ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"]
+        "$value": "{primitive.brand.font-sans}"
       }
     },
     "font-size": {
       "$type": "dimension",
-      "xs": { "$value": { "value": 0.75, "unit": "rem" } },
-      "sm": { "$value": { "value": 0.875, "unit": "rem" } },
-      "base": { "$value": { "value": 1, "unit": "rem" } },
-      "lg": { "$value": { "value": 1.125, "unit": "rem" } },
-      "xl": { "$value": { "value": 1.25, "unit": "rem" } },
-      "2xl": { "$value": { "value": 1.5, "unit": "rem" } }
+      "sm": {
+        "$value": {
+          "value": 0.875,
+          "unit": "rem"
+        }
+      }
     },
     "font-weight": {
       "$type": "fontWeight",
-      "regular": { "$value": 400 },
-      "medium": { "$value": 500 },
-      "semibold": { "$value": 600 },
-      "bold": { "$value": 700 }
-    },
-    "line-height": {
-      "$type": "number",
-      "tight": { "$value": 1.25 },
-      "normal": { "$value": 1.5 },
-      "relaxed": { "$value": 1.625 }
-    },
-    "letter-spacing": {
-      "$type": "dimension",
-      "tight": { "$value": { "value": -0.015, "unit": "rem" } },
-      "normal": { "$value": { "value": 0, "unit": "rem" } },
-      "wide": { "$value": { "value": 0.025, "unit": "rem" } }
-    },
-    "opacity": {
-      "$type": "number",
-      "disabled": { "$value": 0.48 },
-      "muted": { "$value": 0.72 }
-    },
-    "breakpoint": {
-      "$type": "dimension",
-      "sm": { "$value": { "value": 40, "unit": "rem" } },
-      "md": { "$value": { "value": 48, "unit": "rem" } },
-      "lg": { "$value": { "value": 64, "unit": "rem" } },
-      "xl": { "$value": { "value": 80, "unit": "rem" } }
+      "medium": {
+        "$value": 500
+      }
     },
     "duration": {
       "$type": "duration",
-      "fast": { "$value": { "value": 120, "unit": "ms" } },
-      "normal": { "$value": { "value": 180, "unit": "ms" } }
+      "fast": {
+        "$value": {
+          "value": 120,
+          "unit": "ms"
+        }
+      }
     },
     "easing": {
       "$type": "cubicBezier",
-      "standard": { "$value": [0.2, 0, 0, 1] },
-      "exit": { "$value": [0.4, 0, 1, 1] }
-    },
-    "animation": {
-      "fade-in": {
-        "$type": "duration",
-        "$value": "{primitive.duration.normal}",
-        "$extensions": {
-          "org.global-torque.css": {
-            "name": "gt-fade-in",
-            "easing": "{primitive.easing.standard}",
-            "fillMode": "both",
-            "keyframes": {
-              "from": { "opacity": 0 },
-              "to": { "opacity": 1 }
-            }
-          }
-        }
+      "standard": {
+        "$value": [0.2, 0, 0, 1]
       }
     },
     "shadow": {
@@ -316,10 +748,22 @@
             "components": [0.0588, 0.0902, 0.1647],
             "alpha": 0.12
           },
-          "offsetX": { "value": 0, "unit": "px" },
-          "offsetY": { "value": 1, "unit": "px" },
-          "blur": { "value": 2, "unit": "px" },
-          "spread": { "value": 0, "unit": "px" }
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 2,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
         }
       },
       "md": {
@@ -330,10 +774,22 @@
               "components": [0.0588, 0.0902, 0.1647],
               "alpha": 0.12
             },
-            "offsetX": { "value": 0, "unit": "px" },
-            "offsetY": { "value": 4, "unit": "px" },
-            "blur": { "value": 12, "unit": "px" },
-            "spread": { "value": -2, "unit": "px" }
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 4,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 12,
+              "unit": "px"
+            },
+            "spread": {
+              "value": -2,
+              "unit": "px"
+            }
           },
           {
             "color": {
@@ -341,12 +797,176 @@
               "components": [0.0588, 0.0902, 0.1647],
               "alpha": 0.08
             },
-            "offsetX": { "value": 0, "unit": "px" },
-            "offsetY": { "value": 2, "unit": "px" },
-            "blur": { "value": 4, "unit": "px" },
-            "spread": { "value": -1, "unit": "px" }
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 2,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 4,
+              "unit": "px"
+            },
+            "spread": {
+              "value": -1,
+              "unit": "px"
+            }
           }
         ]
+      },
+      "card": {
+        "$description": "card, row and notice are the elevations of dashboard cards, table rows and inline notices.",
+        "$value": {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0.149, 0.1922, 0.3059],
+            "alpha": 0.09
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 18,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 50,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        }
+      },
+      "row": {
+        "$value": [
+          {
+            "color": {
+              "colorSpace": "srgb",
+              "components": [0.0706, 0.0863, 0.1216],
+              "alpha": 0.03
+            },
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 2,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 5,
+              "unit": "px"
+            },
+            "spread": {
+              "value": -5,
+              "unit": "px"
+            }
+          },
+          {
+            "color": {
+              "colorSpace": "srgb",
+              "components": [0.0706, 0.0863, 0.1216],
+              "alpha": 0.15
+            },
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 2,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 3,
+              "unit": "px"
+            },
+            "spread": {
+              "value": -3,
+              "unit": "px"
+            }
+          }
+        ]
+      },
+      "notice": {
+        "$value": {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0, 0, 0],
+            "alpha": 0.1
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 2,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 8,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        }
+      },
+      "sheet": {
+        "$description": "sheet and badge are fixed black elevations for overlay sheets and badges; they do not follow the surface ink.",
+        "$value": {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0, 0, 0],
+            "alpha": 0.25
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 25,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 50,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -12,
+            "unit": "px"
+          }
+        }
+      },
+      "badge": {
+        "$value": {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0, 0, 0],
+            "alpha": 0.15
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 2,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 4,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        }
       }
     }
   },
@@ -355,120 +975,232 @@
     "light": {
       "color": {
         "$type": "color",
-        "background-canvas": { "$value": "{primitive.color.neutral-25}" },
-        "background-surface": { "$value": "{primitive.color.white}" },
-        "background-subtle": { "$value": "{primitive.color.neutral-50}" },
-        "background-elevated": { "$value": "{primitive.color.white}" },
-        "background-overlay": { "$value": "{primitive.color.overlay}" },
-        "foreground-default": { "$value": "{primitive.color.neutral-900}" },
-        "foreground-muted": { "$value": "{primitive.color.neutral-600}" },
-        "foreground-inverse": { "$value": "{primitive.color.neutral-25}" },
-        "foreground-disabled": { "$value": "{primitive.color.neutral-600}" },
-        "border-default": { "$value": "{primitive.color.neutral-200}" },
-        "border-strong": { "$value": "{primitive.color.neutral-500}" },
-        "border-focus": { "$value": "{primitive.color.teal-700}" },
-        "accent-background": { "$value": "{primitive.color.teal-700}" },
-        "accent-background-hover": { "$value": "{primitive.color.teal-800}" },
-        "accent-foreground": { "$value": "{primitive.color.white}" },
-        "positive-background": { "$value": "{primitive.color.green-50}" },
-        "positive-foreground": { "$value": "{primitive.color.green-800}" },
-        "positive-border": { "$value": "{primitive.color.green-700}" },
-        "negative-background": { "$value": "{primitive.color.red-50}" },
-        "negative-foreground": { "$value": "{primitive.color.red-800}" },
-        "negative-border": { "$value": "{primitive.color.red-800}" },
-        "neutral-background": { "$value": "{primitive.color.neutral-50}" },
-        "neutral-foreground": { "$value": "{primitive.color.neutral-700}" },
-        "neutral-border": { "$value": "{primitive.color.neutral-500}" },
-        "warning-background": { "$value": "{primitive.color.amber-50}" },
-        "warning-foreground": { "$value": "{primitive.color.amber-800}" },
-        "warning-border": { "$value": "{primitive.color.amber-800}" },
-        "info-background": { "$value": "{primitive.color.blue-50}" },
-        "info-foreground": { "$value": "{primitive.color.blue-800}" },
-        "info-border": { "$value": "{primitive.color.blue-800}" }
-      },
-      "typography": {
-        "body": {
-          "$type": "typography",
-          "$value": {
-            "fontFamily": "{primitive.font-family.sans}",
-            "fontSize": "{primitive.font-size.base}",
-            "fontWeight": "{primitive.font-weight.regular}",
-            "letterSpacing": "{primitive.letter-spacing.normal}",
-            "lineHeight": "{primitive.line-height.normal}"
-          }
+        "background-canvas": {
+          "$value": "{primitive.color.neutral-25}"
         },
-        "tabular-number": {
-          "$type": "typography",
-          "$value": {
-            "fontFamily": "{primitive.font-family.mono}",
-            "fontSize": "{primitive.font-size.base}",
-            "fontWeight": "{primitive.font-weight.medium}",
-            "letterSpacing": "{primitive.letter-spacing.normal}",
-            "lineHeight": "{primitive.line-height.normal}"
-          },
-          "$extensions": {
-            "org.global-torque.css": { "fontVariantNumeric": "tabular-nums" }
-          }
+        "background-surface": {
+          "$value": "{primitive.color.white}"
+        },
+        "background-subtle": {
+          "$value": "{primitive.color.grey-100}"
+        },
+        "background-elevated": {
+          "$value": "{primitive.color.white}"
+        },
+        "background-overlay": {
+          "$value": "{primitive.color.overlay}"
+        },
+        "background-sidebar": {
+          "$value": "{primitive.color.grey-100}"
+        },
+        "foreground-default": {
+          "$value": "{primitive.color.neutral-950}"
+        },
+        "foreground-muted": {
+          "$value": "{primitive.color.grey-600}"
+        },
+        "foreground-disabled": {
+          "$value": "{primitive.color.neutral-600}"
+        },
+        "border-default": {
+          "$value": "{primitive.color.grey-200}"
+        },
+        "border-input": {
+          "$value": "{primitive.color.grey-300}"
+        },
+        "border-focus": {
+          "$value": "{primitive.color.primary-500}"
+        },
+        "accent-background": {
+          "$value": "{primitive.color.primary-500}"
+        },
+        "accent-background-hover": {
+          "$value": "{primitive.color.primary-600}"
+        },
+        "accent-foreground": {
+          "$value": "{primitive.color.primary-foreground}"
+        },
+        "accent-secondary-background": {
+          "$value": "{primitive.color.secondary-500}"
+        },
+        "accent-secondary-foreground": {
+          "$value": "{primitive.color.secondary-foreground}"
+        },
+        "accent-subtle": {
+          "$value": "{primitive.color.primary-50}"
+        },
+        "accent-subtle-foreground": {
+          "$value": "{primitive.color.primary-500}"
+        },
+        "positive-background": {
+          "$value": "{primitive.color.green-50}"
+        },
+        "positive-foreground": {
+          "$value": "{primitive.color.green-800}"
+        },
+        "positive-border": {
+          "$value": "{primitive.color.green-700}"
+        },
+        "negative-background": {
+          "$value": "{primitive.color.red-50}"
+        },
+        "negative-foreground": {
+          "$value": "{primitive.color.red-800}"
+        },
+        "negative-border": {
+          "$value": "{primitive.color.red-800}"
+        },
+        "negative-solid": {
+          "$value": "{primitive.color.scarlet-400}"
+        },
+        "negative-solid-foreground": {
+          "$value": "{primitive.color.white}"
+        },
+        "neutral-background": {
+          "$value": "{primitive.color.neutral-50}"
+        },
+        "neutral-foreground": {
+          "$value": "{primitive.color.neutral-700}"
+        },
+        "warning-background": {
+          "$value": "{primitive.color.amber-50}"
+        },
+        "warning-foreground": {
+          "$value": "{primitive.color.amber-800}"
+        },
+        "warning-border": {
+          "$value": "{primitive.color.amber-800}"
+        },
+        "chart-1": {
+          "$value": "{primitive.color.primary-500}"
+        },
+        "chart-2": {
+          "$value": "{primitive.color.secondary-500}"
+        },
+        "chart-3": {
+          "$value": "{primitive.color.gold-500}"
+        },
+        "chart-4": {
+          "$value": "{primitive.color.grape-500}"
+        },
+        "chart-5": {
+          "$value": "{primitive.color.scarlet-500}"
         }
       }
     },
     "dark": {
       "color": {
         "$type": "color",
-        "background-canvas": { "$value": "{primitive.color.neutral-950}" },
-        "background-surface": { "$value": "{primitive.color.neutral-900}" },
-        "background-subtle": { "$value": "{primitive.color.neutral-800}" },
-        "background-elevated": { "$value": "{primitive.color.neutral-800}" },
-        "background-overlay": { "$value": "{primitive.color.overlay}" },
-        "foreground-default": { "$value": "{primitive.color.neutral-25}" },
-        "foreground-muted": { "$value": "{primitive.color.neutral-200}" },
-        "foreground-inverse": { "$value": "{primitive.color.neutral-900}" },
-        "foreground-disabled": { "$value": "{primitive.color.neutral-400}" },
-        "border-default": { "$value": "{primitive.color.neutral-700}" },
-        "border-strong": { "$value": "{primitive.color.neutral-400}" },
-        "border-focus": { "$value": "{primitive.color.teal-300}" },
-        "accent-background": { "$value": "{primitive.color.teal-300}" },
-        "accent-background-hover": { "$value": "{primitive.color.teal-200}" },
-        "accent-foreground": { "$value": "{primitive.color.teal-950}" },
-        "positive-background": { "$value": "{primitive.color.green-950}" },
-        "positive-foreground": { "$value": "{primitive.color.green-300}" },
-        "positive-border": { "$value": "{primitive.color.green-300}" },
-        "negative-background": { "$value": "{primitive.color.red-950}" },
-        "negative-foreground": { "$value": "{primitive.color.red-300}" },
-        "negative-border": { "$value": "{primitive.color.red-300}" },
-        "neutral-background": { "$value": "{primitive.color.neutral-800}" },
-        "neutral-foreground": { "$value": "{primitive.color.neutral-100}" },
-        "neutral-border": { "$value": "{primitive.color.neutral-400}" },
-        "warning-background": { "$value": "{primitive.color.amber-950}" },
-        "warning-foreground": { "$value": "{primitive.color.amber-200}" },
-        "warning-border": { "$value": "{primitive.color.amber-200}" },
-        "info-background": { "$value": "{primitive.color.blue-950}" },
-        "info-foreground": { "$value": "{primitive.color.blue-200}" },
-        "info-border": { "$value": "{primitive.color.blue-200}" }
-      },
-      "typography": {
-        "body": {
-          "$type": "typography",
-          "$value": {
-            "fontFamily": "{primitive.font-family.sans}",
-            "fontSize": "{primitive.font-size.base}",
-            "fontWeight": "{primitive.font-weight.regular}",
-            "letterSpacing": "{primitive.letter-spacing.normal}",
-            "lineHeight": "{primitive.line-height.normal}"
-          }
+        "background-canvas": {
+          "$value": "{primitive.color.neutral-950}"
         },
-        "tabular-number": {
-          "$type": "typography",
-          "$value": {
-            "fontFamily": "{primitive.font-family.mono}",
-            "fontSize": "{primitive.font-size.base}",
-            "fontWeight": "{primitive.font-weight.medium}",
-            "letterSpacing": "{primitive.letter-spacing.normal}",
-            "lineHeight": "{primitive.line-height.normal}"
-          },
-          "$extensions": {
-            "org.global-torque.css": { "fontVariantNumeric": "tabular-nums" }
-          }
+        "background-surface": {
+          "$value": "{primitive.color.navy-900}"
+        },
+        "background-subtle": {
+          "$value": "{primitive.color.grey-800}"
+        },
+        "background-elevated": {
+          "$value": "{primitive.color.navy-900}"
+        },
+        "background-overlay": {
+          "$value": "{primitive.color.overlay}"
+        },
+        "background-sidebar": {
+          "$value": "{primitive.color.navy-900}"
+        },
+        "foreground-default": {
+          "$value": "{primitive.color.grey-100}"
+        },
+        "foreground-muted": {
+          "$value": "{primitive.color.grey-500}"
+        },
+        "foreground-disabled": {
+          "$value": "{primitive.color.neutral-400}"
+        },
+        "border-default": {
+          "$value": "{primitive.color.grey-800}"
+        },
+        "border-input": {
+          "$value": "{primitive.color.grey-700}"
+        },
+        "border-focus": {
+          "$value": "{primitive.color.primary-500}"
+        },
+        "accent-background": {
+          "$value": "{primitive.color.primary-500}"
+        },
+        "accent-background-hover": {
+          "$value": "{primitive.color.primary-200}"
+        },
+        "accent-foreground": {
+          "$value": "{primitive.color.primary-foreground}"
+        },
+        "accent-secondary-background": {
+          "$value": "{primitive.color.secondary-500}"
+        },
+        "accent-secondary-foreground": {
+          "$value": "{primitive.color.secondary-foreground}"
+        },
+        "accent-subtle": {
+          "$value": "{primitive.color.navy-800}"
+        },
+        "accent-subtle-foreground": {
+          "$value": "{primitive.color.primary-50}"
+        },
+        "positive-background": {
+          "$value": "{primitive.color.green-950}"
+        },
+        "positive-foreground": {
+          "$value": "{primitive.color.green-300}"
+        },
+        "positive-border": {
+          "$value": "{primitive.color.green-300}"
+        },
+        "negative-background": {
+          "$value": "{primitive.color.red-950}"
+        },
+        "negative-foreground": {
+          "$value": "{primitive.color.red-300}"
+        },
+        "negative-border": {
+          "$value": "{primitive.color.red-300}"
+        },
+        "negative-solid": {
+          "$value": "{primitive.color.scarlet-500}"
+        },
+        "negative-solid-foreground": {
+          "$value": "{primitive.color.white}"
+        },
+        "neutral-background": {
+          "$value": "{primitive.color.neutral-800}"
+        },
+        "neutral-foreground": {
+          "$value": "{primitive.color.neutral-100}"
+        },
+        "warning-background": {
+          "$value": "{primitive.color.amber-950}"
+        },
+        "warning-foreground": {
+          "$value": "{primitive.color.amber-200}"
+        },
+        "warning-border": {
+          "$value": "{primitive.color.amber-200}"
+        },
+        "chart-1": {
+          "$value": "{primitive.color.primary-500}"
+        },
+        "chart-2": {
+          "$value": "{primitive.color.secondary-500}"
+        },
+        "chart-3": {
+          "$value": "{primitive.color.gold-500}"
+        },
+        "chart-4": {
+          "$value": "{primitive.color.grape-500}"
+        },
+        "chart-5": {
+          "$value": "{primitive.color.scarlet-500}"
         }
       }
     }
@@ -493,19 +1225,14 @@
         "disabled-foreground": {
           "$value": "{semantic.light.color.foreground-disabled}"
         },
-        "focus-ring": { "$value": "{semantic.light.color.border-focus}" }
+        "focus-ring": {
+          "$value": "{semantic.light.color.border-focus}"
+        }
       },
       "input": {
         "$type": "color",
-        "background": { "$value": "{semantic.light.color.background-surface}" },
-        "foreground": { "$value": "{semantic.light.color.foreground-default}" },
-        "border": { "$value": "{semantic.light.color.border-strong}" },
-        "border-focus": { "$value": "{semantic.light.color.border-focus}" },
-        "disabled-background": {
-          "$value": "{semantic.light.color.background-subtle}"
-        },
-        "disabled-foreground": {
-          "$value": "{semantic.light.color.foreground-disabled}"
+        "border": {
+          "$value": "{semantic.light.color.border-input}"
         }
       },
       "dialog": {
@@ -513,8 +1240,12 @@
         "background": {
           "$value": "{semantic.light.color.background-elevated}"
         },
-        "foreground": { "$value": "{semantic.light.color.foreground-default}" },
-        "overlay": { "$value": "{semantic.light.color.background-overlay}" }
+        "foreground": {
+          "$value": "{semantic.light.color.foreground-default}"
+        },
+        "overlay": {
+          "$value": "{semantic.light.color.background-overlay}"
+        }
       },
       "toast": {
         "$type": "color",
@@ -556,26 +1287,27 @@
         "disabled-foreground": {
           "$value": "{semantic.dark.color.foreground-disabled}"
         },
-        "focus-ring": { "$value": "{semantic.dark.color.border-focus}" }
+        "focus-ring": {
+          "$value": "{semantic.dark.color.border-focus}"
+        }
       },
       "input": {
         "$type": "color",
-        "background": { "$value": "{semantic.dark.color.background-surface}" },
-        "foreground": { "$value": "{semantic.dark.color.foreground-default}" },
-        "border": { "$value": "{semantic.dark.color.border-strong}" },
-        "border-focus": { "$value": "{semantic.dark.color.border-focus}" },
-        "disabled-background": {
-          "$value": "{semantic.dark.color.background-subtle}"
-        },
-        "disabled-foreground": {
-          "$value": "{semantic.dark.color.foreground-disabled}"
+        "border": {
+          "$value": "{semantic.dark.color.border-input}"
         }
       },
       "dialog": {
         "$type": "color",
-        "background": { "$value": "{semantic.dark.color.background-elevated}" },
-        "foreground": { "$value": "{semantic.dark.color.foreground-default}" },
-        "overlay": { "$value": "{semantic.dark.color.background-overlay}" }
+        "background": {
+          "$value": "{semantic.dark.color.background-elevated}"
+        },
+        "foreground": {
+          "$value": "{semantic.dark.color.foreground-default}"
+        },
+        "overlay": {
+          "$value": "{semantic.dark.color.background-overlay}"
+        }
       },
       "toast": {
         "$type": "color",

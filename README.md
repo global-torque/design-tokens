@@ -1,16 +1,24 @@
 # @global-torque/design-tokens
 
-> **Stable release:** `0.2.0` promotes the verified `0.1.0-beta.5` contract
-> without changing token values or public APIs.
+> **Unreleased:** this file describes the unreleased contract, not the released
+> `0.2.0` one. It adds the brand seeds, the accent steps derived from them, and
+> the `./derive` entry point, and it moves token values.
 
 Neutral institutional design tokens for administrative and content interfaces.
 One DTCG 2025.10 source generates the typed JavaScript API, declarations,
 resolved JSON, plain CSS, and Tailwind CSS v4 mappings. The generator rejects
-invalid references, cycles, mode drift, invalid typed values, and supported
-foreground/background pairs below 4.5:1.
+invalid references, cycles, mode drift, and invalid typed values.
+
+Brand values enter as seven seeds under `primitive.brand`, emitted as
+`--brand-*`. The primary, secondary, and tertiary accent steps are derived from
+them; the dictionary also holds fixed system colors and elevations that a
+rebrand does not move. The seeds are build-time inputs: edit `primitive.brand`,
+run `pnpm run tokens:derive` to rewrite the derived steps in
+`src/tokens.tokens.json`, and rebuild. `./derive` exports the same derivation
+for a host that recolors at runtime (see [Runtime rebrand](#runtime-rebrand)).
 
 The package contains no Vue code, runtime mode detection, media-query theme
-activation, product palette, routes, environment reads, or private URLs.
+activation, routes, environment reads, or private URLs.
 
 ## Install
 
@@ -40,13 +48,6 @@ Import the variable definitions once:
   border-radius: var(--gt-primitive-radius-md);
   box-shadow: var(--gt-primitive-shadow-sm);
 }
-
-.amount {
-  font-family: var(--gt-typography-tabular-number-font-family);
-  font-variant-numeric: var(
-    --gt-typography-tabular-number-font-variant-numeric
-  );
-}
 ```
 
 Light values live on `:root`. A host activates dark values explicitly with
@@ -71,15 +72,10 @@ The generated `@theme inline` block maps these documented namespaces:
 | spacing         | `--spacing-gt-*`     | `p-gt-4`                   |
 | radii           | `--radius-gt-*`      | `rounded-gt-md`            |
 | font families   | `--font-gt-*`        | `font-gt-sans`             |
-| font sizes      | `--text-gt-*`        | `text-gt-base`             |
+| font sizes      | `--text-gt-*`        | `text-gt-sm`               |
 | font weights    | `--font-weight-gt-*` | `font-gt-medium`           |
-| line heights    | `--leading-gt-*`     | `leading-gt-normal`        |
-| letter spacing  | `--tracking-gt-*`    | `tracking-gt-wide`         |
 | shadows         | `--shadow-gt-*`      | `shadow-gt-md`             |
-| opacity         | `--opacity-gt-*`     | `opacity-gt-disabled`      |
-| breakpoints     | `--breakpoint-gt-*`  | `gt-md:grid-cols-2`        |
 | easing          | `--ease-gt-*`        | `ease-gt-standard`         |
-| animation       | `--animate-gt-*`     | `animate-gt-fade-in`       |
 
 No Tailwind configuration file or plugin is required.
 
@@ -131,29 +127,72 @@ Generated API references cover the [typed root](./docs/api/index.md),
 [plain-CSS URL facade](./docs/api-css/index.md), and
 [Tailwind-theme URL facade](./docs/api-theme/index.md).
 
+## Runtime rebrand
+
+`@global-torque/design-tokens/derive` exports `deriveBrand`, the function the
+build uses to turn the five color seeds into the `primary-*`, `secondary-*` and
+`tertiary-*` steps: the subtle tint at 50, the seed at 500, the readable
+`foreground`, and for `tertiary-*` the tints 100 to 300 (10%, 20%, 30% of the
+seed into the light surface) and the shades 600 and 800 (10% and 45% black into
+the seed).
+A rebrand at runtime writes the seeds as `--brand-*` and every derived step as
+`--gt-primitive-color-<family>-<step>` on the root element; the alias chain in
+the generated CSS carries the new values down to the semantic and component
+variables.
+
+```js
+import { deriveBrand } from '@global-torque/design-tokens/derive';
+
+const brand = {
+  primary: '#004fff',
+  secondary: '#3ddc97',
+  tertiary: '#5b55d6',
+  surfaceLight: '#ffffff',
+  surfaceDark: '#12161f',
+};
+const { style } = document.documentElement;
+style.setProperty('--brand-primary', brand.primary);
+style.setProperty('--brand-secondary', brand.secondary);
+style.setProperty('--brand-tertiary', brand.tertiary);
+style.setProperty('--brand-surface-light', brand.surfaceLight);
+style.setProperty('--brand-surface-dark', brand.surfaceDark);
+style.setProperty('--brand-radius', '0.5rem');
+style.setProperty('--brand-font-sans', 'Avenir, sans-serif');
+for (const [family, steps] of Object.entries(deriveBrand(brand))) {
+  for (const [step, hex] of Object.entries(steps)) {
+    style.setProperty(`--gt-primitive-color-${family}-${step}`, hex);
+  }
+}
+```
+
+The function is pure and throws on a seed that is not a six-digit hex color.
+
 ## Token architecture
 
-- `primitive` contains raw color, spacing, radius, typography, shadow,
-  breakpoint, opacity, duration, easing, and animation values.
+- `primitive` contains the `brand` seeds, the accent steps derived from them
+  (`primary-50/-500/-foreground`, `secondary-50/-500/-foreground` and
+  `tertiary-50/-100/-200/-300/-500/-600/-800/-foreground`), the fixed system
+  palette, the fixed status colors, the fixed colors and elevations of the
+  surfaces, and the spacing, radius, font, shadow, duration, and easing values.
 - `semantic.light` and `semantic.dark` assign accessible interface meaning,
-  including canvas/surface/overlay, foregrounds, borders/focus, accent, and
-  positive/negative/neutral/warning/info pairs.
+  including canvas/surface/overlay, foregrounds, borders/focus, accent,
+  accent-secondary, accent-subtle, the positive/negative/neutral/warning tint
+  pairs, the negative solid pair, and chart-1 to chart-5.
 - `component.light` and `component.dark` alias semantic values for button,
   input, dialog, toast, disabled, hover, and focus states.
+
+A handful of derived steps are held as fixed values and carry a `$description`
+saying so; a rebrand does not move them.
 
 Light and dark semantic/component token paths must have exact type parity. The
 generator rejects any missing counterpart. Generated files live only in
 `dist`; edit `src/tokens.tokens.json`, never a generated representation.
 
-## Supported contrast pairs
+## Contrast
 
-The build enforces WCAG contrast of at least 4.5:1 for default, muted, and
-disabled foregrounds on surfaces; accent foreground/background; and the five
-status foreground/background pairs. Component disabled pairs are enforced too.
-Current enforced text ratios range from 5.47:1 to 17.74:1 in light mode and
-5.71:1 to 16.96:1 in dark mode. The active input boundary is independently
-enforced at 3:1 and currently measures 4.76:1 light and 6.92:1 dark. Decorative
-borders, overlays, and focus rings are not misrepresented as text pairs.
+The build does not gate contrast. The generator checks structure, references,
+modes, and typed values only, and carries the fixed system colors as written.
+A host owns contrast acceptance for the pairs it actually paints.
 
 ## Development and release checks
 
@@ -178,8 +217,8 @@ limited to the scheduled informational compatibility workflow; release gates
 use only the exact lockfile dependency.
 The test matrix validates DTCG structure and aliases, deterministic generation,
 deep runtime freezing, CSS/JSON/JS/declaration/source-map parity, both explicit
-modes, browser theme activation, text and input-boundary contrast, and real
-Tailwind compilation against both supported targets. Release automation must
+modes, browser theme activation, brand derivation, and real Tailwind
+compilation against both supported targets. Release automation must
 build once and use the same immutable tarball bytes for npm and pnpm clean
 rooms, admin consumer validation, and publication.
 
@@ -200,11 +239,11 @@ assert.equal(Object.isFrozen(designTokens), true);
 assert.equal(Object.isFrozen(designTokens.modes.dark.semantic.color), true);
 assert.equal(
   designTokens.modes.dark.semantic.color['background-surface'],
-  '#111827',
+  '#1a202d',
 );
 assert.equal(
   resolvedTokens.modes.dark.semantic.color['background-surface'],
-  '#111827',
+  '#1a202d',
 );
 assert.match(sourceTokens.$description, /Neutral institutional/u);
 assert.match(cssUrl, /\/index\.css$/u);
@@ -216,20 +255,20 @@ assert.match(themeUrl, /\/theme\.css$/u);
 The 0.1 beta intentionally replaces the earlier handwritten maps and variable
 catalog. Concrete common mappings are:
 
-| Before                            | 0.1 beta replacement                                            |
-| --------------------------------- | --------------------------------------------------------------- |
-| `colorTokens.surface`             | `designTokens.modes.light.semantic.color['background-surface']` |
-| `colorTokens.text`                | `designTokens.modes.light.semantic.color['foreground-default']` |
-| `spacingTokens.lg`                | `designTokens.primitive.spacing['4']`                           |
-| `radiusTokens.md`                 | `designTokens.primitive.radius.md`                              |
-| `typographyTokens.weightSemibold` | `designTokens.primitive['font-weight'].semibold`                |
-| Type `DesignTokens`               | Type `ResolvedDesignTokens`                                     |
-| `--gt-color-surface`              | `--gt-color-background-surface`                                 |
-| `--gt-color-text`                 | `--gt-color-foreground-default`                                 |
-| `--gt-space-lg`                   | `--gt-primitive-spacing-4`                                      |
-| Tailwind `bg-gt-surface`          | `bg-gt-background-surface`                                      |
-| Tailwind `text-gt-text`           | `text-gt-foreground-default`                                    |
-| Tailwind `@theme` import          | `@global-torque/design-tokens/theme` (`@theme inline`)          |
+| Before                          | 0.1 beta replacement                                            |
+| ------------------------------- | --------------------------------------------------------------- |
+| `colorTokens.surface`           | `designTokens.modes.light.semantic.color['background-surface']` |
+| `colorTokens.text`              | `designTokens.modes.light.semantic.color['foreground-default']` |
+| `spacingTokens.lg`              | `designTokens.primitive.spacing['4']`                           |
+| `radiusTokens.md`               | `designTokens.primitive.radius.md`                              |
+| `typographyTokens.weightMedium` | `designTokens.primitive['font-weight'].medium`                  |
+| Type `DesignTokens`             | Type `ResolvedDesignTokens`                                     |
+| `--gt-color-surface`            | `--gt-color-background-surface`                                 |
+| `--gt-color-text`               | `--gt-color-foreground-default`                                 |
+| `--gt-space-lg`                 | `--gt-primitive-spacing-4`                                      |
+| Tailwind `bg-gt-surface`        | `bg-gt-background-surface`                                      |
+| Tailwind `text-gt-text`         | `text-gt-foreground-default`                                    |
+| Tailwind `@theme` import        | `@global-torque/design-tokens/theme` (`@theme inline`)          |
 
 For dark mode, select `designTokens.modes.dark` and activate either `.dark` or
 `[data-theme="dark"]` in CSS. Product aliases belong in the host stylesheet,
@@ -247,8 +286,8 @@ The Global Torque Design Systems maintainers own the schema, generator, public
 API, compatibility matrix, and release decision. Host applications own product
 aliases and visual acceptance. Propose changes through the package repository's
 GitHub issues before opening a pull request. A contribution must update the
-canonical DTCG file (never `dist`), include generator/contrast/parity regression
-tests, regenerate API docs and reports, add a changelog and migration note for
+canonical DTCG file (never `dist`), include generator/parity regression tests,
+regenerate API docs and reports, add a changelog and migration note for
 public-name changes, and pass every development/release command above. A
 maintainer must review generated diffs and the exact packed artifact before a
 beta is accepted.

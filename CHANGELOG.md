@@ -1,5 +1,28 @@
 # Changelog
 
+## Unreleased
+
+- Added seven brand seeds under `primitive.brand`, emitted as `--brand-*`, as
+  the build-time inputs a rebrand edits.
+- Derived the primary, secondary, and tertiary accent steps from those seeds
+  and added `tokens:derive` to rewrite them in the canonical source.
+- Added the `./derive` entry point exporting `deriveBrand`, the same derivation
+  the build runs, so a host can recolor at runtime.
+- Added fixed system colors and elevations alongside the derived steps; a
+  handful of steps are held as fixed values and carry a `$description` saying a
+  rebrand does not move them.
+- Removed the contrast gate. Structure, reference, mode, and typed-value
+  validation is unchanged; contrast acceptance now belongs to the host.
+- Changed generated token values, including the dark surface.
+- Removed the `line-height`, `letter-spacing`, `opacity`, `breakpoint`, and
+  `animation` primitive families with their Tailwind namespaces, and reduced
+  the `font-size` and `font-weight` scales to the steps in use.
+- Added `accent-secondary`, `accent-subtle`, `background-sidebar`, the negative
+  solid pair, and `chart-1` to `chart-5`; removed the `info` pair,
+  `foreground-inverse`, `border-strong`, and `neutral-border`.
+- Rewrote the source `$description` text so each one names what the value is
+  and the kind of surface it serves.
+
 ## 0.2.0 - 2026-08-31
 
 - Promoted the verified `0.1.0-beta.5` contract to the first stable `0.2`

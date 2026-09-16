@@ -12,3 +12,4 @@ The generated design-token object type.
 export type ResolvedDesignTokens = typeof designTokens;
 ```
 **References:** [designTokens](./design-tokens.designtokens.md)
+

@@ -138,7 +138,15 @@ const EXPECTED_EXPORT_SUBPATHS = new Map([
   ],
   [
     '@global-torque/design-tokens',
-    ['.', './css', './source', './theme', './tokens', './tokens.json'],
+    [
+      '.',
+      './css',
+      './derive',
+      './source',
+      './theme',
+      './tokens',
+      './tokens.json',
+    ],
   ],
   ['@global-torque/markdown-it-wikilinks', ['.', './node', './url']],
   [
