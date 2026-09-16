@@ -26,7 +26,7 @@ activation, routes, environment reads, or private URLs.
 pnpm add @global-torque/design-tokens@0.2.1
 ```
 
-Required and release-candidate CI run on Node 24.x; Node 26.x is informational.
+Required and release-candidate CI run on Node 24.x.
 Required and release-candidate CI test the generated Tailwind entrypoint with
 the exact lockfile version, Tailwind 4.3.3. A scheduled informational workflow
 tests npm's current 4.x release without making a protected tag depend on a
@@ -209,7 +209,7 @@ pnpm run docs:check
 pnpm run package:lint
 ```
 
-`browser:install` installs the Chromium binary pinned to Playwright 1.62.1 and
+`browser:install` installs the Chromium binary pinned to Playwright 1.63.0 and
 its Linux system dependencies. It is required on a clean CI/cache image before
 `test:run` or `test:coverage`.
 `test:tailwind:current` performs a mutable npm lookup and is intentionally

@@ -11,9 +11,9 @@ Implemented controls:
   linear-history, no-force-push, and no-deletion rules;
 - protected immutable `v*` tags;
 - least-privilege, SHA-pinned GitHub Actions;
-- Node 24 required CI with Node 26 informational CI;
-- dependency review, Dependabot, CodeQL, Scorecard, secret
-  scanning, push protection, and private vulnerability reporting;
+- Node 24 required CI;
+- dependency review, Dependabot, secret scanning, push protection, and
+  private vulnerability reporting;
 - explicit package contents, API reports, coverage thresholds, source maps,
   clean-room verification, SHA-512 manifests, and build provenance.
 

@@ -22,6 +22,13 @@
   `foreground-inverse`, `border-strong`, and `neutral-border`.
 - Rewrote the source `$description` text so each one names what the value is
   and the kind of surface it serves.
+- Update the development and SHA-pinned GitHub Actions toolchains, including
+  Playwright 1.63.0 and matching Vitest/coverage 5.0.1.
+- Keep TypeScript at 6.0.3 for the generator tests' compiler API, align Node
+  declarations with Node 24 CI, and remove unused TypeScript ESLint packages.
+- Separate major Dependabot updates from routine minor/patch updates and keep
+  Vitest major upgrades paired with their coverage provider.
+- Preserve generated token values, package exports, and runtime requirements.
 
 ## 0.2.1 - 2026-09-09
 
