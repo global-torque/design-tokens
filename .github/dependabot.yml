@@ -5,9 +5,27 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 10
+    ignore:
+      # The declaration-parity tests depend on the TypeScript 6 compiler API.
+      - dependency-name: typescript
+        update-types:
+          - version-update:semver-major
+      # Match the required Node 24 CI baseline.
+      - dependency-name: '@types/node'
+        update-types:
+          - version-update:semver-major
     groups:
       development-dependencies:
         dependency-type: development
+        update-types:
+          - minor
+          - patch
+      vitest-major:
+        patterns:
+          - vitest
+          - '@vitest/*'
+        update-types:
+          - major
   - package-ecosystem: github-actions
     directory: /
     schedule:

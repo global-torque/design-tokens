@@ -170,7 +170,7 @@ pnpm run docs:check
 pnpm run package:lint
 ```
 
-`browser:install` installs the Chromium binary pinned to Playwright 1.62.1 and
+`browser:install` installs the Chromium binary pinned to Playwright 1.63.0 and
 its Linux system dependencies. It is required on a clean CI/cache image before
 `test:run` or `test:coverage`.
 `test:tailwind:current` performs a mutable npm lookup and is intentionally
