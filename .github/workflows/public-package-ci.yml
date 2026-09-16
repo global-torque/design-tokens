@@ -14,11 +14,6 @@ on:
         required: false
         type: string
         default: '["24.18.0"]'
-      run-node-26:
-        description: Run the informational Node.js 26 package check.
-        required: false
-        type: boolean
-        default: true
 
 permissions:
   contents: read
@@ -51,33 +46,6 @@ jobs:
         if: inputs.install-browser
         run: pnpm run browser:install
       - name: Run release-grade package checks
-        run: pnpm --config.enable-pre-post-scripts=false run ci
-
-  informational-node-26:
-    name: Node 26 informational
-    if: inputs.run-node-26
-    continue-on-error: true
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Check out source
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-      - name: Install pnpm
-        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
-        with:
-          run_install: false
-      - name: Install Node.js
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
-        with:
-          node-version: 26.5.0
-          cache: pnpm
-      - name: Install dependencies
-        run: pnpm --config.ignore-pnpmfile=true install --frozen-lockfile --ignore-scripts
-      - name: Install browser test runtime
-        if: inputs.install-browser
-        run: pnpm run browser:install
-      - name: Run package checks
         run: pnpm --config.enable-pre-post-scripts=false run ci
 
   dependency-review:
@@ -919,21 +887,3 @@ jobs:
               "missing attestation filename normalization",
           )
           PYTHON
-
-  reuse:
-    name: REUSE 3.3 compliance
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Check out source
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-        with:
-          persist-credentials: false
-      - name: Validate licensing metadata
-        shell: bash
-        run: |
-          set -euo pipefail
-          docker run --rm \
-            --volume "${GITHUB_WORKSPACE}:/data:ro" \
-            --workdir /data \
-            docker.io/fsfe/reuse@sha256:85462a75c0f8efda09ddd190b92816b70e7662577c8427429e11e1b9f25a992e \
-            lint

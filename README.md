@@ -18,7 +18,7 @@ activation, product palette, routes, environment reads, or private URLs.
 pnpm add @global-torque/design-tokens@0.2.1
 ```
 
-Required and release-candidate CI run on Node 24.x; Node 26.x is informational.
+Required and release-candidate CI run on Node 24.x.
 Required and release-candidate CI test the generated Tailwind entrypoint with
 the exact lockfile version, Tailwind 4.3.3. A scheduled informational workflow
 tests npm's current 4.x release without making a protected tag depend on a
