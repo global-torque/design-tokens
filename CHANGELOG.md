@@ -23,6 +23,13 @@
 - Rewrote the source `$description` text so each one names what the value is
   and the kind of surface it serves.
 
+## 0.2.1 - 2026-09-09
+
+- Update build/documentation dependencies to patched `fast-uri` 3.1.6 and
+  `js-yaml` 4.3.2, resolving five high-severity dependency advisories.
+- Preserve generated token values, CSS, declarations and public API. These
+  dependencies are development tools and are not shipped to consumers.
+
 ## 0.2.0 - 2026-08-31
 
 - Promoted the verified `0.1.0-beta.5` contract to the first stable `0.2`

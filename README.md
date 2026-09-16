@@ -1,7 +1,7 @@
 # @global-torque/design-tokens
 
 > **Unreleased:** this file describes the unreleased contract, not the released
-> `0.2.0` one. It adds the brand seeds, the accent steps derived from them, and
+> `0.2.1` one. It adds the brand seeds, the accent steps derived from them, and
 > the `./derive` entry point, and it moves token values.
 
 Neutral institutional design tokens for administrative and content interfaces.
@@ -23,7 +23,7 @@ activation, routes, environment reads, or private URLs.
 ## Install
 
 ```sh
-pnpm add https://github.com/global-torque/design-tokens/releases/download/v0.2.0/global-torque-design-tokens-0.2.0.tgz
+pnpm add @global-torque/design-tokens@0.2.1
 ```
 
 Node 22.x and 24.x are supported release targets; Node 26.x is informational.
