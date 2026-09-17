@@ -34,7 +34,7 @@ void primary50;
 void onPrimary;
 void tertiary300;
 
-// @ts-expect-error Only steps 50 and 500 are derived.
+// @ts-expect-error The primary accent derives no step 300.
 void ramps.primary[300];
 // @ts-expect-error The tertiary accent derives no step 700.
 void ramps.tertiary[700];

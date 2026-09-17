@@ -48,28 +48,22 @@ const mix = (color, into, fraction) => {
   return `#${channels.map((byte) => byte.toString(16).padStart(2, '0')).join('')}`;
 };
 
-const accent = (seed, light, dark) => ({
+/* The steps every accent shares, plus the extra tints (seed into the light
+   surface) and shades (black into the seed) that family's consumers need. */
+const accent = (seed, light, dark, extra) => ({
   50: mix(seed, light, SUBTLE_MIX),
   500: seed,
-  foreground: luminance(seed) > FOREGROUND_SPLIT ? dark : light,
-});
-
-/* The tertiary accent also carries the tints (seed into the light surface) and
-   shades (black into the seed) that backgrounds, borders and accents need. */
-const tertiaryAccent = (seed, light, dark) => ({
-  ...accent(seed, light, dark),
-  100: mix(seed, light, 0.1),
-  200: mix(seed, light, 0.2),
-  300: mix(seed, light, 0.3),
   600: mix(BLACK, seed, 0.1),
-  800: mix(BLACK, seed, 0.45),
+  foreground: luminance(seed) > FOREGROUND_SPLIT ? dark : light,
+  ...extra,
 });
 
 /**
  * Returns the primary, secondary and tertiary colors for a set of brand seeds:
- * the subtle tint at step 50, the seed itself at step 500, `foreground`, the
- * brand surface that reads better on the seed, and for the tertiary accent its
- * tints 100 to 300 and shades 600 and 800.
+ * the subtle tint at step 50, the seed itself at step 500, the shade 600, and
+ * `foreground`, the brand surface that reads better on the seed. The primary
+ * accent also carries the tint 200, the secondary accent the tint 100, and the
+ * tertiary accent its tints 100 to 300 and its deep shade 800.
  */
 export const deriveBrand = ({
   primary,
@@ -80,9 +74,21 @@ export const deriveBrand = ({
 }) => {
   const light = assertHex(surfaceLight, 'surfaceLight');
   const dark = assertHex(surfaceDark, 'surfaceDark');
+  const primarySeed = assertHex(primary, 'primary');
+  const secondarySeed = assertHex(secondary, 'secondary');
+  const tertiarySeed = assertHex(tertiary, 'tertiary');
   return {
-    primary: accent(assertHex(primary, 'primary'), light, dark),
-    secondary: accent(assertHex(secondary, 'secondary'), light, dark),
-    tertiary: tertiaryAccent(assertHex(tertiary, 'tertiary'), light, dark),
+    primary: accent(primarySeed, light, dark, {
+      200: mix(primarySeed, light, 0.2),
+    }),
+    secondary: accent(secondarySeed, light, dark, {
+      100: mix(secondarySeed, light, 0.1),
+    }),
+    tertiary: accent(tertiarySeed, light, dark, {
+      100: mix(tertiarySeed, light, 0.1),
+      200: mix(tertiarySeed, light, 0.2),
+      300: mix(tertiarySeed, light, 0.3),
+      800: mix(BLACK, tertiarySeed, 0.45),
+    }),
   };
 };

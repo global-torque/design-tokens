@@ -9,39 +9,30 @@ export interface BrandSeeds {
   readonly surfaceDark: string;
 }
 
-/** The steps derived for an accent color. */
-export type RampStep = 50 | 500;
-
-/** The steps derived for the tertiary accent: the accent steps plus its tints and shades. */
-export type TertiaryStep = RampStep | 100 | 200 | 300 | 600 | 800;
-
 /**
- * A primary or secondary accent: the steps plus `foreground`, the brand surface
- * color that reads better on the seed.
+ * The colors derived from one set of brand seeds. Every accent carries its own
+ * steps plus `foreground`, the brand surface color that reads better on the
+ * seed.
  */
-export type AccentRamp = Readonly<Record<RampStep | 'foreground', string>>;
-
-/**
- * The tertiary accent: the accent steps, its tints and shades, plus
- * `foreground`, the brand surface color that reads better on the seed.
- */
-export type TertiaryRamp = Readonly<
-  Record<TertiaryStep | 'foreground', string>
->;
-
-/** The colors derived from one set of brand seeds. */
 export interface BrandRamps {
-  readonly primary: AccentRamp;
-  readonly secondary: AccentRamp;
-  readonly tertiary: TertiaryRamp;
+  readonly primary: Readonly<
+    Record<50 | 200 | 500 | 600 | 'foreground', string>
+  >;
+  readonly secondary: Readonly<
+    Record<50 | 100 | 500 | 600 | 'foreground', string>
+  >;
+  readonly tertiary: Readonly<
+    Record<50 | 100 | 200 | 300 | 500 | 600 | 800 | 'foreground', string>
+  >;
 }
 
 /**
  * Returns the primary, secondary and tertiary accents for a set of brand seeds.
- * Each seed is returned unchanged at step 500, and step 50 is a 6% sRGB mix of
- * the seed into the light surface seed. The tertiary accent also carries the
- * tints 100 to 300 (10%, 20% and 30% of the seed into the light surface) and
- * the shades 600 and 800 (10% and 45% black into the seed). Throws on a seed
- * that is not a six-digit hex color.
+ * Each seed is returned unchanged at step 500, step 50 is a 6% sRGB mix of the
+ * seed into the light surface seed, and step 600 is 10% black into the seed.
+ * The primary accent also carries the tint 200, the secondary accent the tint
+ * 100, and the tertiary accent the tints 100 to 300 (10%, 20% and 30% of the
+ * seed into the light surface) and the deep shade 800 (45% black into the
+ * seed). Throws on a seed that is not a six-digit hex color.
  */
 export declare const deriveBrand: (seeds: BrandSeeds) => BrandRamps;

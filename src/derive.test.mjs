@@ -12,11 +12,22 @@ const seeds = {
 describe('deriveBrand', () => {
   const ramps = deriveBrand(seeds);
 
-  it('emits step 50, the seed at step 500, and a foreground', () => {
+  it('emits each accent its own steps, the seed at 500, and a foreground', () => {
     expect(Object.keys(ramps)).toEqual(['primary', 'secondary', 'tertiary']);
-    for (const accent of [ramps.primary, ramps.secondary]) {
-      expect(Object.keys(accent)).toEqual(['50', '500', 'foreground']);
-    }
+    expect(Object.keys(ramps.primary)).toEqual([
+      '50',
+      '200',
+      '500',
+      '600',
+      'foreground',
+    ]);
+    expect(Object.keys(ramps.secondary)).toEqual([
+      '50',
+      '100',
+      '500',
+      '600',
+      'foreground',
+    ]);
     expect(Object.keys(ramps.tertiary)).toEqual([
       '50',
       '100',
@@ -38,7 +49,11 @@ describe('deriveBrand', () => {
     expect(ramps.tertiary[50]).toBe('#f5f5fd');
   });
 
-  it('tints and shades the tertiary seed', () => {
+  it('tints and shades every accent seed', () => {
+    expect(ramps.primary[200]).toBe('#ccdcff');
+    expect(ramps.primary[600]).toBe('#0047e6');
+    expect(ramps.secondary[100]).toBe('#ecfcf5');
+    expect(ramps.secondary[600]).toBe('#37c688');
     expect(ramps.tertiary[100]).toBe('#efeefb');
     expect(ramps.tertiary[200]).toBe('#deddf7');
     expect(ramps.tertiary[300]).toBe('#ceccf3');

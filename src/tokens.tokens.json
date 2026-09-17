@@ -403,10 +403,7 @@
         }
       },
       "primary-foreground": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [1, 1, 1]
-        }
+        "$value": "{primitive.brand.surface-light}"
       },
       "secondary-50": {
         "$value": {
@@ -432,10 +429,7 @@
         }
       },
       "secondary-foreground": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.0706, 0.0863, 0.1216]
-        }
+        "$value": "{primitive.brand.surface-dark}"
       },
       "tertiary-50": {
         "$value": {
@@ -477,10 +471,7 @@
         }
       },
       "tertiary-foreground": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [1, 1, 1]
-        }
+        "$value": "{primitive.brand.surface-light}"
       },
       "gold-50": {
         "$value": {
