@@ -797,6 +797,9 @@ describe('artifact generation', () => {
     expect(first.get('index.css')).toContain(
       '--gt-primitive-color-tertiary-800: #322f76;',
     );
+    expect(first.get('index.css')).toContain(
+      '--gt-primitive-color-primary-foreground: var(--brand-surface-light);',
+    );
     expect(first.get('theme.css')).toContain('@theme inline');
     expect(first.get('theme.css')).toContain('--font-weight-gt-medium:');
     expect(first.get('index.d.ts')).not.toContain('Record<string');

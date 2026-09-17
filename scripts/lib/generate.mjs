@@ -1261,12 +1261,21 @@ const makeSourceMap = (
 /** Color families whose steps are derived from the brand seeds. */
 export const GENERATED_RAMPS = ['primary', 'secondary', 'tertiary'];
 
-/* Generated steps that alias a brand seed instead of holding a derived value. */
+/* Generated steps that alias a brand seed instead of holding a derived value.
+   The two kinds of entry differ: step 500 is the seed itself for any seed set,
+   while a `foreground` entry records which surface seed the luminance split
+   picks for the seeds committed here. Move a seed across that split and this
+   table needs the matching edit; the build says which one. */
 export const ANCHORS = {
-  primary: { 500: 'primary' },
-  secondary: { 500: 'secondary' },
-  tertiary: { 500: 'tertiary' },
+  primary: { 500: 'primary', foreground: 'surface-light' },
+  secondary: { 500: 'secondary', foreground: 'surface-dark' },
+  tertiary: { 500: 'tertiary', foreground: 'surface-light' },
 };
+
+/* Generated steps the dictionary holds at a hand-picked value no mix produces;
+   a rebrand does not move them, so they are not checked against the seeds. Add
+   a hand-picked step without adding it here and the build says so. */
+export const FIXED = { primary: [200, 600], secondary: [100, 600] };
 
 /**
  * Derives the generated ramps from the brand seed values, given as DTCG color
@@ -1330,6 +1339,7 @@ const assertBrandRamps = (resolved) => {
           `${tokenPath} must alias {primitive.brand.${seedName}}; run pnpm run tokens:derive.`,
         );
       }
+      if (FIXED[family]?.includes(Number(step))) continue;
       const actual = colorToCss(token.value);
       if (actual !== expected) {
         throw new Error(
