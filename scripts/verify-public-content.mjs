@@ -141,6 +141,7 @@ const EXPECTED_EXPORT_SUBPATHS = new Map([
     [
       '.',
       './css',
+      './apply',
       './derive',
       './source',
       './theme',

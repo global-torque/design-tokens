@@ -140,32 +140,92 @@ A rebrand at runtime writes the seeds as `--brand-*` and every derived step as
 the generated CSS carries the new values down to the semantic and component
 variables.
 
-```js
-import { deriveBrand } from '@global-torque/design-tokens/derive';
+`@global-torque/design-tokens/apply` does that write for you, from a document a
+host publishes. `parseBrandDocument` bounds an untrusted document and
+`applyBrandDocument` writes one set of custom properties on the root element:
 
-const brand = {
-  primary: '#004fff',
-  secondary: '#3ddc97',
-  tertiary: '#5b55d6',
-  surfaceLight: '#ffffff',
-  surfaceDark: '#12161f',
+```js
+import {
+  applyBrandDocument,
+  parseBrandDocument,
+} from '@global-torque/design-tokens/apply';
+
+const published = {
+  tokens: {
+    '--brand-primary': '#1a56db',
+    '--brand-secondary': '#6b7280',
+    '--brand-radius': '0.5rem',
+  },
+  logoUrl: null,
 };
-const { style } = document.documentElement;
-style.setProperty('--brand-primary', brand.primary);
-style.setProperty('--brand-secondary', brand.secondary);
-style.setProperty('--brand-tertiary', brand.tertiary);
-style.setProperty('--brand-surface-light', brand.surfaceLight);
-style.setProperty('--brand-surface-dark', brand.surfaceDark);
-style.setProperty('--brand-radius', '0.5rem');
-style.setProperty('--brand-font-sans', 'Avenir, sans-serif');
-for (const [family, steps] of Object.entries(deriveBrand(brand))) {
-  for (const [step, hex] of Object.entries(steps)) {
-    style.setProperty(`--gt-primitive-color-${family}-${step}`, hex);
-  }
-}
+applyBrandDocument(
+  parseBrandDocument(published, { origins: [location.origin] }),
+);
 ```
 
-The function is pure and throws on a seed that is not a six-digit hex color.
+`tokens` is a flat map from custom-property name to value. Every entry is
+written as it stands, and when the map carries one of the five `--brand-*` seeds
+the steps `deriveBrand` returns are written too, with the seeds the map leaves
+out read off the root element; an entry naming a derived step wins over the
+derived value. A seed that reaches the root as a short hex (`#fff`, which is
+what a CSS minifier emits) is expanded before it is judged.
+
+The guard rails are the price of accepting arbitrary keys, and they drop a
+failing entry rather than the document:
+
+- **Keys** must match `/^--(?:brand|gt)-[a-z0-9-]+$/` — the `--brand-*` and
+  `--gt-*` namespaces only, so the shadcn contract and the role layer stay the
+  host's. A brand recolors them by moving the tokens underneath.
+- **Values** must be a hex color in one of its four lengths, or a non-negative
+  length of at most four integer digits and three decimals (`0`, `2px`, `.5rem`,
+  `0.5REM`, `100%`). No function, no keyword, no URL and no arbitrary text, so a
+  published value can never make a browser fetch anything. A value is trimmed
+  before it is judged; a key is matched as it stands. The map is capped at 256
+  entries and a value at 64 characters.
+- **`logoUrl`** must be `https:` on one of the `origins` the caller allows, and
+  must carry no quote, angle bracket, backslash, backtick, `@`, whitespace or
+  control character. What survives is the normalized `URL.href`, and the first
+  origin is the base a relative value resolves against. The entry is carried,
+  never written to the page: a logo belongs in an image source the browser
+  parses, not interpolated into a CSS `url()`.
+
+Both functions are total — they never throw — so a document that fails leaves
+the neutral theme in place and the application carries on. The entry reads no
+environment and fetches nothing: a host fetches the document itself, and one
+line in a blocking head script is enough.
+
+```html
+<script>
+  try {
+    window.__brandDocument = fetch('/css/design-tokens.json', {
+      cache: 'no-cache',
+      signal: AbortSignal.timeout(3000),
+    })
+      .then((response) =>
+        response.ok && /json/.test(response.headers.get('content-type') || '')
+          ? response.json()
+          : response.text().then(() => null),
+      )
+      .catch(() => null);
+  } catch (error) {}
+</script>
+```
+
+Three constraints on that snippet: it goes last in the script, because the built
+output is minified into one sequence and a `TypeError` would kill everything
+after it; it is wrapped for the same reason; and it has to be written in syntax
+the oldest browser the host supports parses, because an inline script is
+minified but never lowered. Reading the body on the non-JSON path matters — a
+fetch resolves when the headers arrive, and a body left unread holds the
+connection open until the timeout fires.
+
+`@global-torque/design-tokens/derive` exports `deriveBrand` on its own, for a
+host that has its own seeds and needs no document. The function is pure and
+throws on a seed that is not a six-digit hex color.
+
+Generated API references cover the [typed root](./docs/api/index.md),
+[plain-CSS URL facade](./docs/api-css/index.md), and
+[Tailwind-theme URL facade](./docs/api-theme/index.md).
 
 ## Token architecture
 

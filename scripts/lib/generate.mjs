@@ -19,6 +19,17 @@ const deriveDeclaration = fs.readFileSync(
   'utf8',
 );
 
+/* The applier ships verbatim too, except for the one specifier it imports: the
+   source sits beside `derive.mjs` and `dist/` holds the same module as
+   `derive.js`. Nothing else is rewritten. */
+const applyModule = fs
+  .readFileSync(new URL('../../src/apply.mjs', import.meta.url), 'utf8')
+  .replace("from './derive.mjs'", "from './derive.js'");
+const applyDeclaration = fs.readFileSync(
+  new URL('../../src/apply.d.ts', import.meta.url),
+  'utf8',
+);
+
 const TOKEN_REFERENCE = /^\{([^{}]+)\}$/;
 const KNOWN_TYPES = new Set([
   'color',
@@ -1384,6 +1395,8 @@ export const generateArtifacts = (source, sourceText) => {
     ],
     ['css.js', cssModule],
     ['css.js.map', makeSourceMap('css.js', sourceText, cssModule, runtimeJson)],
+    ['apply.d.ts', applyDeclaration],
+    ['apply.js', applyModule],
     ['derive.d.ts', deriveDeclaration],
     ['derive.js', deriveModule],
     ['index.css', indexCss],

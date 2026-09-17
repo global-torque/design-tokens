@@ -4,6 +4,12 @@ import designTokens, {
   type ResolvedDesignTokens,
 } from '../dist/index.js';
 import { deriveBrand, type BrandRamps } from '../dist/derive.js';
+import {
+  applyBrandDocument,
+  parseBrandDocument,
+  type BrandDocument,
+  type ParseOptions,
+} from '../dist/apply.js';
 import sourceTokens from '../dist/tokens.tokens.json' with { type: 'json' };
 import resolvedJson from '../dist/tokens.json' with { type: 'json' };
 
@@ -40,6 +46,30 @@ void ramps.primary[300];
 void ramps.tertiary[700];
 // @ts-expect-error Derived colors are readonly.
 ramps.primary[500] = '#000000';
+
+const parseOptions: ParseOptions = { origins: ['https://invest.example'] };
+const brand: BrandDocument | null = parseBrandDocument(
+  { tokens: { '--brand-primary': '#004fff' }, logoUrl: null },
+  parseOptions,
+);
+const logoUrl: string | null | undefined = brand?.logoUrl;
+const seed: string | undefined = brand?.tokens.get('--brand-primary');
+const wrote: boolean = applyBrandDocument(brand);
+const wroteOnRoot: boolean = applyBrandDocument(
+  brand,
+  document.documentElement,
+);
+void logoUrl;
+void seed;
+void wrote;
+void wroteOnRoot;
+
+// @ts-expect-error The allowed origins are required.
+void parseBrandDocument({ tokens: {} });
+// @ts-expect-error A parsed document is readonly.
+brand!.logoUrl = null;
+// @ts-expect-error The entries of a parsed document are read-only.
+void brand?.tokens.set('--brand-primary', '#000000');
 
 // @ts-expect-error Generated tokens are deeply readonly.
 tokens.modes.dark.semantic.color['background-surface'] = '#000000';

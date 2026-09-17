@@ -111,6 +111,10 @@
       "types": "./dist/derive.d.ts",
       "import": "./dist/derive.js"
     },
+    "./apply": {
+      "types": "./dist/apply.d.ts",
+      "import": "./dist/apply.js"
+    },
     "./tokens.json": "./dist/tokens.json",
     "./source": "./dist/tokens.tokens.json"
   }

@@ -29,6 +29,11 @@
 - Separate major Dependabot updates from routine minor/patch updates and keep
   Vitest major upgrades paired with their coverage provider.
 - Preserve generated token values, package exports, and runtime requirements.
+- Added the `./apply` entry point: `parseBrandDocument` bounds a brand document
+  to our token namespaces, hex colors or bounded lengths, and logo URLs on
+  caller-supplied origins; `applyBrandDocument` writes it on the root element
+  together with the steps `deriveBrand` derives, so every host applies a brand
+  with the same code.
 
 ## 0.2.1 - 2026-09-09
 

@@ -765,6 +765,8 @@ describe('artifact generation', () => {
       'css.d.ts.map',
       'css.js',
       'css.js.map',
+      'apply.d.ts',
+      'apply.js',
       'derive.d.ts',
       'derive.js',
       'index.css',
@@ -811,6 +813,17 @@ describe('artifact generation', () => {
         path.join(packageDirectory, 'src', 'derive.d.ts'),
         'utf8',
       ),
+    );
+    // The applier ships verbatim apart from that one specifier: `src/apply.mjs`
+    // imports `./derive.mjs`, and the emitted copy has to reach `dist/derive.js`.
+    expect(first.get('apply.js')).toBe(
+      fs
+        .readFileSync(path.join(packageDirectory, 'src', 'apply.mjs'), 'utf8')
+        .replace("from './derive.mjs'", "from './derive.js'"),
+    );
+    expect(first.get('apply.js')).toContain("from './derive.js'");
+    expect(first.get('apply.d.ts')).toBe(
+      fs.readFileSync(path.join(packageDirectory, 'src', 'apply.d.ts'), 'utf8'),
     );
     const manifest = JSON.parse(first.get('build-manifest.json'));
     const files = Object.fromEntries(
