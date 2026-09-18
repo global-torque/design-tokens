@@ -125,11 +125,28 @@ const parseCssVariables = (css, selector) => {
   return variables;
 };
 
+/* The arithmetic of derive's `mix`, so an evaluated `color-mix()` lands on the
+   byte the runtime tree holds. */
+const mixHex = (color, into, fraction) => {
+  const bytes = (hex) =>
+    [1, 3, 5].map((offset) => parseInt(hex.slice(offset, offset + 2), 16));
+  const colorBytes = bytes(color);
+  return `#${bytes(into)
+    .map((channel, index) =>
+      Math.round(channel - (channel - colorBytes[index]) * fraction)
+        .toString(16)
+        .padStart(2, '0'),
+    )
+    .join('')}`;
+};
+
 /**
- * Follows `var(--other)` references so CSS values can be compared with the
- * resolved runtime literals. The stylesheet keeps the DTCG alias chain, so a
- * semantic variable points at a primitive instead of repeating its value.
- * Throws on a dangling or cyclic reference, which the flat form could not catch.
+ * Follows `var(--other)` references and evaluates
+ * `color-mix(in srgb, <color> <p>%, <color>)` so CSS values can be compared
+ * with the resolved runtime literals. The stylesheet keeps the DTCG alias
+ * chain, so a semantic variable points at a primitive instead of repeating its
+ * value. Throws on a dangling or cyclic reference, which the flat form could
+ * not catch.
  */
 const resolveCssVariables = (variables, inherited = new Map()) => {
   const scope = new Map([...inherited, ...variables]);
@@ -137,11 +154,16 @@ const resolveCssVariables = (variables, inherited = new Map()) => {
     const value = scope.get(name);
     if (value === undefined)
       throw new Error(`Unresolved CSS variable reference ${name}.`);
-    const match = value.match(/^var\((--[a-z0-9-]+)\)$/u);
-    if (!match) return value;
     if (seen.has(name))
       throw new Error(`Cyclic CSS variable reference ${name}.`);
-    return resolve(match[1], new Set([...seen, name]));
+    const follow = (part) => {
+      const match = part.match(/^var\((--[a-z0-9-]+)\)$/u);
+      return match ? resolve(match[1], new Set([...seen, name])) : part;
+    };
+    const mix = value.match(/^color-mix\(in srgb, (\S+) ([\d.]+)%, (\S+)\)$/u);
+    return mix
+      ? mixHex(follow(mix[1]), follow(mix[3]), Number(mix[2]) / 100)
+      : follow(value);
   };
   return new Map(
     [...variables.keys()].map((name) => [name, resolve(name, new Set())]),
@@ -795,11 +817,23 @@ describe('artifact generation', () => {
       '--gt-primitive-color-tertiary-500: var(--brand-tertiary);',
     );
     expect(first.get('index.css')).toContain(
-      '--gt-primitive-color-tertiary-800: #322f76;',
+      '--gt-primitive-color-tertiary-800: color-mix(in srgb, #000000 45%, var(--brand-tertiary));',
     );
     expect(first.get('index.css')).toContain(
-      '--gt-primitive-color-primary-foreground: var(--brand-surface-light);',
+      '--gt-primitive-color-primary-50: color-mix(in srgb, var(--brand-primary) 6%, var(--brand-surface-light));',
     );
+    expect(first.get('index.css')).toContain(
+      '--gt-primitive-color-primary-200: color-mix(in srgb, var(--brand-primary) 26.9%, var(--brand-surface-light));',
+    );
+    expect(first.get('index.css')).toContain(
+      '--brand-primary-foreground: var(--brand-surface-light);',
+    );
+    expect(first.get('index.css')).toContain(
+      '--gt-primitive-color-primary-foreground: var(--brand-primary-foreground);',
+    );
+    expect(
+      JSON.parse(first.get('tokens.json')).primitive.color['primary-200'],
+    ).toBe('#bad0ff');
     expect(first.get('theme.css')).toContain('@theme inline');
     expect(first.get('theme.css')).toContain('--font-weight-gt-medium:');
     expect(first.get('index.d.ts')).not.toContain('Record<string');
@@ -860,11 +894,11 @@ describe('artifact generation', () => {
     ).toEqual([]);
   });
 
-  it('ships deriveBrand as the only export', async () => {
+  it('ships deriveBrand and its mix table as the only exports', async () => {
     const shipped = await import(
       pathToFileURL(path.join(packageDirectory, 'dist', 'derive.js')).href
     );
-    expect(Object.keys(shipped)).toEqual(['deriveBrand']);
+    expect(Object.keys(shipped)).toEqual(['BRAND_MIXES', 'deriveBrand']);
   });
 
   it('keeps the built JS, JSON, CSS, declarations, and source maps in parity', async () => {
@@ -1067,7 +1101,7 @@ describe('brand ramps', () => {
 
   it('rejects a generated step that drifted from its seeds', () => {
     const input = copySource();
-    input.primitive.color['primary-50'].$value.components = [0, 0, 0];
+    input.primitive.color['primary-600'].$value.components = [0, 0, 0];
     expect(() => validateAndResolveDtcg(input)).toThrow(/tokens:derive/u);
   });
 

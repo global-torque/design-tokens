@@ -15,8 +15,8 @@ describe('applyBrandRamps', () => {
 
   it('writes every generated step under primitive.color', () => {
     for (const [family, steps] of [
-      ['primary', [50, 500, 'foreground']],
-      ['secondary', [50, 500, 'foreground']],
+      ['primary', [50, 200, 500, 600, 'foreground']],
+      ['secondary', [50, 100, 500, 600, 'foreground']],
       ['tertiary', [50, 100, 200, 300, 500, 600, 800, 'foreground']],
     ]) {
       for (const step of steps) {
@@ -34,8 +34,8 @@ describe('applyBrandRamps', () => {
   it('leaves the primitives it does not generate alone', () => {
     expect(colors['neutral-25'].$value).toBe('{primitive.brand.surface-light}');
     expect(colors['neutral-950'].$value).toBe('{primitive.brand.surface-dark}');
-    expect(colors['primary-600']).toEqual(
-      JSON.parse(sourceText).primitive.color['primary-600'],
+    expect(colors['grey-100']).toEqual(
+      JSON.parse(sourceText).primitive.color['grey-100'],
     );
   });
 

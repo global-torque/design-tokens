@@ -1,5 +1,5 @@
 import { applyEdits, modify, parse } from 'jsonc-parser';
-import { ANCHORS, FIXED, GENERATED_RAMPS, brandRamps } from './generate.mjs';
+import { ANCHORS, GENERATED_RAMPS, brandRamps } from './generate.mjs';
 
 const hexToComponents = (hex) =>
   [1, 3, 5].map((offset) =>
@@ -24,9 +24,8 @@ const insertionIndex = (names, family, step) => {
 /**
  * Writes the color ramps derived from the brand seeds into the token source
  * text as ordinary tokens under primitive.color, editing only those entries so
- * the rest of the file keeps its formatting; an anchor step aliases its seed,
- * and a step `FIXED` names keeps the value and the description it was given by
- * hand. Applying it again changes nothing.
+ * the rest of the file keeps its formatting; an anchor step aliases its seed.
+ * Applying it again changes nothing.
  */
 export const applyBrandRamps = (text) => {
   const source = parse(text);
@@ -45,7 +44,6 @@ export const applyBrandRamps = (text) => {
   for (const family of GENERATED_RAMPS) {
     for (const [step, hex] of Object.entries(ramps[family])) {
       const seedName = ANCHORS[family]?.[step];
-      if (!seedName && FIXED[family]?.includes(Number(step))) continue;
       result = applyEdits(
         result,
         modify(

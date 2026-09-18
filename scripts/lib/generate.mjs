@@ -7,7 +7,7 @@ import {
   toEncodedMap,
 } from '@jridgewell/gen-mapping';
 import { findNodeAtLocation, parseTree } from 'jsonc-parser';
-import { deriveBrand } from '../../src/derive.mjs';
+import { BRAND_MIXES, deriveBrand } from '../../src/derive.mjs';
 
 /* The derivation ships verbatim, so a runtime rebrand computes the same ramps. */
 const deriveModule = fs.readFileSync(
@@ -689,6 +689,26 @@ const aliasReference = (rawValue) => {
     : undefined;
 };
 
+/* `0.269` -> `26.9`: a percentage the stylesheet holds without float noise. */
+const percent = (fraction) => Math.round(fraction * 1000) / 10;
+
+/**
+ * Renders a derived accent step as the `color-mix()` of its seeds, so a
+ * stylesheet that redeclares `--brand-*` after the generated one moves the
+ * step too. Returns undefined for every other token.
+ */
+const brandMix = (token) => {
+  const [layer, category, name] = token.path;
+  if (layer !== 'primitive' || category !== 'color' || token.path.length !== 3)
+    return undefined;
+  const [family, step] = name.split('-');
+  const entry = BRAND_MIXES[family]?.[step];
+  if (!entry) return undefined;
+  return entry.tint === undefined
+    ? `color-mix(in srgb, #000000 ${percent(entry.shade)}%, var(--brand-${family}))`
+    : `color-mix(in srgb, var(--brand-${family}) ${percent(entry.tint)}%, var(--brand-surface-light))`;
+};
+
 const cssDeclarations = (token) => {
   const name = variableName(token);
   if (token.type !== 'typography') {
@@ -696,6 +716,7 @@ const cssDeclarations = (token) => {
       [
         name,
         aliasReference(token.node.$value) ??
+          brandMix(token) ??
           toCssValue(token.type, token.value),
       ],
     ];
@@ -1261,21 +1282,15 @@ const makeSourceMap = (
 /** Color families whose steps are derived from the brand seeds. */
 export const GENERATED_RAMPS = ['primary', 'secondary', 'tertiary'];
 
-/* Generated steps that alias a brand seed instead of holding a derived value.
-   The two kinds of entry differ: step 500 is the seed itself for any seed set,
-   while a `foreground` entry records which surface seed the luminance split
-   picks for the seeds committed here. Move a seed across that split and this
-   table needs the matching edit; the build says which one. */
+/* Generated steps that alias a brand seed instead of holding a derived value:
+   step 500 is the seed itself, and `foreground` is the foreground seed under
+   `primitive.brand`, which records the surface the luminance split picks by
+   aliasing it. The build still compares its resolved hex with `deriveBrand`. */
 export const ANCHORS = {
-  primary: { 500: 'primary', foreground: 'surface-light' },
-  secondary: { 500: 'secondary', foreground: 'surface-dark' },
-  tertiary: { 500: 'tertiary', foreground: 'surface-light' },
+  primary: { 500: 'primary', foreground: 'primary-foreground' },
+  secondary: { 500: 'secondary', foreground: 'secondary-foreground' },
+  tertiary: { 500: 'tertiary', foreground: 'tertiary-foreground' },
 };
-
-/* Generated steps the dictionary holds at a hand-picked value no mix produces;
-   a rebrand does not move them, so they are not checked against the seeds. Add
-   a hand-picked step without adding it here and the build says so. */
-export const FIXED = { primary: [200, 600], secondary: [100, 600] };
 
 /**
  * Derives the generated ramps from the brand seed values, given as DTCG color
@@ -1339,7 +1354,6 @@ const assertBrandRamps = (resolved) => {
           `${tokenPath} must alias {primitive.brand.${seedName}}; run pnpm run tokens:derive.`,
         );
       }
-      if (FIXED[family]?.includes(Number(step))) continue;
       const actual = colorToCss(token.value);
       if (actual !== expected) {
         throw new Error(

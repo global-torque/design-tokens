@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { deriveBrand } from './derive.mjs';
+import { BRAND_MIXES, deriveBrand } from './derive.mjs';
 
 const seeds = {
   primary: '#004fff',
@@ -50,10 +50,10 @@ describe('deriveBrand', () => {
   });
 
   it('tints and shades every accent seed', () => {
-    expect(ramps.primary[200]).toBe('#ccdcff');
-    expect(ramps.primary[600]).toBe('#0047e6');
-    expect(ramps.secondary[100]).toBe('#ecfcf5');
-    expect(ramps.secondary[600]).toBe('#37c688');
+    expect(ramps.primary[200]).toBe('#bad0ff');
+    expect(ramps.primary[600]).toBe('#0042d4');
+    expect(ramps.secondary[100]).toBe('#dff9ee');
+    expect(ramps.secondary[600]).toBe('#35bf83');
     expect(ramps.tertiary[100]).toBe('#efeefb');
     expect(ramps.tertiary[200]).toBe('#deddf7');
     expect(ramps.tertiary[300]).toBe('#ceccf3');
@@ -79,6 +79,18 @@ describe('deriveBrand', () => {
 
   it('is deterministic', () => {
     expect(deriveBrand(seeds)).toEqual(ramps);
+  });
+
+  it('declares every mix as one tint or one shade inside (0, 1)', () => {
+    for (const mixes of Object.values(BRAND_MIXES)) {
+      for (const entry of Object.values(mixes)) {
+        const [[kind, fraction], ...rest] = Object.entries(entry);
+        expect(rest).toEqual([]);
+        expect(['tint', 'shade']).toContain(kind);
+        expect(fraction).toBeGreaterThan(0);
+        expect(fraction).toBeLessThan(1);
+      }
+    }
   });
 
   it('rejects anything but six-digit hex', () => {

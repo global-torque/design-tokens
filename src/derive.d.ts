@@ -27,12 +27,29 @@ export interface BrandRamps {
 }
 
 /**
+ * One derived step: the seed's share in the light surface (`tint`) or black's
+ * share in the seed (`shade`), as a fraction.
+ */
+export type BrandMix = Readonly<{ tint: number } | { shade: number }>;
+
+/**
+ * The mix behind every derived step, per accent family. The generated CSS
+ * emits the same fractions as `color-mix()` of the `--brand-*` seeds.
+ */
+export declare const BRAND_MIXES: Readonly<{
+  primary: Readonly<Record<50 | 200 | 600, BrandMix>>;
+  secondary: Readonly<Record<50 | 100 | 600, BrandMix>>;
+  tertiary: Readonly<Record<50 | 100 | 200 | 300 | 600 | 800, BrandMix>>;
+}>;
+
+/**
  * Returns the primary, secondary and tertiary accents for a set of brand seeds.
- * Each seed is returned unchanged at step 500, step 50 is a 6% sRGB mix of the
- * seed into the light surface seed, and step 600 is 10% black into the seed.
- * The primary accent also carries the tint 200, the secondary accent the tint
- * 100, and the tertiary accent the tints 100 to 300 (10%, 20% and 30% of the
- * seed into the light surface) and the deep shade 800 (45% black into the
- * seed). Throws on a seed that is not a six-digit hex color.
+ * Each seed is returned unchanged at step 500 and step 50 is a 6% sRGB mix of
+ * the seed into the light surface seed. The primary accent also carries the
+ * tint 200 (26.9%) and the shade 600 (16.7% black into the seed), the
+ * secondary accent the tint 100 (16.3%) and the shade 600 (13% black), and the
+ * tertiary accent the tints 100 to 300 (10%, 20% and 30%) and the shades 600
+ * and 800 (10% and 45% black). Throws on a seed that is not a six-digit hex
+ * color.
  */
 export declare const deriveBrand: (seeds: BrandSeeds) => BrandRamps;

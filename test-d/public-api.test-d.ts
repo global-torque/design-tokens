@@ -3,7 +3,12 @@ import designTokens, {
   type DesignTokenMode,
   type ResolvedDesignTokens,
 } from '../dist/index.js';
-import { deriveBrand, type BrandRamps } from '../dist/derive.js';
+import {
+  BRAND_MIXES,
+  deriveBrand,
+  type BrandMix,
+  type BrandRamps,
+} from '../dist/derive.js';
 import sourceTokens from '../dist/tokens.tokens.json' with { type: 'json' };
 import resolvedJson from '../dist/tokens.json' with { type: 'json' };
 
@@ -30,9 +35,11 @@ const ramps: BrandRamps = deriveBrand({
 const primary50: string = ramps.primary[50];
 const onPrimary: string = ramps.primary.foreground;
 const tertiary300: string = ramps.tertiary[300];
+const primary200: BrandMix = BRAND_MIXES.primary[200];
 void primary50;
 void onPrimary;
 void tertiary300;
+void primary200;
 
 // @ts-expect-error The primary accent derives no step 300.
 void ramps.primary[300];
