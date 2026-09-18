@@ -20,7 +20,7 @@ designTokens: {
           readonly "disabled-foreground": "#a3a5a9";
           readonly "focus-ring": "#004fff";
           readonly "primary-background": "#004fff";
-          readonly "primary-background-hover": "#b8d1ff";
+          readonly "primary-background-hover": "#bad0ff";
           readonly "primary-foreground": "#ffffff";
         };
         readonly "dialog": {
@@ -43,7 +43,7 @@ designTokens: {
       readonly "semantic": {
         readonly "color": {
           readonly "accent-background": "#004fff";
-          readonly "accent-background-hover": "#b8d1ff";
+          readonly "accent-background-hover": "#bad0ff";
           readonly "accent-foreground": "#ffffff";
           readonly "accent-secondary-background": "#3ddc97";
           readonly "accent-secondary-foreground": "#12161f";
@@ -156,11 +156,14 @@ designTokens: {
     readonly "brand": {
       readonly "font-sans": "\"Avenir\", \"Avenir Next\", system-ui, \"Segoe UI\", \"Roboto\", \"Helvetica Neue\", \"Arial\", sans-serif";
       readonly "primary": "#004fff";
+      readonly "primary-foreground": "#ffffff";
       readonly "radius": "0.5rem";
       readonly "secondary": "#3ddc97";
+      readonly "secondary-foreground": "#12161f";
       readonly "surface-dark": "#12161f";
       readonly "surface-light": "#ffffff";
       readonly "tertiary": "#5b55d6";
+      readonly "tertiary-foreground": "#ffffff";
     };
     readonly "color": {
       readonly "amber-200": "#fde68a";
@@ -217,7 +220,7 @@ designTokens: {
       readonly "neutral-800": "#232730";
       readonly "neutral-950": "#12161f";
       readonly "overlay": "rgb(0 0 0 / 0.64)";
-      readonly "primary-200": "#b8d1ff";
+      readonly "primary-200": "#bad0ff";
       readonly "primary-50": "#f0f4ff";
       readonly "primary-500": "#004fff";
       readonly "primary-600": "#0042d4";
@@ -236,10 +239,10 @@ designTokens: {
       readonly "scarlet-800": "#8e2626";
       readonly "scarlet-900": "#842b2b";
       readonly "scrim": "rgb(0 0 0 / 0.3)";
-      readonly "secondary-100": "#d9ffee";
+      readonly "secondary-100": "#dff9ee";
       readonly "secondary-50": "#f3fdf9";
       readonly "secondary-500": "#3ddc97";
-      readonly "secondary-600": "#36be83";
+      readonly "secondary-600": "#35bf83";
       readonly "secondary-foreground": "#12161f";
       readonly "slate-200": "#e2e8f0";
       readonly "slate-950": "#020618";

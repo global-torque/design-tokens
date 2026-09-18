@@ -1,13 +1,26 @@
 /**
  * Derives the brand-dependent colors from a brand's seed colors.
  *
- * Pure: six-digit hex strings in, six-digit hex strings out. The same function
- * serves the build (default seeds) and the runtime (a tenant's seeds), so both
- * produce identical colors by construction.
+ * Pure: six-digit hex strings in, six-digit hex strings out. The build and the
+ * admin's save-time foreground choice share the function, and the generator
+ * writes the same mixes into the stylesheet as `color-mix()` of the seeds, so
+ * every consumer produces identical colors by construction.
  */
 
-/* Fraction of the seed mixed into the light surface for the subtle step 50. */
-const SUBTLE_MIX = 0.06;
+/* Every derived step is one sRGB mix: `tint` is the seed's share in the light
+   surface, `shade` is black's share in the seed. */
+export const BRAND_MIXES = {
+  primary: { 50: { tint: 0.06 }, 200: { tint: 0.269 }, 600: { shade: 0.167 } },
+  secondary: { 50: { tint: 0.06 }, 100: { tint: 0.163 }, 600: { shade: 0.13 } },
+  tertiary: {
+    50: { tint: 0.06 },
+    100: { tint: 0.1 },
+    200: { tint: 0.2 },
+    300: { tint: 0.3 },
+    600: { shade: 0.1 },
+    800: { shade: 0.45 },
+  },
+};
 
 /* At a WCAG relative luminance of 0.18 a light and a dark surface both reach
    4.5:1 against the seed, so the seed's side of it reads better. */
@@ -48,22 +61,24 @@ const mix = (color, into, fraction) => {
   return `#${channels.map((byte) => byte.toString(16).padStart(2, '0')).join('')}`;
 };
 
-/* The steps every accent shares, plus the extra tints (seed into the light
-   surface) and shades (black into the seed) that family's consumers need. */
-const accent = (seed, light, dark, extra) => ({
-  50: mix(seed, light, SUBTLE_MIX),
+/* The family's mixes from the table, the seed at 500, and the surface that
+   reads better on the seed. */
+const accent = (seed, light, dark, mixes) => ({
+  ...Object.fromEntries(
+    Object.entries(mixes).map(([step, { tint, shade }]) => [
+      step,
+      tint === undefined ? mix(BLACK, seed, shade) : mix(seed, light, tint),
+    ]),
+  ),
   500: seed,
-  600: mix(BLACK, seed, 0.1),
   foreground: luminance(seed) > FOREGROUND_SPLIT ? dark : light,
-  ...extra,
 });
 
 /**
  * Returns the primary, secondary and tertiary colors for a set of brand seeds:
- * the subtle tint at step 50, the seed itself at step 500, the shade 600, and
- * `foreground`, the brand surface that reads better on the seed. The primary
- * accent also carries the tint 200, the secondary accent the tint 100, and the
- * tertiary accent its tints 100 to 300 and its deep shade 800.
+ * the seed itself at step 500, the tints and shades `BRAND_MIXES` lists for
+ * the family, and `foreground`, the brand surface that reads better on the
+ * seed.
  */
 export const deriveBrand = ({
   primary,
@@ -74,21 +89,24 @@ export const deriveBrand = ({
 }) => {
   const light = assertHex(surfaceLight, 'surfaceLight');
   const dark = assertHex(surfaceDark, 'surfaceDark');
-  const primarySeed = assertHex(primary, 'primary');
-  const secondarySeed = assertHex(secondary, 'secondary');
-  const tertiarySeed = assertHex(tertiary, 'tertiary');
   return {
-    primary: accent(primarySeed, light, dark, {
-      200: mix(primarySeed, light, 0.2),
-    }),
-    secondary: accent(secondarySeed, light, dark, {
-      100: mix(secondarySeed, light, 0.1),
-    }),
-    tertiary: accent(tertiarySeed, light, dark, {
-      100: mix(tertiarySeed, light, 0.1),
-      200: mix(tertiarySeed, light, 0.2),
-      300: mix(tertiarySeed, light, 0.3),
-      800: mix(BLACK, tertiarySeed, 0.45),
-    }),
+    primary: accent(
+      assertHex(primary, 'primary'),
+      light,
+      dark,
+      BRAND_MIXES.primary,
+    ),
+    secondary: accent(
+      assertHex(secondary, 'secondary'),
+      light,
+      dark,
+      BRAND_MIXES.secondary,
+    ),
+    tertiary: accent(
+      assertHex(tertiary, 'tertiary'),
+      light,
+      dark,
+      BRAND_MIXES.tertiary,
+    ),
   };
 };

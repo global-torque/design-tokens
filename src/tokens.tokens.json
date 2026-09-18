@@ -45,6 +45,18 @@
           "components": [0.0706, 0.0863, 0.1216]
         }
       },
+      "primary-foreground": {
+        "$type": "color",
+        "$value": "{primitive.brand.surface-light}"
+      },
+      "secondary-foreground": {
+        "$type": "color",
+        "$value": "{primitive.brand.surface-dark}"
+      },
+      "tertiary-foreground": {
+        "$type": "color",
+        "$value": "{primitive.brand.surface-light}"
+      },
       "radius": {
         "$type": "dimension",
         "$value": {
@@ -386,24 +398,22 @@
         }
       },
       "primary-200": {
-        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.7216, 0.8196, 1]
+          "components": [0.7294, 0.8157, 1]
         }
       },
       "primary-500": {
         "$value": "{primitive.brand.primary}"
       },
       "primary-600": {
-        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0, 0.2588, 0.8314]
         }
       },
       "primary-foreground": {
-        "$value": "{primitive.brand.surface-light}"
+        "$value": "{primitive.brand.primary-foreground}"
       },
       "secondary-50": {
         "$value": {
@@ -412,24 +422,22 @@
         }
       },
       "secondary-100": {
-        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.851, 1, 0.9333]
+          "components": [0.8745, 0.9765, 0.9333]
         }
       },
       "secondary-500": {
         "$value": "{primitive.brand.secondary}"
       },
       "secondary-600": {
-        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.2118, 0.7451, 0.5137]
+          "components": [0.2078, 0.749, 0.5137]
         }
       },
       "secondary-foreground": {
-        "$value": "{primitive.brand.surface-dark}"
+        "$value": "{primitive.brand.secondary-foreground}"
       },
       "tertiary-50": {
         "$value": {
@@ -471,7 +479,7 @@
         }
       },
       "tertiary-foreground": {
-        "$value": "{primitive.brand.surface-light}"
+        "$value": "{primitive.brand.tertiary-foreground}"
       },
       "gold-50": {
         "$value": {
