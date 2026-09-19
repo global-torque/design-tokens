@@ -1,13 +1,15 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 - 2026-09-19
 
-- Added seven brand seeds under `primitive.brand`, emitted as `--brand-*`, as
+- Added ten brand seeds under `primitive.brand`, emitted as `--brand-*`, as
   the build-time inputs a rebrand edits.
 - Derived the primary, secondary, and tertiary accent steps from those seeds
   and added `tokens:derive` to rewrite them in the canonical source.
 - Added the `./derive` entry point exporting `deriveBrand`, the same derivation
   the build runs, so a host can recolor at runtime.
+- Emitted the derived accent steps as `color-mix()` of the brand seeds, so a
+  host recolors by writing `--brand-*` alone, without a rebuild or JavaScript.
 - Added fixed system colors and elevations alongside the derived steps; a
   handful of steps are held as fixed values and carry a `$description` saying a
   rebrand does not move them.
