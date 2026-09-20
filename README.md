@@ -1,8 +1,8 @@
 # @global-torque/design-tokens
 
-> **Unreleased:** this file describes the unreleased contract, not the released
-> `0.2.1` one. It adds the brand seeds, the accent steps derived from them, and
-> the `./derive` entry point, and it moves token values.
+> **Stable release:** `0.3.0` adds the brand seeds, the accent steps derived
+> from them, and the `./derive` entry point. It removes token families and
+> moves token values, so it does not drop in over `0.2.1`.
 
 Neutral institutional design tokens for administrative and content interfaces.
 One DTCG 2025.10 source generates the typed JavaScript API, declarations,
@@ -23,7 +23,7 @@ activation, routes, environment reads, or private URLs.
 ## Install
 
 ```sh
-pnpm add @global-torque/design-tokens@0.2.1
+pnpm add @global-torque/design-tokens@0.3.0
 ```
 
 Required and release-candidate CI run on Node 24.x.
@@ -135,34 +135,38 @@ build uses to turn the five color seeds into the `primary-*`, `secondary-*` and
 `foreground`, and for `tertiary-*` the tints 100 to 300 (10%, 20%, 30% of the
 seed into the light surface) and the shades 600 and 800 (10% and 45% black into
 the seed).
-A rebrand at runtime writes the seeds as `--brand-*` and every derived step as
-`--gt-primitive-color-<family>-<step>` on the root element; the alias chain in
-the generated CSS carries the new values down to the semantic and component
-variables.
+A rebrand at runtime writes the seeds as `--brand-*` on the root element and
+stops there: the generated CSS derives every accent step from them with
+`color-mix()`, and the alias chain carries the new values down to the semantic
+and component variables. A stylesheet that declares the seeds is enough; no
+rebuild and no derivation in JavaScript are required. The three
+`--brand-*-foreground` seeds default to the surface seeds; set them only to
+override that pairing.
+
+```js
+const { style } = document.documentElement;
+style.setProperty('--brand-primary', '#004fff');
+style.setProperty('--brand-secondary', '#3ddc97');
+style.setProperty('--brand-tertiary', '#5b55d6');
+style.setProperty('--brand-surface-light', '#ffffff');
+style.setProperty('--brand-surface-dark', '#12161f');
+style.setProperty('--brand-radius', '0.5rem');
+style.setProperty('--brand-font-sans', 'Avenir, sans-serif');
+```
+
+`deriveBrand` computes the same steps as hex, for a host that needs the values
+in JavaScript rather than in CSS.
 
 ```js
 import { deriveBrand } from '@global-torque/design-tokens/derive';
 
-const brand = {
+const steps = deriveBrand({
   primary: '#004fff',
   secondary: '#3ddc97',
   tertiary: '#5b55d6',
   surfaceLight: '#ffffff',
   surfaceDark: '#12161f',
-};
-const { style } = document.documentElement;
-style.setProperty('--brand-primary', brand.primary);
-style.setProperty('--brand-secondary', brand.secondary);
-style.setProperty('--brand-tertiary', brand.tertiary);
-style.setProperty('--brand-surface-light', brand.surfaceLight);
-style.setProperty('--brand-surface-dark', brand.surfaceDark);
-style.setProperty('--brand-radius', '0.5rem');
-style.setProperty('--brand-font-sans', 'Avenir, sans-serif');
-for (const [family, steps] of Object.entries(deriveBrand(brand))) {
-  for (const [step, hex] of Object.entries(steps)) {
-    style.setProperty(`--gt-primitive-color-${family}-${step}`, hex);
-  }
-}
+});
 ```
 
 The function is pure and throws on a seed that is not a six-digit hex color.
