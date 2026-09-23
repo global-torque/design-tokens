@@ -511,10 +511,12 @@ const resolveTokens = (tokens) => {
 
 const formatNumber = (value) => (Object.is(value, -0) ? '0' : String(value));
 
+/* The byte channels the stylesheet writes for a DTCG sRGB color. */
+const colorChannels = (value) =>
+  value.components.map((component) => Math.round(component * 255));
+
 const colorToCss = (value) => {
-  const channels = value.components.map((component) =>
-    Math.round(component * 255),
-  );
+  const channels = colorChannels(value);
   if (value.alpha !== undefined && value.alpha < 1) {
     return `rgb(${channels.join(' ')} / ${formatNumber(value.alpha)})`;
   }
@@ -918,6 +920,115 @@ const assertLayerAliasContracts = (resolved) => {
 const renderDeclarationBlock = (selector, declarations) =>
   `${selector} {\n${declarations.map(([name, value]) => `  ${name}: ${value};`).join('\n')}\n}`;
 
+/* The neutral steps by the surface seed each one follows: steps at CIE L* 40
+   and above follow the light seed, the darker ones the dark seed. neutral-25
+   and neutral-950 alias the seeds themselves. */
+const NEUTRAL_ANCHORS = {
+  'surface-light': [
+    'grey-100',
+    'grey-200',
+    'grey-300',
+    'grey-400',
+    'grey-500',
+    'grey-600',
+    'neutral-50',
+    'neutral-100',
+    'neutral-400',
+    'neutral-450',
+    'neutral-500',
+    'slate-200',
+    'steel-100',
+    'steel-200',
+    'steel-300',
+    'steel-400',
+    'steel-500',
+    'steel-600',
+  ],
+  'surface-dark': [
+    'charcoal-500',
+    'grey-700',
+    'grey-800',
+    'navy-800',
+    'navy-900',
+    'neutral-600',
+    'neutral-700',
+    'neutral-800',
+    'slate-950',
+    'steel-700',
+  ],
+};
+
+const NEUTRAL_FAMILIES = new Set([
+  'charcoal',
+  'grey',
+  'navy',
+  'neutral',
+  'slate',
+  'steel',
+]);
+
+const assertNeutralAnchors = (resolved) => {
+  const listed = Object.values(NEUTRAL_ANCHORS).flat();
+  const steps = [...resolved.values()]
+    .map((token) => token.path)
+    .filter(
+      ([layer, category, name]) =>
+        layer === 'primitive' &&
+        category === 'color' &&
+        NEUTRAL_FAMILIES.has(name.split('-')[0]) &&
+        name !== 'neutral-25' &&
+        name !== 'neutral-950',
+    )
+    .map(([, , name]) => name);
+  for (const name of new Set([...listed, ...steps])) {
+    if (
+      !steps.includes(name) ||
+      listed.filter((entry) => entry === name).length !== 1
+    ) {
+      throw new Error(
+        `NEUTRAL_ANCHORS must list each neutral step except neutral-25 and neutral-950 exactly once: ${name}.`,
+      );
+    }
+  }
+};
+
+/* Where relative color syntax and round() both parse; other browsers keep the
+   hex values of the default seeds. */
+const NEUTRAL_SUPPORTS =
+  '(color: rgb(from red calc(r - 1) g b)) and (width: round(1px, 1px))';
+
+const shift = (channel, offset) =>
+  `calc(${channel} ${offset < 0 ? '-' : '+'} ${Math.abs(offset)})`;
+
+/**
+ * Re-declares each neutral step as its surface seed shifted by the step's
+ * per-channel offset from the default seed, so a stylesheet that redeclares
+ * `--brand-surface-*` moves the neutrals too, while the default seeds give
+ * back the hex values exactly.
+ */
+const renderNeutralBlock = (primitive, resolved) => {
+  const seeds = new Map(
+    Object.entries(NEUTRAL_ANCHORS).flatMap(([seed, names]) =>
+      names.map((name) => [name, resolved.get(`primitive.brand.${seed}`)]),
+    ),
+  );
+  const declarations = primitive
+    .filter((token) => token.path[1] === 'color' && seeds.has(token.path[2]))
+    .map((token) => {
+      const seed = seeds.get(token.path[2]);
+      const seedChannels = colorChannels(seed.value);
+      const [r, g, b] = colorChannels(token.value).map(
+        (channel, index) => channel - seedChannels[index],
+      );
+      return [
+        variableName(token),
+        `rgb(from var(${variableName(seed)}) ${shift('r', r)} ${shift('g', g)} ${shift('b', b)})`,
+      ];
+    });
+  const block = renderDeclarationBlock(':root', declarations);
+  return `@supports ${NEUTRAL_SUPPORTS} {\n  ${block.replaceAll('\n', '\n  ')}\n}`;
+};
+
 const makeCss = (resolved) => {
   const all = [...resolved.values()].sort((left, right) =>
     compareCodePoints(left.path.join('.'), right.path.join('.')),
@@ -935,6 +1046,7 @@ const makeCss = (resolved) => {
       ':root',
       [...primitive, ...light].flatMap(cssDeclarations),
     ),
+    renderNeutralBlock(primitive, resolved),
     renderDeclarationBlock(
       ':is(.dark, [data-theme="dark"])',
       dark.flatMap(cssDeclarations),
@@ -1371,6 +1483,7 @@ export const validateAndResolveDtcg = (source) => {
   assertNoOutputCollisions(resolved);
   assertPrimitiveOutputTypes(resolved);
   assertBrandRamps(resolved);
+  assertNeutralAnchors(resolved);
   assertLayerOutputTypes(resolved);
   assertLayerAliasContracts(resolved);
   assertAnimationNames(resolved);

@@ -87,7 +87,7 @@
         }
       },
       "grey-100": {
-        "$description": "grey-100 to grey-800 are the grey scale of the fixed system palette, ordered by lightness.",
+        "$description": "grey-100 to grey-800 are the grey scale, ordered by lightness. In the stylesheet grey-100 to grey-600 follow the light surface seed and grey-700 and grey-800 the dark one, each at its fixed offset from the default seed.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0.9725, 0.9765, 0.9804]
@@ -136,7 +136,7 @@
         }
       },
       "navy-800": {
-        "$description": "Dark surfaces of the fixed system palette.",
+        "$description": "navy-800 and navy-900 are dark surfaces. In the stylesheet they follow the dark surface seed, each at its fixed offset from the default seed.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0.1412, 0.1882, 0.2745]
@@ -149,7 +149,7 @@
         }
       },
       "steel-100": {
-        "$description": "steel-100 to steel-700 are the cool blue-greys of data-dense dashboard surfaces, ordered by lightness.",
+        "$description": "steel-100 to steel-700 are the cool blue-greys of data-dense dashboard surfaces, ordered by lightness. In the stylesheet steel-100 to steel-600 follow the light surface seed and steel-700 the dark one, each at its fixed offset from the default seed.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0.8863, 0.902, 0.9373]
@@ -192,7 +192,7 @@
         }
       },
       "slate-200": {
-        "$description": "slate-200 and slate-950 carry the sRGB values of Tailwind's slate steps, used for navigation rules and overlays.",
+        "$description": "slate-200 and slate-950 carry the sRGB values of Tailwind's slate steps, used for navigation rules and overlays. In the stylesheet slate-200 follows the light surface seed and slate-950 the dark one, each at its fixed offset from the default seed.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0.8863, 0.9098, 0.9412]
@@ -205,59 +205,52 @@
         }
       },
       "neutral-25": {
+        "$description": "neutral-25 and neutral-950 are the light and dark surface seeds. In the stylesheet neutral-50 to neutral-500 follow the light seed and neutral-600 to neutral-800 the dark one, each at its fixed offset from the default seed.",
         "$value": "{primitive.brand.surface-light}"
       },
       "neutral-50": {
-        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0.9804, 0.9804, 0.9804]
         }
       },
       "neutral-100": {
-        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0.9255, 0.9255, 0.9294]
         }
       },
       "neutral-400": {
-        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0.6392, 0.6471, 0.6627]
         }
       },
       "neutral-450": {
-        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0.6078, 0.6078, 0.6078]
         }
       },
       "neutral-500": {
-        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0.4588, 0.4588, 0.4588]
         }
       },
       "neutral-600": {
-        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0.3176, 0.3333, 0.3608]
         }
       },
       "neutral-700": {
-        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0.2314, 0.2471, 0.2824]
         }
       },
       "neutral-800": {
-        "$description": "Fixed value; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0.1373, 0.1529, 0.1882]
@@ -267,7 +260,7 @@
         "$value": "{primitive.brand.surface-dark}"
       },
       "charcoal-500": {
-        "$description": "Fixed value; not derived from the brand seeds.",
+        "$description": "In the stylesheet charcoal-500 follows the dark surface seed at its fixed offset from the default seed.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0.2, 0.2, 0.2]
@@ -661,6 +654,25 @@
           "colorSpace": "srgb",
           "components": [0.1255, 0.4627, 0.3333]
         }
+      },
+      "mint-100": {
+        "$description": "mint-100, mint-500 and mint-600 are the tint, fill and strong shade of success states. Fixed values; not derived from the brand seeds.",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8745, 0.9765, 0.9333]
+        }
+      },
+      "mint-500": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.2392, 0.8627, 0.5922]
+        }
+      },
+      "mint-600": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.2078, 0.749, 0.5137]
+        }
       }
     },
     "spacing": {
@@ -978,13 +990,13 @@
           "$value": "{primitive.color.neutral-25}"
         },
         "background-surface": {
-          "$value": "{primitive.color.white}"
+          "$value": "{primitive.color.neutral-25}"
         },
         "background-subtle": {
           "$value": "{primitive.color.grey-100}"
         },
         "background-elevated": {
-          "$value": "{primitive.color.white}"
+          "$value": "{primitive.color.neutral-25}"
         },
         "background-overlay": {
           "$value": "{primitive.color.overlay}"

@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased
+
+- Derived the grey, neutral, steel, slate, navy, and charcoal steps from the
+  surface seeds: the generated CSS re-declares each step, inside an `@supports`
+  block for relative color syntax and `round()`, as the nearer surface seed
+  shifted by the step's fixed per-channel offset from the default seed. The
+  default seeds give back every value exactly; browsers without that support
+  keep the dictionary values.
+- Behavior change for hosts that override `--brand-surface-light` or
+  `--brand-surface-dark`: the neutral fills, borders, text, and dark surfaces,
+  and the light `background-surface` and `background-elevated`, now move with
+  the override instead of staying fixed.
+- Pointed the light `background-surface` and `background-elevated` at
+  `neutral-25`, the light surface seed, instead of `white`; the default seed
+  keeps them white.
+- Added the fixed `mint-100`, `mint-500`, and `mint-600` success colors, holding
+  the default secondary values; a rebrand does not move them.
+- Changed what `getPropertyValue()` returns for a derived neutral step: its
+  formula rather than a hex value. Read a painted property such as `color` to
+  get the color.
+
 ## 0.3.0 - 2026-09-19
 
 - Added ten brand seeds under `primitive.brand`, emitted as `--brand-*`, as
