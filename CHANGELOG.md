@@ -4,7 +4,8 @@
 
 - Derived the grey, neutral, steel, slate, navy, and charcoal steps from the
   surface seeds: the generated CSS re-declares each step, inside an `@supports`
-  block for relative color syntax and `round()`, as the nearer surface seed
+  block for relative color syntax and `round()`, as its surface seed (the light
+  seed for steps with a CIE lightness of 40 or more, the dark seed for the rest)
   shifted by the step's fixed per-channel offset from the default seed. The
   default seeds give back every value exactly; browsers without that support
   keep the dictionary values.
@@ -12,14 +13,22 @@
   `--brand-surface-dark`: the neutral fills, borders, text, and dark surfaces,
   and the light `background-surface` and `background-elevated`, now move with
   the override instead of staying fixed.
+- Behavior change even at the default seeds: where the `@supports` block
+  applies, gradients and running color transitions that use a derived step,
+  directly or through an alias, blend in Oklab rather than sRGB. To keep sRGB in
+  a gradient, repeat it after the original declaration with `in srgb`, inside
+  `@supports (background: linear-gradient(in srgb, transparent, transparent))`;
+  unguarded, an engine without `in srgb` still accepts a `var()` value and then
+  paints no gradient.
 - Pointed the light `background-surface` and `background-elevated` at
   `neutral-25`, the light surface seed, instead of `white`; the default seed
   keeps them white.
 - Added the fixed `mint-100`, `mint-500`, and `mint-600` success colors, holding
   the default secondary values; a rebrand does not move them.
-- Changed what `getPropertyValue()` returns for a derived neutral step: its
-  formula rather than a hex value. Read a painted property such as `color` to
-  get the color.
+- Changed what `getPropertyValue()` returns for a derived neutral step and for
+  any variable that aliases one, such as `--gt-color-border-default`: the
+  formula rather than a hex value. Read a painted property such as `color`
+  instead; it can serialize as `color(srgb ...)` rather than `rgb()`.
 
 ## 0.3.0 - 2026-09-19
 

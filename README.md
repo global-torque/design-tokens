@@ -145,7 +145,7 @@ override that pairing.
 
 The neutral steps follow the two surface seeds as well. Each `grey-*`,
 `neutral-*`, `steel-*`, `slate-*`, `navy-*`, and `charcoal-*` step keeps a
-fixed per-channel offset from the default seed it sits nearer to: steps with a
+fixed per-channel offset from one of the two default seeds: steps with a
 CIE lightness of 40 or more (fills, borders, secondary text) from
 `--brand-surface-light`, darker ones (strong text, dark surfaces) from
 `--brand-surface-dark`. The generated CSS re-declares each step as that seed
@@ -156,8 +156,18 @@ a tinted seed tints every neutral role. In light mode `background-surface` and
 `background-elevated` resolve to `--brand-surface-light` itself. The
 re-declaration sits in an `@supports` block that requires relative color syntax
 and `round()`; other browsers keep the dictionary values, as do the JavaScript
-and JSON exports. `getPropertyValue()` returns a derived step's formula, not a
-color; read a painted property such as `color` to get the color.
+and JSON exports. `getPropertyValue()` returns the formula, not a color, for a
+derived step and for any variable that aliases one, such as
+`--gt-color-border-default`; read a painted property such as `color` instead,
+which can serialize as `color(srgb ...)`.
+
+Where that block applies, gradients and running color transitions that use a
+derived step, directly or through an alias, blend in Oklab rather than sRGB,
+even at the default seeds. To keep sRGB in a gradient, repeat it after the
+original declaration with `in srgb`, inside
+`@supports (background: linear-gradient(in srgb, transparent, transparent))`;
+unguarded, an engine without `in srgb` still accepts a `var()` value and then
+paints no gradient.
 
 ```js
 const { style } = document.documentElement;
