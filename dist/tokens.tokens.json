@@ -14,35 +14,55 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0, 0.3098, 1]
+          "components": [
+            0,
+            0.3098,
+            1
+          ]
         }
       },
       "secondary": {
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.2392, 0.8627, 0.5922]
+          "components": [
+            0.2392,
+            0.8627,
+            0.5922
+          ]
         }
       },
       "tertiary": {
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.3569, 0.3333, 0.8392]
+          "components": [
+            0.3569,
+            0.3333,
+            0.8392
+          ]
         }
       },
       "surface-light": {
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [1, 1, 1]
+          "components": [
+            1,
+            1,
+            1
+          ]
         }
       },
       "surface-dark": {
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.0706, 0.0863, 0.1216]
+          "components": [
+            0.0706,
+            0.0863,
+            0.1216
+          ]
         }
       },
       "primary-foreground": {
@@ -83,125 +103,205 @@
       "white": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [1, 1, 1]
+          "components": [
+            1,
+            1,
+            1
+          ]
         }
       },
       "grey-100": {
         "$description": "grey-100 to grey-800 are the grey scale, ordered by lightness. In the stylesheet grey-100 to grey-600 follow the light surface seed and grey-700 and grey-800 the dark one, each at its fixed offset from the default seed.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9725, 0.9765, 0.9804]
+          "components": [
+            0.9725,
+            0.9765,
+            0.9804
+          ]
         }
       },
       "grey-200": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9137, 0.9255, 0.9373]
+          "components": [
+            0.9137,
+            0.9255,
+            0.9373
+          ]
         }
       },
       "grey-300": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.8706, 0.8863, 0.902]
+          "components": [
+            0.8706,
+            0.8863,
+            0.902
+          ]
         }
       },
       "grey-400": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.8078, 0.8314, 0.8549]
+          "components": [
+            0.8078,
+            0.8314,
+            0.8549
+          ]
         }
       },
       "grey-500": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.6784, 0.7098, 0.7412]
+          "components": [
+            0.6784,
+            0.7098,
+            0.7412
+          ]
         }
       },
       "grey-600": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.4235, 0.4588, 0.4902]
+          "components": [
+            0.4235,
+            0.4588,
+            0.4902
+          ]
         }
       },
       "grey-700": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.2863, 0.3137, 0.3412]
+          "components": [
+            0.2863,
+            0.3137,
+            0.3412
+          ]
         }
       },
       "grey-800": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.2039, 0.2275, 0.251]
+          "components": [
+            0.2039,
+            0.2275,
+            0.251
+          ]
         }
       },
       "navy-800": {
         "$description": "navy-800 and navy-900 are dark surfaces. In the stylesheet they follow the dark surface seed, each at its fixed offset from the default seed.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.1412, 0.1882, 0.2745]
+          "components": [
+            0.1412,
+            0.1882,
+            0.2745
+          ]
         }
       },
       "navy-900": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.102, 0.1255, 0.1765]
+          "components": [
+            0.102,
+            0.1255,
+            0.1765
+          ]
         }
       },
       "steel-100": {
         "$description": "steel-100 to steel-700 are the cool blue-greys of data-dense dashboard surfaces, ordered by lightness. In the stylesheet steel-100 to steel-600 follow the light surface seed and steel-700 the dark one, each at its fixed offset from the default seed.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.8863, 0.902, 0.9373]
+          "components": [
+            0.8863,
+            0.902,
+            0.9373
+          ]
         }
       },
       "steel-200": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.7843, 0.7961, 0.8157]
+          "components": [
+            0.7843,
+            0.7961,
+            0.8157
+          ]
         }
       },
       "steel-300": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.5294, 0.5647, 0.6314]
+          "components": [
+            0.5294,
+            0.5647,
+            0.6314
+          ]
         }
       },
       "steel-400": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.4824, 0.5176, 0.5843]
+          "components": [
+            0.4824,
+            0.5176,
+            0.5843
+          ]
         }
       },
       "steel-500": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.4196, 0.4588, 0.5373]
+          "components": [
+            0.4196,
+            0.4588,
+            0.5373
+          ]
         }
       },
       "steel-600": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.3647, 0.4078, 0.4902]
+          "components": [
+            0.3647,
+            0.4078,
+            0.4902
+          ]
         }
       },
       "steel-700": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.0902, 0.1373, 0.2353]
+          "components": [
+            0.0902,
+            0.1373,
+            0.2353
+          ]
         }
       },
       "slate-200": {
         "$description": "slate-200 and slate-950 carry the sRGB values of Tailwind's slate steps, used for navigation rules and overlays. In the stylesheet slate-200 follows the light surface seed and slate-950 the dark one, each at its fixed offset from the default seed.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.8863, 0.9098, 0.9412]
+          "components": [
+            0.8863,
+            0.9098,
+            0.9412
+          ]
         }
       },
       "slate-950": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.0078, 0.0235, 0.0941]
+          "components": [
+            0.0078,
+            0.0235,
+            0.0941
+          ]
         }
       },
       "neutral-25": {
@@ -211,49 +311,81 @@
       "neutral-50": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9804, 0.9804, 0.9804]
+          "components": [
+            0.9804,
+            0.9804,
+            0.9804
+          ]
         }
       },
       "neutral-100": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9255, 0.9255, 0.9294]
+          "components": [
+            0.9255,
+            0.9255,
+            0.9294
+          ]
         }
       },
       "neutral-400": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.6392, 0.6471, 0.6627]
+          "components": [
+            0.6392,
+            0.6471,
+            0.6627
+          ]
         }
       },
       "neutral-450": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.6078, 0.6078, 0.6078]
+          "components": [
+            0.6078,
+            0.6078,
+            0.6078
+          ]
         }
       },
       "neutral-500": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.4588, 0.4588, 0.4588]
+          "components": [
+            0.4588,
+            0.4588,
+            0.4588
+          ]
         }
       },
       "neutral-600": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.3176, 0.3333, 0.3608]
+          "components": [
+            0.3176,
+            0.3333,
+            0.3608
+          ]
         }
       },
       "neutral-700": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.2314, 0.2471, 0.2824]
+          "components": [
+            0.2314,
+            0.2471,
+            0.2824
+          ]
         }
       },
       "neutral-800": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.1373, 0.1529, 0.1882]
+          "components": [
+            0.1373,
+            0.1529,
+            0.1882
+          ]
         }
       },
       "neutral-950": {
@@ -263,116 +395,192 @@
         "$description": "In the stylesheet charcoal-500 follows the dark surface seed at its fixed offset from the default seed.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.2, 0.2, 0.2]
+          "components": [
+            0.2,
+            0.2,
+            0.2
+          ]
         }
       },
       "green-50": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9255, 0.9922, 0.9608]
+          "components": [
+            0.9255,
+            0.9922,
+            0.9608
+          ]
         }
       },
       "green-300": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.5255, 0.9373, 0.6745]
+          "components": [
+            0.5255,
+            0.9373,
+            0.6745
+          ]
         }
       },
       "green-700": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.0824, 0.502, 0.2392]
+          "components": [
+            0.0824,
+            0.502,
+            0.2392
+          ]
         }
       },
       "green-800": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.0863, 0.3961, 0.2039]
+          "components": [
+            0.0863,
+            0.3961,
+            0.2039
+          ]
         }
       },
       "green-950": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.0196, 0.1804, 0.0863]
+          "components": [
+            0.0196,
+            0.1804,
+            0.0863
+          ]
         }
       },
       "red-50": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9961, 0.949, 0.949]
+          "components": [
+            0.9961,
+            0.949,
+            0.949
+          ]
         }
       },
       "red-300": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9882, 0.6471, 0.6471]
+          "components": [
+            0.9882,
+            0.6471,
+            0.6471
+          ]
         }
       },
       "red-500": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9373, 0.2667, 0.2667]
+          "components": [
+            0.9373,
+            0.2667,
+            0.2667
+          ]
         }
       },
       "red-800": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.6, 0.1059, 0.1059]
+          "components": [
+            0.6,
+            0.1059,
+            0.1059
+          ]
         }
       },
       "red-950": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.2706, 0.0392, 0.0392]
+          "components": [
+            0.2706,
+            0.0392,
+            0.0392
+          ]
         }
       },
       "amber-50": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [1, 0.9843, 0.9216]
+          "components": [
+            1,
+            0.9843,
+            0.9216
+          ]
         }
       },
       "amber-200": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9922, 0.902, 0.5412]
+          "components": [
+            0.9922,
+            0.902,
+            0.5412
+          ]
         }
       },
       "amber-800": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.5725, 0.251, 0.0549]
+          "components": [
+            0.5725,
+            0.251,
+            0.0549
+          ]
         }
       },
       "amber-950": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.2706, 0.102, 0.0118]
+          "components": [
+            0.2706,
+            0.102,
+            0.0118
+          ]
         }
       },
       "emerald-500": {
         "$description": "emerald-500, yellow-500, red-500 and blue-500 carry Tailwind's values for four-step rating indicators.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.0627, 0.7255, 0.5059]
+          "components": [
+            0.0627,
+            0.7255,
+            0.5059
+          ]
         }
       },
       "yellow-500": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9176, 0.702, 0.0314]
+          "components": [
+            0.9176,
+            0.702,
+            0.0314
+          ]
         }
       },
       "blue-500": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.2314, 0.5098, 0.9647]
+          "components": [
+            0.2314,
+            0.5098,
+            0.9647
+          ]
         }
       },
       "overlay": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0, 0, 0],
+          "components": [
+            0,
+            0,
+            0
+          ],
           "alpha": 0.64
         }
       },
@@ -380,20 +588,32 @@
         "$description": "Translucent black for a loading layer over an image.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0, 0, 0],
+          "components": [
+            0,
+            0,
+            0
+          ],
           "alpha": 0.3
         }
       },
       "primary-50": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9412, 0.9569, 1]
+          "components": [
+            0.9412,
+            0.9569,
+            1
+          ]
         }
       },
       "primary-200": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.7294, 0.8157, 1]
+          "components": [
+            0.7294,
+            0.8157,
+            1
+          ]
         }
       },
       "primary-500": {
@@ -402,7 +622,11 @@
       "primary-600": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0, 0.2588, 0.8314]
+          "components": [
+            0,
+            0.2588,
+            0.8314
+          ]
         }
       },
       "primary-foreground": {
@@ -411,13 +635,21 @@
       "secondary-50": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9529, 0.9922, 0.9765]
+          "components": [
+            0.9529,
+            0.9922,
+            0.9765
+          ]
         }
       },
       "secondary-100": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.8745, 0.9765, 0.9333]
+          "components": [
+            0.8745,
+            0.9765,
+            0.9333
+          ]
         }
       },
       "secondary-500": {
@@ -426,7 +658,11 @@
       "secondary-600": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.2078, 0.749, 0.5137]
+          "components": [
+            0.2078,
+            0.749,
+            0.5137
+          ]
         }
       },
       "secondary-foreground": {
@@ -435,25 +671,41 @@
       "tertiary-50": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9608, 0.9608, 0.9922]
+          "components": [
+            0.9608,
+            0.9608,
+            0.9922
+          ]
         }
       },
       "tertiary-100": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9373, 0.9333, 0.9843]
+          "components": [
+            0.9373,
+            0.9333,
+            0.9843
+          ]
         }
       },
       "tertiary-200": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.8706, 0.8667, 0.9686]
+          "components": [
+            0.8706,
+            0.8667,
+            0.9686
+          ]
         }
       },
       "tertiary-300": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.8078, 0.8, 0.9529]
+          "components": [
+            0.8078,
+            0.8,
+            0.9529
+          ]
         }
       },
       "tertiary-500": {
@@ -462,13 +714,21 @@
       "tertiary-600": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.3216, 0.302, 0.7569]
+          "components": [
+            0.3216,
+            0.302,
+            0.7569
+          ]
         }
       },
       "tertiary-800": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.1961, 0.1843, 0.4627]
+          "components": [
+            0.1961,
+            0.1843,
+            0.4627
+          ]
         }
       },
       "tertiary-foreground": {
@@ -477,93 +737,153 @@
       "gold-50": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [1, 0.9686, 0.9098]
+          "components": [
+            1,
+            0.9686,
+            0.9098
+          ]
         }
       },
       "gold-400": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [1, 0.7608, 0.302]
+          "components": [
+            1,
+            0.7608,
+            0.302
+          ]
         }
       },
       "gold-500": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9451, 0.6863, 0.1961]
+          "components": [
+            0.9451,
+            0.6863,
+            0.1961
+          ]
         }
       },
       "grape-50": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9725, 0.9608, 1]
+          "components": [
+            0.9725,
+            0.9608,
+            1
+          ]
         }
       },
       "grape-500": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.4353, 0.2392, 0.9922]
+          "components": [
+            0.4353,
+            0.2392,
+            0.9922
+          ]
         }
       },
       "grape-700": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.3137, 0.0784, 0.8157]
+          "components": [
+            0.3137,
+            0.0784,
+            0.8157
+          ]
         }
       },
       "scarlet-50": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [1, 0.9451, 0.9451]
+          "components": [
+            1,
+            0.9451,
+            0.9451
+          ]
         }
       },
       "scarlet-300": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9373, 0.698, 0.698]
+          "components": [
+            0.9373,
+            0.698,
+            0.698
+          ]
         }
       },
       "scarlet-400": {
         "$description": "Light destructive fill of the fixed system palette.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [1, 0.4392, 0.4392]
+          "components": [
+            1,
+            0.4392,
+            0.4392
+          ]
         }
       },
       "scarlet-500": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [1, 0.2314, 0.2314]
+          "components": [
+            1,
+            0.2314,
+            0.2314
+          ]
         }
       },
       "scarlet-600": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.8118, 0.2471, 0.2471]
+          "components": [
+            0.8118,
+            0.2471,
+            0.2471
+          ]
         }
       },
       "scarlet-700": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.7725, 0.1882, 0.1882]
+          "components": [
+            0.7725,
+            0.1882,
+            0.1882
+          ]
         }
       },
       "scarlet-800": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.5569, 0.149, 0.149]
+          "components": [
+            0.5569,
+            0.149,
+            0.149
+          ]
         }
       },
       "scarlet-900": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.5176, 0.1686, 0.1686]
+          "components": [
+            0.5176,
+            0.1686,
+            0.1686
+          ]
         }
       },
       "iris-tint": {
         "$description": "Translucent tint for a text highlight.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.2667, 0.3098, 0.898],
+          "components": [
+            0.2667,
+            0.3098,
+            0.898
+          ],
           "alpha": 0.1255
         }
       },
@@ -571,14 +891,22 @@
         "$description": "azure-tint-100 and azure-tint-200 are the translucent blue tints of the loading shimmer. Fixed values; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9216, 0.9529, 1],
+          "components": [
+            0.9216,
+            0.9529,
+            1
+          ],
           "alpha": 0.34
         }
       },
       "azure-tint-200": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.8118, 0.8588, 1],
+          "components": [
+            0.8118,
+            0.8588,
+            1
+          ],
           "alpha": 0.34
         }
       },
@@ -586,92 +914,152 @@
         "$description": "coral-500, citrine-500, chartreuse-500 and jade-500 are the four steps of the password-strength meter.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [1, 0.3216, 0.3216]
+          "components": [
+            1,
+            0.3216,
+            0.3216
+          ]
         }
       },
       "citrine-50": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [1, 0.9922, 0.9216]
+          "components": [
+            1,
+            0.9922,
+            0.9216
+          ]
         }
       },
       "citrine-300": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.8471, 0.8314, 0.6471]
+          "components": [
+            0.8471,
+            0.8314,
+            0.6471
+          ]
         }
       },
       "citrine-500": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9333, 0.7647, 0.1765]
+          "components": [
+            0.9333,
+            0.7647,
+            0.1765
+          ]
         }
       },
       "citrine-800": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.3843, 0.3647, 0.1294]
+          "components": [
+            0.3843,
+            0.3647,
+            0.1294
+          ]
         }
       },
       "chartreuse-500": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.651, 0.8039, 0.0471]
+          "components": [
+            0.651,
+            0.8039,
+            0.0471
+          ]
         }
       },
       "jade-50": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9451, 0.9843, 0.9686]
+          "components": [
+            0.9451,
+            0.9843,
+            0.9686
+          ]
         }
       },
       "jade-100": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.9059, 0.9725, 0.9451]
+          "components": [
+            0.9059,
+            0.9725,
+            0.9451
+          ]
         }
       },
       "jade-300": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.6627, 0.8667, 0.7882]
+          "components": [
+            0.6627,
+            0.8667,
+            0.7882
+          ]
         }
       },
       "jade-500": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0, 0.8275, 0.5843]
+          "components": [
+            0,
+            0.8275,
+            0.5843
+          ]
         }
       },
       "jade-600": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.1686, 0.6078, 0.4431]
+          "components": [
+            0.1686,
+            0.6078,
+            0.4431
+          ]
         }
       },
       "jade-700": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.1255, 0.4627, 0.3333]
+          "components": [
+            0.1255,
+            0.4627,
+            0.3333
+          ]
         }
       },
       "mint-100": {
         "$description": "mint-100, mint-500 and mint-600 are the tint, fill and strong shade of success states. Fixed values; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.8745, 0.9765, 0.9333]
+          "components": [
+            0.8745,
+            0.9765,
+            0.9333
+          ]
         }
       },
       "mint-500": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.2392, 0.8627, 0.5922]
+          "components": [
+            0.2392,
+            0.8627,
+            0.5922
+          ]
         }
       },
       "mint-600": {
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.2078, 0.749, 0.5137]
+          "components": [
+            0.2078,
+            0.749,
+            0.5137
+          ]
         }
       }
     },
@@ -747,7 +1135,12 @@
     "easing": {
       "$type": "cubicBezier",
       "standard": {
-        "$value": [0.2, 0, 0, 1]
+        "$value": [
+          0.2,
+          0,
+          0,
+          1
+        ]
       }
     },
     "shadow": {
@@ -756,7 +1149,11 @@
         "$value": {
           "color": {
             "colorSpace": "srgb",
-            "components": [0.0588, 0.0902, 0.1647],
+            "components": [
+              0.0588,
+              0.0902,
+              0.1647
+            ],
             "alpha": 0.12
           },
           "offsetX": {
@@ -782,7 +1179,11 @@
           {
             "color": {
               "colorSpace": "srgb",
-              "components": [0.0588, 0.0902, 0.1647],
+              "components": [
+                0.0588,
+                0.0902,
+                0.1647
+              ],
               "alpha": 0.12
             },
             "offsetX": {
@@ -805,7 +1206,11 @@
           {
             "color": {
               "colorSpace": "srgb",
-              "components": [0.0588, 0.0902, 0.1647],
+              "components": [
+                0.0588,
+                0.0902,
+                0.1647
+              ],
               "alpha": 0.08
             },
             "offsetX": {
@@ -832,7 +1237,11 @@
         "$value": {
           "color": {
             "colorSpace": "srgb",
-            "components": [0.149, 0.1922, 0.3059],
+            "components": [
+              0.149,
+              0.1922,
+              0.3059
+            ],
             "alpha": 0.09
           },
           "offsetX": {
@@ -858,7 +1267,11 @@
           {
             "color": {
               "colorSpace": "srgb",
-              "components": [0.0706, 0.0863, 0.1216],
+              "components": [
+                0.0706,
+                0.0863,
+                0.1216
+              ],
               "alpha": 0.03
             },
             "offsetX": {
@@ -881,7 +1294,11 @@
           {
             "color": {
               "colorSpace": "srgb",
-              "components": [0.0706, 0.0863, 0.1216],
+              "components": [
+                0.0706,
+                0.0863,
+                0.1216
+              ],
               "alpha": 0.15
             },
             "offsetX": {
@@ -907,7 +1324,11 @@
         "$value": {
           "color": {
             "colorSpace": "srgb",
-            "components": [0, 0, 0],
+            "components": [
+              0,
+              0,
+              0
+            ],
             "alpha": 0.1
           },
           "offsetX": {
@@ -933,7 +1354,11 @@
         "$value": {
           "color": {
             "colorSpace": "srgb",
-            "components": [0, 0, 0],
+            "components": [
+              0,
+              0,
+              0
+            ],
             "alpha": 0.25
           },
           "offsetX": {
@@ -958,7 +1383,11 @@
         "$value": {
           "color": {
             "colorSpace": "srgb",
-            "components": [0, 0, 0],
+            "components": [
+              0,
+              0,
+              0
+            ],
             "alpha": 0.15
           },
           "offsetX": {

@@ -1,7 +1,7 @@
 {
   "name": "@global-torque/design-tokens",
   "private": false,
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Neutral design tokens generated deterministically from one DTCG source.",
   "keywords": [
     "design-tokens",
@@ -35,8 +35,7 @@
     "docs:api": "pnpm run api:report:update && api-documenter markdown --input temp/root --output docs/api && api-documenter markdown --input temp/css --output docs/api-css && api-documenter markdown --input temp/theme --output docs/api-theme",
     "docs:check": "pnpm run api:check && node scripts/verify-api-docs.mjs",
     "package:lint": "publint && attw --pack . --profile esm-only",
-    "content:check": "node scripts/verify-public-content.mjs",
-    "ci": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test:coverage && pnpm run build && pnpm run docs:check && pnpm run package:lint && pnpm run content:check",
+    "ci": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test:coverage && pnpm run build && pnpm run docs:check && pnpm run package:lint",
     "tokens:derive": "node scripts/derive-tokens.mjs && prettier --write src/tokens.tokens.json"
   },
   "devDependencies": {

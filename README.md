@@ -1,6 +1,6 @@
 # @global-torque/design-tokens
 
-> **Stable release:** `0.3.0` adds the brand seeds, the accent steps derived
+> **Stable release:** `0.3.1` adds the brand seeds, the accent steps derived
 > from them, and the `./derive` entry point. It removes token families and
 > moves token values, so it does not drop in over `0.2.1`.
 
@@ -23,7 +23,7 @@ activation, routes, environment reads, or private URLs.
 ## Install
 
 ```sh
-pnpm add @global-torque/design-tokens@0.3.0
+pnpm add @global-torque/design-tokens@0.3.1
 ```
 
 Required and release-candidate CI run on Node 24.x.
@@ -143,6 +143,32 @@ rebuild and no derivation in JavaScript are required. The three
 `--brand-*-foreground` seeds default to the surface seeds; set them only to
 override that pairing.
 
+The neutral steps follow the two surface seeds as well. Each `grey-*`,
+`neutral-*`, `steel-*`, `slate-*`, `navy-*`, and `charcoal-*` step keeps a
+fixed per-channel offset from one of the two default seeds: steps with a
+CIE lightness of 40 or more (fills, borders, secondary text) from
+`--brand-surface-light`, darker ones (strong text, dark surfaces) from
+`--brand-surface-dark`. The generated CSS re-declares each step as that seed
+shifted by its offset, for example
+`rgb(from var(--brand-surface-light) calc(r - 22) calc(g - 19) calc(b - 16))`
+for `grey-200`, so the default seeds give back the dictionary values exactly and
+a tinted seed tints every neutral role. In light mode `background-surface` and
+`background-elevated` resolve to `--brand-surface-light` itself. The
+re-declaration sits in an `@supports` block that requires relative color syntax
+and `round()`; other browsers keep the dictionary values, as do the JavaScript
+and JSON exports. `getPropertyValue()` returns the formula, not a color, for a
+derived step and for any variable that aliases one, such as
+`--gt-color-border-default`; read a painted property such as `color` instead,
+which can serialize as `color(srgb ...)`.
+
+Where that block applies, gradients and running color transitions that use a
+derived step, directly or through an alias, blend in Oklab rather than sRGB,
+even at the default seeds. To keep sRGB in a gradient, repeat it after the
+original declaration with `in srgb`, inside
+`@supports (background: linear-gradient(in srgb, transparent, transparent))`;
+unguarded, an engine without `in srgb` still accepts a `var()` value and then
+paints no gradient.
+
 ```js
 const { style } = document.documentElement;
 style.setProperty('--brand-primary', '#004fff');
@@ -175,9 +201,10 @@ The function is pure and throws on a seed that is not a six-digit hex color.
 
 - `primitive` contains the `brand` seeds, the accent steps derived from them
   (`primary-50/-500/-foreground`, `secondary-50/-500/-foreground` and
-  `tertiary-50/-100/-200/-300/-500/-600/-800/-foreground`), the fixed system
-  palette, the fixed status colors, the fixed colors and elevations of the
-  surfaces, and the spacing, radius, font, shadow, duration, and easing values.
+  `tertiary-50/-100/-200/-300/-500/-600/-800/-foreground`), the neutral steps
+  that follow the surface seeds, the fixed system palette, the fixed status
+  colors, the fixed elevations of the surfaces, and the spacing, radius, font,
+  shadow, duration, and easing values.
 - `semantic.light` and `semantic.dark` assign accessible interface meaning,
   including canvas/surface/overlay, foregrounds, borders/focus, accent,
   accent-secondary, accent-subtle, the positive/negative/neutral/warning tint

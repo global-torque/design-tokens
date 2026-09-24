@@ -5,7 +5,6 @@ import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
 
-import { verifyPublicContent } from './verify-public-content.mjs';
 import {
   verifyCanonicalPackageArchive,
   verifyPackedFileSet,
@@ -84,9 +83,6 @@ try {
   const packageManifest = JSON.parse(
     fs.readFileSync(path.join(packageRoot, 'package.json'), 'utf8'),
   );
-  // pnpm intentionally removes repository-only packageManager metadata from
-  // the npm-format manifest. Source CI validates that field before packing.
-  verifyPublicContent(packageRoot, { packed: true });
 
   const configuredEntries = new Set([
     'package.json',

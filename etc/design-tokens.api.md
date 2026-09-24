@@ -204,6 +204,9 @@ const designTokens: {
             readonly "jade-500": "#00d395";
             readonly "jade-600": "#2b9b71";
             readonly "jade-700": "#207655";
+            readonly "mint-100": "#dff9ee";
+            readonly "mint-500": "#3ddc97";
+            readonly "mint-600": "#35bf83";
             readonly "navy-800": "#243046";
             readonly "navy-900": "#1a202d";
             readonly "neutral-100": "#ececed";

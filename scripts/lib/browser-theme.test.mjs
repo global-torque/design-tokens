@@ -23,13 +23,22 @@ describe('explicit browser theme activation', () => {
     try {
       const context = await browser.newContext({ colorScheme: 'dark' });
       const page = await context.newPage();
-      await page.setContent(`<style>${css}</style><main>theme</main>`);
+      await page.setContent(
+        `<style>${css}</style><main style="background: var(--gt-color-background-surface)">theme</main>`,
+      );
+      /* The painted surface as hex: the dark surface is a relative color, so
+         the custom property holds its formula rather than a color value. */
       const surface = () =>
-        page.evaluate(() =>
-          getComputedStyle(document.documentElement)
-            .getPropertyValue('--gt-color-background-surface')
-            .trim(),
-        );
+        page.evaluate(() => {
+          const painter = document.createElement('canvas').getContext('2d');
+          painter.fillStyle = getComputedStyle(
+            document.querySelector('main'),
+          ).backgroundColor;
+          painter.fillRect(0, 0, 1, 1);
+          return `#${[...painter.getImageData(0, 0, 1, 1).data.subarray(0, 3)]
+            .map((channel) => channel.toString(16).padStart(2, '0'))
+            .join('')}`;
+        });
 
       await expect(surface()).resolves.toBe(expected('light'));
       await page.evaluate(() => document.documentElement.classList.add('dark'));

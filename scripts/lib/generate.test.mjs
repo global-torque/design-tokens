@@ -140,13 +140,25 @@ const mixHex = (color, into, fraction) => {
     .join('')}`;
 };
 
+/* The arithmetic of a relative `rgb(from <color> calc(r - n) …)`: each byte
+   of the color moves by its offset. */
+const shiftHex = (color, offsets) =>
+  `#${[1, 3, 5]
+    .map((start, index) =>
+      (parseInt(color.slice(start, start + 2), 16) + offsets[index])
+        .toString(16)
+        .padStart(2, '0'),
+    )
+    .join('')}`;
+
 /**
  * Follows `var(--other)` references and evaluates
- * `color-mix(in srgb, <color> <p>%, <color>)` so CSS values can be compared
- * with the resolved runtime literals. The stylesheet keeps the DTCG alias
- * chain, so a semantic variable points at a primitive instead of repeating its
- * value. Throws on a dangling or cyclic reference, which the flat form could
- * not catch.
+ * `color-mix(in srgb, <color> <p>%, <color>)` and
+ * `rgb(from <color> calc(r ± n) calc(g ± n) calc(b ± n))` so CSS values can be
+ * compared with the resolved runtime literals. The stylesheet keeps the DTCG
+ * alias chain, so a semantic variable points at a primitive instead of
+ * repeating its value. Throws on a dangling or cyclic reference, which the flat
+ * form could not catch.
  */
 const resolveCssVariables = (variables, inherited = new Map()) => {
   const scope = new Map([...inherited, ...variables]);
@@ -161,8 +173,17 @@ const resolveCssVariables = (variables, inherited = new Map()) => {
       return match ? resolve(match[1], new Set([...seen, name])) : part;
     };
     const mix = value.match(/^color-mix\(in srgb, (\S+) ([\d.]+)%, (\S+)\)$/u);
-    return mix
-      ? mixHex(follow(mix[1]), follow(mix[3]), Number(mix[2]) / 100)
+    if (mix) {
+      return mixHex(follow(mix[1]), follow(mix[3]), Number(mix[2]) / 100);
+    }
+    const relative = value.match(
+      /^rgb\(from (\S+) calc\(r ([+-] \d+)\) calc\(g ([+-] \d+)\) calc\(b ([+-] \d+)\)\)$/u,
+    );
+    return relative
+      ? shiftHex(
+          follow(relative[1]),
+          relative.slice(2).map((offset) => Number(offset.replace(' ', ''))),
+        )
       : follow(value);
   };
   return new Map(
@@ -950,6 +971,21 @@ describe('artifact generation', () => {
         ),
       ),
     ).toEqual(sortedObject(expectedVariables.dark));
+    const derivedVariables = parseCssVariables(
+      css,
+      '@supports (color: rgb(from red calc(r - 1) g b)) and (width: round(1px, 1px))',
+    );
+    expect(derivedVariables.size).toBe(28);
+    expect(
+      sortedObject(resolveCssVariables(derivedVariables, baseVariables)),
+    ).toEqual(
+      sortedObject(
+        [...derivedVariables.keys()].map((name) => [
+          name,
+          expectedVariables.base.get(name),
+        ]),
+      ),
+    );
     expect(declarationDesignTokens(declaration)).toEqual(json);
     expect(sourceMap.sources).toEqual(['../src/tokens.tokens.json']);
     expect(sourceMap.sourcesContent).toEqual([sourceText]);
