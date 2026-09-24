@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.1 - 2026-09-24
 
 - Derived the grey, neutral, steel, slate, navy, and charcoal steps from the
   surface seeds: the generated CSS re-declares each step, inside an `@supports`

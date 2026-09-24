@@ -1,6 +1,6 @@
 # @global-torque/design-tokens
 
-> **Stable release:** `0.3.0` adds the brand seeds, the accent steps derived
+> **Stable release:** `0.3.1` adds the brand seeds, the accent steps derived
 > from them, and the `./derive` entry point. It removes token families and
 > moves token values, so it does not drop in over `0.2.1`.
 
@@ -23,7 +23,7 @@ activation, routes, environment reads, or private URLs.
 ## Install
 
 ```sh
-pnpm add @global-torque/design-tokens@0.3.0
+pnpm add @global-torque/design-tokens@0.3.1
 ```
 
 Required and release-candidate CI run on Node 24.x.
