@@ -23,8 +23,7 @@ available at <https://developercertificate.org/>.
 2. Install the package manager version declared by `packageManager`.
 3. Run the repository's `pnpm run ci` command.
 4. Explain public API, compatibility, privacy, and supply-chain impact.
-5. Do not commit generated package output unless the repository policy names
-   it as source.
+5. Keep `dist/` committed so consumers can install a commit, and rebuild it with `pnpm run build` when sources change.
 
 Security reports must use GitHub private vulnerability reporting, not a public
 issue.
