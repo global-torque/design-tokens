@@ -1,7 +1,42 @@
 # Changelog
 
-## 0.3.1 - 2026-09-24
+## 0.4.0 - 2026-10-05
 
+This release includes the unreleased `0.3.1` changes. It does not drop in over
+`0.3.0`.
+
+- Added the standard shadcn variables to `:root`: `--background`,
+  `--foreground`, `--card`, `--card-foreground`, `--popover`,
+  `--popover-foreground`, `--primary`, `--primary-foreground`, `--secondary`,
+  `--secondary-foreground`, `--muted`, `--muted-foreground`, `--accent`,
+  `--accent-foreground`, `--destructive`, `--destructive-foreground`,
+  `--border`, `--input`, `--ring`, `--chart-1` to `--chart-5`, `--sidebar`,
+  `--sidebar-foreground`, `--sidebar-primary`, `--sidebar-primary-foreground`,
+  `--sidebar-accent`, `--sidebar-accent-foreground`, `--sidebar-border`,
+  `--sidebar-ring`, `--radius`, and `--font-sans`. Each color aliases the
+  palette value its `--gt-color-*` role pointed at, so it resolves to the same
+  value at any seeds; `--radius` and `--font-sans` alias `radius-md` and
+  `font-family-sans`, which follow `--brand-radius` and `--brand-font-sans`.
+- Added the `--success`, `--warning`, and `--info` status fills (`mint-500`,
+  `gold-500`, `grape-500`) with their `-foreground` pairs. The fills are fixed
+  system colors that a rebrand does not move; `--success-foreground` and
+  `--warning-foreground` follow the dark surface seed, and
+  `--info-foreground` is white.
+- Removed the 37 `--gt-color-*` roles and the 16 `--gt-component-*` tokens;
+  the table below names the replacement for each.
+- Removed the dark set: the `:is(.dark, [data-theme="dark"])` block, the dark
+  semantic and component values, `designTokens.modes`, and the
+  `DesignTokenMode` type.
+- Removed the `./theme` entry point with its `@theme inline` mappings and the
+  `*-gt-*` Tailwind utilities, such as `bg-gt-background-surface` and
+  `p-gt-4`. A shadcn host maps the shadcn variables in its own `@theme inline`.
+  The `--gt-primitive-*` variables remain; map any you still need in the host's
+  `@theme inline`, for example `--spacing-gt-4: var(--gt-primitive-spacing-4)`.
+- Changed the typed and JSON shape to `{ primitive, semantic }`. `semantic` is
+  flat and keyed by variable name, for example `designTokens.semantic.background`
+  and `designTokens.semantic['chart-1']`; `./tokens.json` and `./source` follow.
+  `ResolvedDesignTokens` is unchanged.
+- Kept the ten `--brand-*` seeds and the 118 `--gt-primitive-*` palette values.
 - Derived the grey, neutral, steel, slate, navy, and charcoal steps from the
   surface seeds: the generated CSS re-declares each step, inside an `@supports`
   block for relative color syntax and `round()`, as its surface seed (the light
@@ -10,9 +45,8 @@
   default seeds give back every value exactly; browsers without that support
   keep the dictionary values.
 - Behavior change for hosts that override `--brand-surface-light` or
-  `--brand-surface-dark`: the neutral fills, borders, text, and dark surfaces,
-  and the light `background-surface` and `background-elevated`, now move with
-  the override instead of staying fixed.
+  `--brand-surface-dark`: the neutral fills, borders, text, and dark surfaces
+  now move with the override instead of staying fixed.
 - Behavior change even at the default seeds: where the `@supports` block
   applies, gradients and running color transitions that use a derived step,
   directly or through an alias, blend in Oklab rather than sRGB. To keep sRGB in
@@ -20,15 +54,88 @@
   `@supports (background: linear-gradient(in srgb, transparent, transparent))`;
   unguarded, an engine without `in srgb` still accepts a `var()` value and then
   paints no gradient.
-- Pointed the light `background-surface` and `background-elevated` at
-  `neutral-25`, the light surface seed, instead of `white`; the default seed
-  keeps them white.
+- `--card` and `--popover`, like `--background`, alias `neutral-25`, the light
+  surface seed, where the `0.3.0` `background-surface` and
+  `background-elevated` stayed `white`; the default seed keeps them white.
 - Added the fixed `mint-100`, `mint-500`, and `mint-600` success colors, holding
   the default secondary values; a rebrand does not move them.
 - Changed what `getPropertyValue()` returns for a derived neutral step and for
-  any variable that aliases one, such as `--gt-color-border-default`: the
-  formula rather than a hex value. Read a painted property such as `color`
-  instead; it can serialize as `color(srgb ...)` rather than `rgb()`.
+  any variable that aliases one, such as `--border`: the formula rather than a
+  hex value. Read a painted property such as `color` instead; it can serialize
+  as `color(srgb ...)` rather than `rgb()`.
+- Removed the Tailwind compatibility tooling with `./theme`: the `tailwindcss`
+  development dependency, the `test:tailwind:current` script, and its fixture.
+  The generator no longer accepts typography or animation tokens; the source
+  has neither, and only `./theme` emitted the animation keyframes.
+
+### Migration
+
+Each replacement gives the value the removed variable had in the light set.
+Where there is no replacement variable, the table names the shadcn utility
+class to use instead. Status utilities such as `bg-success` need the host's
+`@theme inline` to map them, for example `--color-success: var(--success)`.
+
+| Removed                                          | Use instead                             |
+| ------------------------------------------------ | --------------------------------------- |
+| `--gt-color-accent-background`                   | `--primary`                             |
+| `--gt-color-accent-background-hover`             | no replacement: `hover:bg-primary/80`   |
+| `--gt-color-accent-foreground`                   | `--primary-foreground`                  |
+| `--gt-color-accent-secondary-background`         | `--secondary`                           |
+| `--gt-color-accent-secondary-foreground`         | `--secondary-foreground`                |
+| `--gt-color-accent-subtle`                       | `--accent`                              |
+| `--gt-color-accent-subtle-foreground`            | `--accent-foreground`                   |
+| `--gt-color-background-canvas`                   | `--background`                          |
+| `--gt-color-background-elevated`                 | `--popover`                             |
+| `--gt-color-background-overlay`                  | no replacement: `bg-black/10`           |
+| `--gt-color-background-sidebar`                  | `--sidebar`                             |
+| `--gt-color-background-subtle`                   | `--muted`                               |
+| `--gt-color-background-surface`                  | `--card`                                |
+| `--gt-color-border-default`                      | `--border`                              |
+| `--gt-color-border-focus`                        | `--ring`                                |
+| `--gt-color-border-input`                        | `--input`                               |
+| `--gt-color-chart-1`                             | `--chart-1`                             |
+| `--gt-color-chart-2`                             | `--chart-2`                             |
+| `--gt-color-chart-3`                             | `--chart-3`                             |
+| `--gt-color-chart-4`                             | `--chart-4`                             |
+| `--gt-color-chart-5`                             | `--chart-5`                             |
+| `--gt-color-foreground-default`                  | `--foreground`                          |
+| `--gt-color-foreground-disabled`                 | no replacement: `text-muted-foreground` |
+| `--gt-color-foreground-muted`                    | `--muted-foreground`                    |
+| `--gt-color-negative-background`                 | no replacement: `bg-destructive/10`     |
+| `--gt-color-negative-border`                     | no replacement: `border-destructive`    |
+| `--gt-color-negative-foreground`                 | no replacement: `text-destructive`      |
+| `--gt-color-negative-solid`                      | `--destructive`                         |
+| `--gt-color-negative-solid-foreground`           | `--destructive-foreground`              |
+| `--gt-color-neutral-background`                  | no replacement: `bg-muted`              |
+| `--gt-color-neutral-foreground`                  | no replacement: `text-muted-foreground` |
+| `--gt-color-positive-background`                 | no replacement: `bg-success/20`         |
+| `--gt-color-positive-border`                     | no replacement: `border-success`        |
+| `--gt-color-positive-foreground`                 | no replacement: `text-foreground`       |
+| `--gt-color-warning-background`                  | no replacement: `bg-warning/10`         |
+| `--gt-color-warning-border`                      | no replacement: `border-warning`        |
+| `--gt-color-warning-foreground`                  | no replacement: `text-foreground`       |
+| `--gt-component-button-disabled-background`      | no replacement: `disabled:opacity-50`   |
+| `--gt-component-button-disabled-foreground`      | no replacement: `disabled:opacity-50`   |
+| `--gt-component-button-focus-ring`               | `--ring`                                |
+| `--gt-component-button-primary-background`       | `--primary`                             |
+| `--gt-component-button-primary-background-hover` | no replacement: `hover:bg-primary/80`   |
+| `--gt-component-button-primary-foreground`       | `--primary-foreground`                  |
+| `--gt-component-dialog-background`               | `--popover`                             |
+| `--gt-component-dialog-foreground`               | `--popover-foreground`                  |
+| `--gt-component-dialog-overlay`                  | no replacement: `bg-black/10`           |
+| `--gt-component-input-border`                    | `--input`                               |
+| `--gt-component-toast-negative-background`       | no replacement: `bg-destructive/10`     |
+| `--gt-component-toast-negative-foreground`       | no replacement: `text-destructive`      |
+| `--gt-component-toast-neutral-background`        | no replacement: `bg-muted`              |
+| `--gt-component-toast-neutral-foreground`        | no replacement: `text-muted-foreground` |
+| `--gt-component-toast-positive-background`       | no replacement: `bg-success/20`         |
+| `--gt-component-toast-positive-foreground`       | no replacement: `text-foreground`       |
+
+In JavaScript and JSON, a role or component token moves to the `semantic` key
+of its replacement variable: `modes.light.semantic.color['background-canvas']`
+becomes `semantic.background`, and `modes.light.component.input.border` becomes
+`semantic.input`. A name with no replacement has no key. The `primitive` paths
+are unchanged.
 
 ## 0.3.0 - 2026-09-19
 

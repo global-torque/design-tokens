@@ -160,10 +160,8 @@ try {
   if (jsonSpecifiers.length !== 2) {
     throw new Error('Expected both installed JSON public subpaths');
   }
-  if (cssResolutions.length !== 4) {
-    throw new Error(
-      'Expected style and default conditions for both CSS exports',
-    );
+  if (cssResolutions.length !== 2) {
+    throw new Error('Expected style and default conditions for the CSS export');
   }
 
   const javascriptImports = specifiers

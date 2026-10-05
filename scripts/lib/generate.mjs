@@ -29,7 +29,6 @@ const KNOWN_TYPES = new Set([
   'fontWeight',
   'number',
   'shadow',
-  'typography',
 ]);
 const GROUP_PROPERTIES = new Set([
   '$deprecated',
@@ -181,34 +180,6 @@ const validateShadow = (value, label) => {
   }
 };
 
-const validateTypography = (value, label) => {
-  if (!isRecord(value)) {
-    throw new Error(`${label} must be a DTCG typography object.`);
-  }
-  const required = [
-    'fontFamily',
-    'fontSize',
-    'fontWeight',
-    'letterSpacing',
-    'lineHeight',
-  ];
-  assertObjectKeys(value, required, label);
-  for (const field of required) {
-    if (!(field in value)) {
-      throw new Error(`${label}.${field} is required.`);
-    }
-  }
-  validateTypedValue('fontFamily', value.fontFamily, `${label}.fontFamily`);
-  validateTypedValue('dimension', value.fontSize, `${label}.fontSize`);
-  validateTypedValue('fontWeight', value.fontWeight, `${label}.fontWeight`);
-  validateTypedValue(
-    'dimension',
-    value.letterSpacing,
-    `${label}.letterSpacing`,
-  );
-  validateTypedValue('number', value.lineHeight, `${label}.lineHeight`);
-};
-
 const validateTypedValue = (type, value, label) => {
   switch (type) {
     case 'color':
@@ -283,9 +254,6 @@ const validateTypedValue = (type, value, label) => {
       return;
     case 'shadow':
       validateShadow(value, label);
-      return;
-    case 'typography':
-      validateTypography(value, label);
       return;
     default:
       throw new Error(`Unsupported DTCG type ${String(type)} at ${label}.`);
@@ -364,20 +332,15 @@ const resolveTokens = (tokens) => {
   const resolving = [];
 
   const assertReferenceBoundary = (source, target) => {
-    const [sourceLayer, sourceMode] = source.path;
-    const [targetLayer, targetMode] = target.path;
+    const [sourceLayer] = source.path;
+    const [targetLayer] = target.path;
     const allowed =
       (sourceLayer === 'primitive' && targetLayer === 'primitive') ||
-      (sourceLayer === 'semantic' && targetLayer === 'primitive') ||
       (sourceLayer === 'semantic' &&
-        targetLayer === 'semantic' &&
-        sourceMode === targetMode) ||
-      (sourceLayer === 'component' &&
-        (targetLayer === 'semantic' || targetLayer === 'component') &&
-        sourceMode === targetMode);
+        (targetLayer === 'primitive' || targetLayer === 'semantic'));
     if (!allowed) {
       throw new Error(
-        `${source.path.join('.')} cannot reference ${target.path.join('.')} across token layer or mode boundaries.`,
+        `${source.path.join('.')} cannot reference ${target.path.join('.')} across token layer boundaries.`,
       );
     }
   };
@@ -410,51 +373,11 @@ const resolveTokens = (tokens) => {
     return value;
   };
 
-  const assertReferenceType = (value, expectedType, label, source) => {
-    const reference =
-      typeof value === 'string' ? value.match(TOKEN_REFERENCE)?.[1] : undefined;
-    if (!reference) return;
-    const target = resolveToken(reference);
-    assertReferenceBoundary(source, target);
-    if (target.type !== expectedType) {
-      throw new Error(
-        `${label} must reference ${expectedType}, received ${target.type}.`,
-      );
-    }
-  };
-
-  const assertCompositeReferenceTypes = (type, value, label, source) => {
-    if (type === 'typography' && isRecord(value)) {
-      const fields = {
-        fontFamily: 'fontFamily',
-        fontSize: 'dimension',
-        fontWeight: 'fontWeight',
-        letterSpacing: 'dimension',
-        lineHeight: 'number',
-      };
-      for (const [field, expectedType] of Object.entries(fields)) {
-        assertReferenceType(
-          value[field],
-          expectedType,
-          `${label}.${field}`,
-          source,
-        );
-      }
-    }
-  };
-
   const resolveToken = (tokenPath) => {
     const cached = resolved.get(tokenPath);
     if (cached) return cached;
     const token = tokens.get(tokenPath);
     if (!token) throw new Error(`Unknown DTCG token reference {${tokenPath}}.`);
-    if (
-      (token.path[0] === 'semantic' || token.path[0] === 'component') &&
-      token.path[1] !== 'light' &&
-      token.path[1] !== 'dark'
-    ) {
-      throw new Error(`${tokenPath} must use an explicit light or dark mode.`);
-    }
     if (resolving.includes(tokenPath)) {
       throw new Error(
         `Circular DTCG reference: ${[...resolving, tokenPath].join(' -> ')}.`,
@@ -481,18 +404,6 @@ const resolveTokens = (tokens) => {
       ) {
         throw new Error(
           `Token ${tokenPath} declares ${token.declaredType} but references ${referenced.type}.`,
-        );
-      }
-      assertCompositeReferenceTypes(type, token.node.$value, tokenPath, token);
-      const fontVariant =
-        token.node.$extensions?.['org.global-torque.css']?.fontVariantNumeric;
-      if (
-        type === 'typography' &&
-        fontVariant !== undefined &&
-        fontVariant !== 'tabular-nums'
-      ) {
-        throw new Error(
-          `${tokenPath} fontVariantNumeric must be the safe tabular-nums keyword.`,
         );
       }
       const value = resolveValue(token.node.$value, token);
@@ -595,92 +506,36 @@ export const toCssValue = (type, value) => {
   }
 };
 
-const typographyToRuntime = (value, node) => {
-  const variant =
-    node?.$extensions?.['org.global-torque.css']?.fontVariantNumeric;
-  return {
-    fontFamily: toCssValue('fontFamily', value.fontFamily),
-    fontSize: toCssValue('dimension', value.fontSize),
-    fontWeight: toCssValue('fontWeight', value.fontWeight),
-    letterSpacing: toCssValue('dimension', value.letterSpacing),
-    lineHeight: toCssValue('number', value.lineHeight),
-    ...(typeof variant === 'string' ? { fontVariantNumeric: variant } : {}),
-  };
-};
-
-const toRuntimeValue = (type, value, node) =>
-  type === 'typography'
-    ? typographyToRuntime(value, node)
-    : toCssValue(type, value);
-
 const makeRuntimeTree = (resolved) => {
   const runtime = createDictionary();
-  defineData(runtime, 'modes', createDictionary());
-  defineData(runtime.modes, 'dark', createDictionary());
-  defineData(runtime.modes, 'light', createDictionary());
   defineData(runtime, 'primitive', createDictionary());
+  defineData(runtime, 'semantic', createDictionary());
   for (const token of [...resolved.values()].sort((left, right) =>
     compareCodePoints(left.path.join('.'), right.path.join('.')),
   )) {
-    const [layer, mode, ...rest] = token.path;
-    const value = toRuntimeValue(token.type, token.value, token.node);
-    if (layer === 'primitive') {
-      setPath(runtime.primitive, [mode, ...rest], value);
-    } else if (layer === 'semantic' && (mode === 'light' || mode === 'dark')) {
-      setPath(runtime.modes[mode], ['semantic', ...rest], value);
-    } else if (layer === 'component' && (mode === 'light' || mode === 'dark')) {
-      setPath(runtime.modes[mode], ['component', ...rest], value);
-    } else {
+    const [layer, ...rest] = token.path;
+    if (layer !== 'primitive' && layer !== 'semantic') {
       throw new Error(
-        `Token ${token.path.join('.')} is outside primitive/semantic/component layers.`,
+        `Token ${token.path.join('.')} is outside primitive/semantic layers.`,
       );
     }
+    setPath(runtime[layer], rest, toCssValue(token.type, token.value));
   }
   return runtime;
 };
 
-const assertModeParity = (resolved) => {
-  for (const layer of ['semantic', 'component']) {
-    const values = new Map();
-    for (const token of resolved.values()) {
-      if (token.path[0] !== layer) continue;
-      const mode = token.path[1];
-      if (mode !== 'light' && mode !== 'dark') {
-        throw new Error(
-          `${token.path.join('.')} must use an explicit light or dark mode.`,
-        );
-      }
-      const key = token.path.slice(2).join('.');
-      const pair = values.get(key) ?? {};
-      const variant =
-        token.node.$extensions?.['org.global-torque.css']?.fontVariantNumeric;
-      pair[mode] =
-        `${token.type}:${typeof variant === 'string' ? variant : ''}`;
-      values.set(key, pair);
-    }
-    for (const [key, pair] of values) {
-      if (!pair.light || !pair.dark || pair.light !== pair.dark) {
-        throw new Error(
-          `${layer}.${key} must have type-matched light and dark values.`,
-        );
-      }
-    }
-  }
-};
-
 const variableName = (token) => {
-  const [layer, mode, ...rest] = token.path;
-  if (layer === 'primitive' && mode === 'brand')
+  const [layer, category, ...rest] = token.path;
+  if (layer === 'primitive' && category === 'brand')
     return `--brand-${rest.join('-')}`;
   if (layer === 'primitive')
-    return `--gt-primitive-${[mode, ...rest].join('-')}`;
-  if (layer === 'semantic') return `--gt-${rest.join('-')}`;
-  return `--gt-component-${rest.join('-')}`;
+    return `--gt-primitive-${[category, ...rest].join('-')}`;
+  return `--${[category, ...rest].join('-')}`;
 };
 
 /**
  * Renders a DTCG alias as a CSS `var()` reference to the token it points at, so
- * the primitive -> semantic -> component chain survives into the stylesheet.
+ * the primitive -> semantic chain survives into the stylesheet.
  * Returns undefined for literal values, which are emitted as-is.
  */
 const aliasReference = (rawValue) => {
@@ -711,50 +566,30 @@ const brandMix = (token) => {
     : `color-mix(in srgb, var(--brand-${family}) ${percent(entry.tint)}%, var(--brand-surface-light))`;
 };
 
-const cssDeclarations = (token) => {
-  const name = variableName(token);
-  if (token.type !== 'typography') {
-    return [
-      [
-        name,
-        aliasReference(token.node.$value) ??
-          brandMix(token) ??
-          toCssValue(token.type, token.value),
-      ],
-    ];
-  }
-  const value = typographyToRuntime(token.value, token.node);
-  const fields = isRecord(token.node.$value) ? token.node.$value : {};
-  const declarations = sortedEntries(value).map(([property, propertyValue]) => [
-    `${name}-${property.replace(/[A-Z]/gu, (letter) => `-${letter.toLowerCase()}`)}`,
-    aliasReference(fields[property]) ?? propertyValue,
-  ]);
-  return declarations;
-};
+const tokenDeclaration = (token) => [
+  variableName(token),
+  aliasReference(token.node.$value) ??
+    brandMix(token) ??
+    toCssValue(token.type, token.value),
+];
 
 const assertNoOutputCollisions = (resolved) => {
-  const buckets = { base: new Map(), dark: new Map() };
+  const names = new Map();
   for (const token of resolved.values()) {
-    const bucket =
-      token.path[0] === 'primitive' || token.path[1] === 'light'
-        ? buckets.base
-        : buckets.dark;
-    for (const [name] of cssDeclarations(token)) {
-      const existing = bucket.get(name);
-      const current = token.path.join('.');
-      if (existing && existing !== current) {
-        throw new Error(
-          `CSS output collision ${name} is produced by ${existing} and ${current}.`,
-        );
-      }
-      bucket.set(name, current);
+    const name = variableName(token);
+    const current = token.path.join('.');
+    const existing = names.get(name);
+    if (existing) {
+      throw new Error(
+        `CSS output collision ${name} is produced by ${existing} and ${current}.`,
+      );
     }
+    names.set(name, current);
   }
 };
 
 const assertPrimitiveOutputTypes = (resolved) => {
   const expectedTypes = {
-    animation: 'duration',
     breakpoint: 'dimension',
     color: 'color',
     duration: 'duration',
@@ -831,88 +666,36 @@ const assertPrimitiveOutputTypes = (resolved) => {
   }
 };
 
+/* The semantic group is flat: each token is one shadcn or status variable,
+   named as its CSS custom property without the leading dashes. */
 const assertLayerOutputTypes = (resolved) => {
-  const semanticTypes = {
-    color: 'color',
-    typography: 'typography',
-  };
-  const componentGroups = new Set(['button', 'dialog', 'input', 'toast']);
+  const semanticTypes = new Set(['color', 'dimension', 'fontFamily']);
 
   for (const token of resolved.values()) {
-    const [layer, , category] = token.path;
-    if (layer === 'semantic') {
-      if (token.path.length < 4) {
-        throw new Error(
-          `${token.path.join('.')} must be a named semantic token below its mode and category.`,
-        );
-      }
-      const expected = semanticTypes[category];
-      if (!expected) {
-        throw new Error(
-          `${token.path.join('.')} uses an unsupported semantic output category.`,
-        );
-      }
-      if (token.type !== expected) {
-        throw new Error(
-          `${token.path.join('.')} must use ${expected} for generated semantic output, received ${token.type}.`,
-        );
-      }
+    if (token.path[0] !== 'semantic') continue;
+    if (token.path.length !== 2) {
+      throw new Error(
+        `${token.path.join('.')} must be a named semantic token directly below semantic.`,
+      );
     }
-    if (layer === 'component') {
-      if (token.path.length < 4) {
-        throw new Error(
-          `${token.path.join('.')} must be a named component token below its mode and group.`,
-        );
-      }
-      if (!componentGroups.has(category)) {
-        throw new Error(
-          `${token.path.join('.')} uses an unsupported component output group.`,
-        );
-      }
-      if (token.type !== 'color') {
-        throw new Error(
-          `${token.path.join('.')} must use color for generated component output, received ${token.type}.`,
-        );
-      }
+    if (!semanticTypes.has(token.type)) {
+      throw new Error(
+        `${token.path.join('.')} must use color, dimension or fontFamily for generated semantic output, received ${token.type}.`,
+      );
     }
   }
 };
 
 const assertLayerAliasContracts = (resolved) => {
   for (const token of resolved.values()) {
-    const [layer] = token.path;
-    if (layer !== 'semantic' && layer !== 'component') continue;
-    const directReference =
-      typeof token.node.$value === 'string' &&
-      TOKEN_REFERENCE.test(token.node.$value);
-    if (layer === 'component' && !directReference) {
+    if (token.path[0] !== 'semantic') continue;
+    if (
+      typeof token.node.$value !== 'string' ||
+      !TOKEN_REFERENCE.test(token.node.$value)
+    ) {
       throw new Error(
-        `${token.path.join('.')} component tokens must be direct same-mode aliases.`,
+        `${token.path.join('.')} semantic values must be aliases.`,
       );
-    }
-    if (layer === 'semantic') {
-      if (token.type === 'typography' && isRecord(token.node.$value)) {
-        for (const field of [
-          'fontFamily',
-          'fontSize',
-          'fontWeight',
-          'letterSpacing',
-          'lineHeight',
-        ]) {
-          if (
-            typeof token.node.$value[field] !== 'string' ||
-            !TOKEN_REFERENCE.test(token.node.$value[field])
-          ) {
-            throw new Error(
-              `${token.path.join('.')}.${field} semantic values must be aliases.`,
-            );
-          }
-        }
-      } else if (!directReference) {
-        throw new Error(
-          `${token.path.join('.')} semantic values must be aliases.`,
-        );
-      }
     }
   }
 };
@@ -1034,160 +817,14 @@ const makeCss = (resolved) => {
     compareCodePoints(left.path.join('.'), right.path.join('.')),
   );
   const primitive = all.filter((token) => token.path[0] === 'primitive');
-  const light = all.filter(
-    (token) => token.path[0] !== 'primitive' && token.path[1] === 'light',
-  );
-  const dark = all.filter(
-    (token) => token.path[0] !== 'primitive' && token.path[1] === 'dark',
-  );
+  const semantic = all.filter((token) => token.path[0] === 'semantic');
   return [
     '/* Generated from src/tokens.tokens.json. Do not edit. */',
     renderDeclarationBlock(
       ':root',
-      [...primitive, ...light].flatMap(cssDeclarations),
+      [...primitive, ...semantic].map(tokenDeclaration),
     ),
     renderNeutralBlock(primitive, resolved),
-    renderDeclarationBlock(
-      ':is(.dark, [data-theme="dark"])',
-      dark.flatMap(cssDeclarations),
-    ),
-    '',
-  ].join('\n\n');
-};
-
-const animationConfiguration = (token, resolved) => {
-  if (token.type !== 'duration') {
-    throw new Error(
-      `${token.path.join('.')} animation token must be a duration.`,
-    );
-  }
-  const extension = token.node.$extensions?.['org.global-torque.css'];
-  if (!isRecord(extension)) {
-    throw new Error(
-      `${token.path.join('.')} requires an org.global-torque.css extension.`,
-    );
-  }
-  const { name, easing, fillMode, keyframes } = extension;
-  if (typeof name !== 'string' || !/^gt-[a-z0-9-]+$/u.test(name)) {
-    throw new Error(
-      `${token.path.join('.')} animation name is not output-safe.`,
-    );
-  }
-  const easingPath =
-    typeof easing === 'string' ? easing.match(TOKEN_REFERENCE)?.[1] : undefined;
-  const easingToken = easingPath ? resolved.get(easingPath) : undefined;
-  if (!easingToken || easingToken.type !== 'cubicBezier') {
-    throw new Error(
-      `${token.path.join('.')} animation easing must reference cubicBezier.`,
-    );
-  }
-  if (!['none', 'forwards', 'backwards', 'both'].includes(fillMode)) {
-    throw new Error(`${token.path.join('.')} animation fillMode is invalid.`);
-  }
-  if (!isRecord(keyframes) || Object.keys(keyframes).length === 0) {
-    throw new Error(
-      `${token.path.join('.')} animation keyframes are required.`,
-    );
-  }
-  const renderedFrames = sortedEntries(keyframes).map(([selector, frame]) => {
-    if (!/^(?:from|to|(?:100|\d?\d)%)$/u.test(selector) || !isRecord(frame)) {
-      throw new Error(
-        `${token.path.join('.')} has an invalid keyframe selector.`,
-      );
-    }
-    const opacity = frame.opacity;
-    if (
-      Object.keys(frame).length !== 1 ||
-      typeof opacity !== 'number' ||
-      !Number.isFinite(opacity) ||
-      opacity < 0 ||
-      opacity > 1
-    ) {
-      throw new Error(
-        `${token.path.join('.')} keyframes support bounded opacity only.`,
-      );
-    }
-    return `  ${selector} { opacity: ${formatNumber(opacity)}; }`;
-  });
-  return {
-    name,
-    fillMode,
-    easingToken,
-    keyframes: `@keyframes ${name} {\n${renderedFrames.join('\n')}\n}`,
-  };
-};
-
-const assertAnimationNames = (resolved) => {
-  const names = new Map();
-  for (const token of resolved.values()) {
-    if (token.path[0] !== 'primitive' || token.path[1] !== 'animation')
-      continue;
-    const animation = animationConfiguration(token, resolved);
-    const current = token.path.join('.');
-    const existing = names.get(animation.name);
-    if (existing) {
-      throw new Error(
-        `Animation name ${animation.name} is produced by ${existing} and ${current}.`,
-      );
-    }
-    names.set(animation.name, current);
-  }
-};
-
-const tailwindMappings = (resolved) => {
-  const mappings = [];
-  for (const token of [...resolved.values()].sort((left, right) =>
-    compareCodePoints(left.path.join('.'), right.path.join('.')),
-  )) {
-    const path = token.path;
-    if (path[0] === 'semantic' && path[1] === 'light' && path[2] === 'color') {
-      mappings.push([
-        `--color-gt-${path.slice(3).join('-')}`,
-        `var(${variableName(token)})`,
-      ]);
-    }
-    const primitiveNamespaces = {
-      breakpoint: 'breakpoint',
-      easing: 'ease',
-      'font-family': 'font',
-      'font-size': 'text',
-      'font-weight': 'font-weight',
-      'letter-spacing': 'tracking',
-      'line-height': 'leading',
-      opacity: 'opacity',
-      radius: 'radius',
-      shadow: 'shadow',
-      spacing: 'spacing',
-    };
-    if (path[0] === 'primitive' && primitiveNamespaces[path[1]]) {
-      mappings.push([
-        `--${primitiveNamespaces[path[1]]}-gt-${path.slice(2).join('-')}`,
-        path[1] === 'breakpoint'
-          ? toCssValue(token.type, token.value)
-          : `var(${variableName(token)})`,
-      ]);
-    }
-    if (path[0] === 'primitive' && path[1] === 'animation') {
-      const animation = animationConfiguration(token, resolved);
-      mappings.push([
-        `--animate-gt-${path.slice(2).join('-')}`,
-        `${animation.name} var(${variableName(token)}) var(${variableName(animation.easingToken)}) ${animation.fillMode}`,
-      ]);
-    }
-  }
-  return mappings;
-};
-
-const makeThemeCss = (resolved) => {
-  const keyframes = [...resolved.values()]
-    .filter(
-      (token) => token.path[0] === 'primitive' && token.path[1] === 'animation',
-    )
-    .map((token) => animationConfiguration(token, resolved).keyframes);
-  return [
-    '/* Generated Tailwind CSS v4 mappings. Import after @global-torque/design-tokens/css. */',
-    renderDeclarationBlock('@theme inline', tailwindMappings(resolved)),
-    ...keyframes,
     '',
   ].join('\n\n');
 };
@@ -1221,9 +858,10 @@ const makeDeclaration = (runtime) => `/**
 /**
  * Resolved, deeply frozen neutral design tokens.
  *
- * Values are generated from the package's DTCG 2025.10 source. Use
- * \`modes.light\` or \`modes.dark\` explicitly; the runtime never detects a
- * preferred mode.
+ * Values are generated from the package's DTCG 2025.10 source. \`primitive\`
+ * holds the palette and scales; \`semantic\` holds the shadcn variables and the
+ * success, warning and info pairs, keyed by their CSS custom property names
+ * without the leading dashes.
  *
  * @public
  */
@@ -1231,9 +869,6 @@ export declare const designTokens: ${literalType(runtime)};
 
 /** The generated design-token object type. @public */
 export type ResolvedDesignTokens = typeof designTokens;
-
-/** Supported explicit color modes. @public */
-export type DesignTokenMode = keyof ResolvedDesignTokens['modes'];
 
 export default designTokens;
 ${sourceMapDirective}index.d.ts.map
@@ -1332,23 +967,15 @@ const javascriptPaths = (javascript, runtimeJson) => {
   return result;
 };
 
-const canonicalPath = (runtimePath) => {
-  if (runtimePath[0] === 'primitive') return runtimePath;
-  if (runtimePath[0] !== 'modes') return [];
-  const [, mode, layer, ...rest] = runtimePath;
-  return typeof mode === 'string' && typeof layer === 'string'
-    ? [layer, mode, ...rest]
-    : [];
-};
-
 const offsetPosition = (text, offset) => {
   const before = text.slice(0, offset);
   const lines = before.split('\n');
   return { line: lines.length - 1, column: lines.at(-1)?.length ?? 0 };
 };
 
+/* The runtime tree keeps the source's primitive/semantic paths. */
 const sourcePosition = (tree, sourceText, runtimePath) => {
-  const path = canonicalPath(runtimePath);
+  const path = [...runtimePath];
   while (path.length > 0) {
     const node = findNodeAtLocation(tree, path);
     if (node) {
@@ -1479,14 +1106,12 @@ const assertBrandRamps = (resolved) => {
 export const validateAndResolveDtcg = (source) => {
   const tokens = collectTokens(source);
   const resolved = resolveTokens(tokens);
-  assertModeParity(resolved);
   assertNoOutputCollisions(resolved);
   assertPrimitiveOutputTypes(resolved);
   assertBrandRamps(resolved);
   assertNeutralAnchors(resolved);
   assertLayerOutputTypes(resolved);
   assertLayerAliasContracts(resolved);
-  assertAnimationNames(resolved);
   const runtime = makeRuntimeTree(resolved);
   return { resolved, runtime };
 };
@@ -1500,9 +1125,6 @@ export const generateArtifacts = (source, sourceText) => {
   const cssDeclaration = makeStylesheetDeclaration('css');
   const cssModule = makeStylesheetModule('index.css', 'css');
   const indexCss = makeCss(resolved);
-  const themeCss = makeThemeCss(resolved);
-  const themeDeclaration = makeStylesheetDeclaration('theme');
-  const themeModule = makeStylesheetModule('theme.css', 'theme');
   const artifacts = new Map([
     ['css.d.ts', cssDeclaration],
     [
@@ -1535,17 +1157,6 @@ export const generateArtifacts = (source, sourceText) => {
         runtimeJson,
         'javascript',
       ),
-    ],
-    ['theme.css', themeCss],
-    ['theme.d.ts', themeDeclaration],
-    [
-      'theme.d.ts.map',
-      makeSourceMap('theme.d.ts', sourceText, themeDeclaration, runtimeJson),
-    ],
-    ['theme.js', themeModule],
-    [
-      'theme.js.map',
-      makeSourceMap('theme.js', sourceText, themeModule, runtimeJson),
     ],
     ['tokens.json', runtimeJson],
     ['tokens.tokens.json', canonical],

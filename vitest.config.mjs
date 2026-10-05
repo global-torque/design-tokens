@@ -8,7 +8,6 @@ export default defineConfig({
       include: [
         'scripts/build.mjs',
         'scripts/lib/generate.mjs',
-        'scripts/lib/tailwindFixture.mjs',
         'scripts/lib/deriveTokens.mjs',
         'src/derive.mjs',
       ],

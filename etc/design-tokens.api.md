@@ -5,150 +5,7 @@
 ```ts
 
 // @public
-export type DesignTokenMode = keyof ResolvedDesignTokens['modes'];
-
-// @public
 const designTokens: {
-    readonly "modes": {
-        readonly "dark": {
-            readonly "component": {
-                readonly "button": {
-                    readonly "disabled-background": "#343a40";
-                    readonly "disabled-foreground": "#a3a5a9";
-                    readonly "focus-ring": "#004fff";
-                    readonly "primary-background": "#004fff";
-                    readonly "primary-background-hover": "#bad0ff";
-                    readonly "primary-foreground": "#ffffff";
-                };
-                readonly "dialog": {
-                    readonly "background": "#1a202d";
-                    readonly "foreground": "#f8f9fa";
-                    readonly "overlay": "rgb(0 0 0 / 0.64)";
-                };
-                readonly "input": {
-                    readonly "border": "#495057";
-                };
-                readonly "toast": {
-                    readonly "negative-background": "#450a0a";
-                    readonly "negative-foreground": "#fca5a5";
-                    readonly "neutral-background": "#232730";
-                    readonly "neutral-foreground": "#ececed";
-                    readonly "positive-background": "#052e16";
-                    readonly "positive-foreground": "#86efac";
-                };
-            };
-            readonly "semantic": {
-                readonly "color": {
-                    readonly "accent-background": "#004fff";
-                    readonly "accent-background-hover": "#bad0ff";
-                    readonly "accent-foreground": "#ffffff";
-                    readonly "accent-secondary-background": "#3ddc97";
-                    readonly "accent-secondary-foreground": "#12161f";
-                    readonly "accent-subtle": "#243046";
-                    readonly "accent-subtle-foreground": "#f0f4ff";
-                    readonly "background-canvas": "#12161f";
-                    readonly "background-elevated": "#1a202d";
-                    readonly "background-overlay": "rgb(0 0 0 / 0.64)";
-                    readonly "background-sidebar": "#1a202d";
-                    readonly "background-subtle": "#343a40";
-                    readonly "background-surface": "#1a202d";
-                    readonly "border-default": "#343a40";
-                    readonly "border-focus": "#004fff";
-                    readonly "border-input": "#495057";
-                    readonly "chart-1": "#004fff";
-                    readonly "chart-2": "#3ddc97";
-                    readonly "chart-3": "#f1af32";
-                    readonly "chart-4": "#6f3dfd";
-                    readonly "chart-5": "#ff3b3b";
-                    readonly "foreground-default": "#f8f9fa";
-                    readonly "foreground-disabled": "#a3a5a9";
-                    readonly "foreground-muted": "#adb5bd";
-                    readonly "negative-background": "#450a0a";
-                    readonly "negative-border": "#fca5a5";
-                    readonly "negative-foreground": "#fca5a5";
-                    readonly "negative-solid": "#ff3b3b";
-                    readonly "negative-solid-foreground": "#ffffff";
-                    readonly "neutral-background": "#232730";
-                    readonly "neutral-foreground": "#ececed";
-                    readonly "positive-background": "#052e16";
-                    readonly "positive-border": "#86efac";
-                    readonly "positive-foreground": "#86efac";
-                    readonly "warning-background": "#451a03";
-                    readonly "warning-border": "#fde68a";
-                    readonly "warning-foreground": "#fde68a";
-                };
-            };
-        };
-        readonly "light": {
-            readonly "component": {
-                readonly "button": {
-                    readonly "disabled-background": "#f8f9fa";
-                    readonly "disabled-foreground": "#51555c";
-                    readonly "focus-ring": "#004fff";
-                    readonly "primary-background": "#004fff";
-                    readonly "primary-background-hover": "#0042d4";
-                    readonly "primary-foreground": "#ffffff";
-                };
-                readonly "dialog": {
-                    readonly "background": "#ffffff";
-                    readonly "foreground": "#12161f";
-                    readonly "overlay": "rgb(0 0 0 / 0.64)";
-                };
-                readonly "input": {
-                    readonly "border": "#dee2e6";
-                };
-                readonly "toast": {
-                    readonly "negative-background": "#fef2f2";
-                    readonly "negative-foreground": "#991b1b";
-                    readonly "neutral-background": "#fafafa";
-                    readonly "neutral-foreground": "#3b3f48";
-                    readonly "positive-background": "#ecfdf5";
-                    readonly "positive-foreground": "#166534";
-                };
-            };
-            readonly "semantic": {
-                readonly "color": {
-                    readonly "accent-background": "#004fff";
-                    readonly "accent-background-hover": "#0042d4";
-                    readonly "accent-foreground": "#ffffff";
-                    readonly "accent-secondary-background": "#3ddc97";
-                    readonly "accent-secondary-foreground": "#12161f";
-                    readonly "accent-subtle": "#f0f4ff";
-                    readonly "accent-subtle-foreground": "#004fff";
-                    readonly "background-canvas": "#ffffff";
-                    readonly "background-elevated": "#ffffff";
-                    readonly "background-overlay": "rgb(0 0 0 / 0.64)";
-                    readonly "background-sidebar": "#f8f9fa";
-                    readonly "background-subtle": "#f8f9fa";
-                    readonly "background-surface": "#ffffff";
-                    readonly "border-default": "#e9ecef";
-                    readonly "border-focus": "#004fff";
-                    readonly "border-input": "#dee2e6";
-                    readonly "chart-1": "#004fff";
-                    readonly "chart-2": "#3ddc97";
-                    readonly "chart-3": "#f1af32";
-                    readonly "chart-4": "#6f3dfd";
-                    readonly "chart-5": "#ff3b3b";
-                    readonly "foreground-default": "#12161f";
-                    readonly "foreground-disabled": "#51555c";
-                    readonly "foreground-muted": "#6c757d";
-                    readonly "negative-background": "#fef2f2";
-                    readonly "negative-border": "#991b1b";
-                    readonly "negative-foreground": "#991b1b";
-                    readonly "negative-solid": "#ff7070";
-                    readonly "negative-solid-foreground": "#ffffff";
-                    readonly "neutral-background": "#fafafa";
-                    readonly "neutral-foreground": "#3b3f48";
-                    readonly "positive-background": "#ecfdf5";
-                    readonly "positive-border": "#15803d";
-                    readonly "positive-foreground": "#166534";
-                    readonly "warning-background": "#fffbeb";
-                    readonly "warning-border": "#92400e";
-                    readonly "warning-foreground": "#92400e";
-                };
-            };
-        };
-    };
     readonly "primitive": {
         readonly "brand": {
             readonly "font-sans": "\"Avenir\", \"Avenir Next\", system-ui, \"Segoe UI\", \"Roboto\", \"Helvetica Neue\", \"Arial\", sans-serif";
@@ -298,6 +155,48 @@ const designTokens: {
             readonly "3": "0.75rem";
             readonly "4": "1rem";
         };
+    };
+    readonly "semantic": {
+        readonly "accent": "#f0f4ff";
+        readonly "accent-foreground": "#004fff";
+        readonly "background": "#ffffff";
+        readonly "border": "#e9ecef";
+        readonly "card": "#ffffff";
+        readonly "card-foreground": "#12161f";
+        readonly "chart-1": "#004fff";
+        readonly "chart-2": "#3ddc97";
+        readonly "chart-3": "#f1af32";
+        readonly "chart-4": "#6f3dfd";
+        readonly "chart-5": "#ff3b3b";
+        readonly "destructive": "#ff7070";
+        readonly "destructive-foreground": "#ffffff";
+        readonly "font-sans": "\"Avenir\", \"Avenir Next\", system-ui, \"Segoe UI\", \"Roboto\", \"Helvetica Neue\", \"Arial\", sans-serif";
+        readonly "foreground": "#12161f";
+        readonly "info": "#6f3dfd";
+        readonly "info-foreground": "#ffffff";
+        readonly "input": "#dee2e6";
+        readonly "muted": "#f8f9fa";
+        readonly "muted-foreground": "#6c757d";
+        readonly "popover": "#ffffff";
+        readonly "popover-foreground": "#12161f";
+        readonly "primary": "#004fff";
+        readonly "primary-foreground": "#ffffff";
+        readonly "radius": "0.5rem";
+        readonly "ring": "#004fff";
+        readonly "secondary": "#3ddc97";
+        readonly "secondary-foreground": "#12161f";
+        readonly "sidebar": "#f8f9fa";
+        readonly "sidebar-accent": "#f0f4ff";
+        readonly "sidebar-accent-foreground": "#004fff";
+        readonly "sidebar-border": "#e9ecef";
+        readonly "sidebar-foreground": "#12161f";
+        readonly "sidebar-primary": "#004fff";
+        readonly "sidebar-primary-foreground": "#ffffff";
+        readonly "sidebar-ring": "#004fff";
+        readonly "success": "#3ddc97";
+        readonly "success-foreground": "#12161f";
+        readonly "warning": "#f1af32";
+        readonly "warning-foreground": "#12161f";
     };
 };
 export default designTokens;

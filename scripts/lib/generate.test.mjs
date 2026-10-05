@@ -29,87 +29,27 @@ const copySource = () => structuredClone(source);
 const at = (value, pathSegments) =>
   pathSegments.reduce((current, segment) => current[segment], value);
 
-/* The token source ships no typography or animation tokens any more, while the
-   generator still supports both; these add the tokens those checks run on. */
-const typographyValue = {
-  fontFamily: '{primitive.font-family.sans}',
-  fontSize: '{primitive.font-size.sm}',
-  fontWeight: '{primitive.font-weight.medium}',
-  letterSpacing: '{primitive.spacing.1}',
-  lineHeight: '{primitive.line-height.normal}',
-};
-
-const withTypography = (input) => {
-  input.primitive['line-height'] = { $type: 'number', normal: { $value: 1.5 } };
-  for (const mode of ['light', 'dark']) {
-    input.semantic[mode].typography = {
-      body: { $type: 'typography', $value: structuredClone(typographyValue) },
-      'tabular-number': {
-        $type: 'typography',
-        $value: structuredClone(typographyValue),
-        $extensions: {
-          'org.global-torque.css': { fontVariantNumeric: 'tabular-nums' },
-        },
-      },
-    };
-  }
-  return input;
-};
-
-const withAnimation = (input) => {
-  input.primitive.animation = {
-    'fade-in': {
-      $type: 'duration',
-      $value: { value: 180, unit: 'ms' },
-      $extensions: {
-        'org.global-torque.css': {
-          name: 'gt-fade-in',
-          easing: '{primitive.easing.standard}',
-          fillMode: 'both',
-          keyframes: { from: { opacity: 0 }, to: { opacity: 1 } },
-        },
-      },
-    },
-  };
-  return input;
-};
-
-const kebabCase = (value) =>
-  value.replace(/[A-Z]/gu, (letter) => `-${letter.toLowerCase()}`);
-
 const flattenLeaves = (value, pathSegments = []) =>
   Object.entries(value).flatMap(([key, child]) => {
-    const nextPath = [...pathSegments, kebabCase(key)];
+    const nextPath = [...pathSegments, key];
     return child !== null && typeof child === 'object'
       ? flattenLeaves(child, nextPath)
       : [[nextPath, child]];
   });
 
-const runtimeCssVariables = (runtime) => {
-  const primitive = flattenLeaves(runtime.primitive).map(
-    ([pathSegments, value]) => [
+const runtimeCssVariables = (runtime) =>
+  new Map([
+    ...flattenLeaves(runtime.primitive).map(([pathSegments, value]) => [
       pathSegments[0] === 'brand'
         ? `--brand-${pathSegments.slice(1).join('-')}`
         : `--gt-primitive-${pathSegments.join('-')}`,
       value,
-    ],
-  );
-  const modeVariables = (mode) => [
-    ...flattenLeaves(runtime.modes[mode].semantic).map(
-      ([pathSegments, value]) => [`--gt-${pathSegments.join('-')}`, value],
-    ),
-    ...flattenLeaves(runtime.modes[mode].component).map(
-      ([pathSegments, value]) => [
-        `--gt-component-${pathSegments.join('-')}`,
-        value,
-      ],
-    ),
-  ];
-  return {
-    base: new Map([...primitive, ...modeVariables('light')]),
-    dark: new Map(modeVariables('dark')),
-  };
-};
+    ]),
+    ...Object.entries(runtime.semantic).map(([name, value]) => [
+      `--${name}`,
+      value,
+    ]),
+  ]);
 
 const parseCssVariables = (css, selector) => {
   const start = css.indexOf(`${selector} {`);
@@ -283,27 +223,22 @@ describe('DTCG validation and resolution', () => {
     expect(loads).toBe(0);
   });
 
-  it('resolves the canonical primitive, semantic, and component layers without mutation', () => {
+  it('resolves the canonical primitive and semantic layers without mutation', () => {
     const input = copySource();
     const snapshot = structuredClone(input);
     const { resolved, runtime } = validateAndResolveDtcg(input);
 
     expect(input).toEqual(snapshot);
     expect(resolved.size).toBeGreaterThan(130);
-    expect(runtime.modes.light.semantic.color['background-surface']).toBe(
-      '#ffffff',
-    );
-    expect(runtime.modes.dark.component.button['primary-background']).toBe(
+    expect(runtime.semantic.background).toBe('#ffffff');
+    expect(runtime.semantic.primary).toBe(
       runtime.primitive.color['primary-500'],
     );
-  });
-
-  it('carries the typography font-variant extension into the runtime tree', () => {
-    const { runtime } = validateAndResolveDtcg(withTypography(copySource()));
-
-    expect(runtime.modes.light.semantic.typography['tabular-number']).toEqual(
-      expect.objectContaining({ fontVariantNumeric: 'tabular-nums' }),
-    );
+    expect(runtime.semantic).toMatchObject({
+      success: '#3ddc97',
+      warning: '#f1af32',
+      info: '#6f3dfd',
+    });
   });
 
   it('supports valid scalar font families and named font weights', () => {
@@ -335,6 +270,19 @@ describe('DTCG validation and resolution', () => {
       /must be an object/u,
     ],
     [
+      'stray top-level group',
+      () =>
+        Object.assign(copySource(), {
+          component: {
+            x: {
+              $type: 'color',
+              $value: { colorSpace: 'srgb', components: [0, 0, 0] },
+            },
+          },
+        }),
+      /outside primitive\/semantic layers/u,
+    ],
+    [
       'unknown type',
       () => {
         const input = copySource();
@@ -356,7 +304,7 @@ describe('DTCG validation and resolution', () => {
       'unknown reference',
       () => {
         const input = copySource();
-        at(input, ['semantic', 'light', 'color', 'background-canvas']).$value =
+        at(input, ['semantic', 'background']).$value =
           '{primitive.color.absent}';
         return input;
       },
@@ -378,7 +326,7 @@ describe('DTCG validation and resolution', () => {
       'interpolated reference',
       () => {
         const input = copySource();
-        at(input, ['semantic', 'light', 'color', 'background-canvas']).$value =
+        at(input, ['semantic', 'background']).$value =
           'prefix {primitive.color.white}';
         return input;
       },
@@ -493,39 +441,6 @@ describe('DTCG validation and resolution', () => {
     expect(() => validateAndResolveDtcg(input)).toThrow(expected);
   });
 
-  it('rejects incomplete typography and mode drift', () => {
-    const typographyInput = withTypography(copySource());
-    delete at(typographyInput, ['semantic', 'light', 'typography', 'body'])
-      .$value.fontSize;
-    expect(() => validateAndResolveDtcg(typographyInput)).toThrow(
-      /fontSize is required/u,
-    );
-
-    const missingMode = copySource();
-    delete missingMode.component.dark.button['focus-ring'];
-    expect(() => validateAndResolveDtcg(missingMode)).toThrow(
-      /type-matched light and dark/u,
-    );
-
-    const invalidMode = copySource();
-    invalidMode.component.system = invalidMode.component.dark;
-    delete invalidMode.component.dark;
-    expect(() => validateAndResolveDtcg(invalidMode)).toThrow(
-      /explicit light or dark/u,
-    );
-
-    const extensionDrift = withTypography(copySource());
-    delete at(extensionDrift, [
-      'semantic',
-      'dark',
-      'typography',
-      'tabular-number',
-    ]).$extensions;
-    expect(() => validateAndResolveDtcg(extensionDrift)).toThrow(
-      /type-matched light and dark/u,
-    );
-  });
-
   it('rejects cross-type aliases, output-unsafe names, and CSS collisions', () => {
     const crossType = copySource();
     crossType.primitive['line-height'] = {
@@ -536,50 +451,11 @@ describe('DTCG validation and resolution', () => {
       /declares number but references fontWeight/u,
     );
 
-    const nestedCrossType = withTypography(copySource());
-    at(nestedCrossType, [
-      'semantic',
-      'light',
-      'typography',
-      'body',
-    ]).$value.lineHeight = '{primitive.font-weight.medium}';
-    expect(() => validateAndResolveDtcg(nestedCrossType)).toThrow(
-      /lineHeight must reference number, received fontWeight/u,
-    );
-
-    const unsafeExtension = withTypography(copySource());
-    at(unsafeExtension, [
-      'semantic',
-      'light',
-      'typography',
-      'tabular-number',
-    ]).$extensions['org.global-torque.css'].fontVariantNumeric =
-      'tabular-nums; color: red';
-    expect(() => validateAndResolveDtcg(unsafeExtension)).toThrow(
-      /safe tabular-nums keyword/u,
-    );
-
     const fontInjection = copySource();
     at(fontInjection, ['primitive', 'font-family', 'sans']).$value =
       'Inter;color:red';
     const fontRuntime = validateAndResolveDtcg(fontInjection).runtime;
     expect(fontRuntime.primitive['font-family'].sans).toBe('"Inter;color:red"');
-
-    const duplicateAnimation = withAnimation(copySource());
-    duplicateAnimation.primitive.animation.duplicate = structuredClone(
-      duplicateAnimation.primitive.animation['fade-in'],
-    );
-    expect(() => validateAndResolveDtcg(duplicateAnimation)).toThrow(
-      /Animation name gt-fade-in is produced/u,
-    );
-
-    const unprefixedAnimation = withAnimation(copySource());
-    at(unprefixedAnimation, ['primitive', 'animation', 'fade-in']).$extensions[
-      'org.global-torque.css'
-    ].name = 'fade-in';
-    expect(() => validateAndResolveDtcg(unprefixedAnimation)).toThrow(
-      /animation name is not output-safe/u,
-    );
 
     const wrongBreakpointType = copySource();
     wrongBreakpointType.primitive.breakpoint = {
@@ -607,27 +483,21 @@ describe('DTCG validation and resolution', () => {
       /opacity must be between 0 and 1/u,
     );
 
-    const wrongAnimationType = withAnimation(copySource());
-    const animation = at(wrongAnimationType, [
-      'primitive',
-      'animation',
-      'fade-in',
-    ]);
-    animation.$type = 'number';
-    animation.$value = 2;
-    expect(() => validateAndResolveDtcg(wrongAnimationType)).toThrow(
-      /must use duration for generated output/u,
+    const wrongSemanticType = copySource();
+    wrongSemanticType.semantic.ring = {
+      $type: 'duration',
+      $value: '{primitive.duration.fast}',
+    };
+    expect(() => validateAndResolveDtcg(wrongSemanticType)).toThrow(
+      /must use color, dimension or fontFamily for generated semantic output/u,
     );
 
-    const wrongSemanticType = copySource();
-    for (const mode of ['light', 'dark']) {
-      wrongSemanticType.semantic[mode].color['positive-border'] = {
-        $type: 'dimension',
-        $value: { value: 1, unit: 'rem' },
-      };
-    }
-    expect(() => validateAndResolveDtcg(wrongSemanticType)).toThrow(
-      /must use color for generated semantic output/u,
+    const nestedSemantic = copySource();
+    nestedSemantic.semantic.status = {
+      ok: { $type: 'color', $value: '{primitive.color.mint-500}' },
+    };
+    expect(() => validateAndResolveDtcg(nestedSemantic)).toThrow(
+      /must be a named semantic token directly below semantic/u,
     );
 
     for (const name of ['', 'not safe']) {
@@ -652,65 +522,33 @@ describe('DTCG validation and resolution', () => {
     expect(() => validateAndResolveDtcg(collision)).toThrow(
       /CSS output collision/u,
     );
+
+    /* Semantic variables share :root with the seeds, unprefixed. */
+    const seedCollision = copySource();
+    seedCollision.semantic['brand-primary'] = {
+      $type: 'color',
+      $value: '{primitive.color.primary-500}',
+    };
+    expect(() => validateAndResolveDtcg(seedCollision)).toThrow(
+      /CSS output collision --brand-primary/u,
+    );
   });
 
-  it('enforces primitive-to-semantic-to-component reference direction and mode isolation', () => {
-    const crossMode = copySource();
-    at(crossMode, ['component', 'dark', 'button', 'focus-ring']).$value =
-      '{semantic.light.color.border-focus}';
-    expect(() => validateAndResolveDtcg(crossMode)).toThrow(
-      /across token layer or mode boundaries/u,
-    );
-
+  it('enforces primitive-to-semantic reference direction and semantic aliases', () => {
     const reverseLayer = copySource();
     at(reverseLayer, ['primitive', 'spacing', '1']).$value =
-      '{semantic.light.color.background-surface}';
+      '{semantic.radius}';
     expect(() => validateAndResolveDtcg(reverseLayer)).toThrow(
-      /across token layer or mode boundaries/u,
+      /across token layer boundaries/u,
     );
 
     const literalSemantic = copySource();
-    at(literalSemantic, [
-      'semantic',
-      'light',
-      'color',
-      'background-canvas',
-    ]).$value = { colorSpace: 'srgb', components: [1, 1, 1] };
+    at(literalSemantic, ['semantic', 'background']).$value = {
+      colorSpace: 'srgb',
+      components: [1, 1, 1],
+    };
     expect(() => validateAndResolveDtcg(literalSemantic)).toThrow(
       /semantic values must be aliases/u,
-    );
-
-    const literalTypographyField = withTypography(copySource());
-    at(literalTypographyField, [
-      'semantic',
-      'light',
-      'typography',
-      'body',
-    ]).$value.fontFamily = ['Inter', 'sans-serif'];
-    expect(() => validateAndResolveDtcg(literalTypographyField)).toThrow(
-      /fontFamily semantic values must be aliases/u,
-    );
-
-    const literalComponent = copySource();
-    at(literalComponent, [
-      'component',
-      'light',
-      'button',
-      'focus-ring',
-    ]).$value = { colorSpace: 'srgb', components: [0, 0, 0] };
-    expect(() => validateAndResolveDtcg(literalComponent)).toThrow(
-      /component tokens must be direct same-mode aliases/u,
-    );
-
-    const primitiveComponent = copySource();
-    at(primitiveComponent, [
-      'component',
-      'light',
-      'button',
-      'focus-ring',
-    ]).$value = '{primitive.color.grey-500}';
-    expect(() => validateAndResolveDtcg(primitiveComponent)).toThrow(
-      /across token layer or mode boundaries/u,
     );
   });
 
@@ -815,16 +653,16 @@ describe('artifact generation', () => {
       'index.d.ts.map',
       'index.js',
       'index.js.map',
-      'theme.css',
-      'theme.d.ts',
-      'theme.d.ts.map',
-      'theme.js',
-      'theme.js.map',
       'tokens.json',
       'tokens.tokens.json',
       'build-manifest.json',
     ]);
-    expect(first.get('index.css')).toContain(':is(.dark, [data-theme="dark"])');
+    expect(first.get('index.css')).toContain(
+      '--primary: var(--gt-primitive-color-primary-500);',
+    );
+    expect(first.get('index.css')).toContain(
+      '--success: var(--gt-primitive-color-mint-500);',
+    );
     expect(first.get('index.css')).toContain('--brand-primary: #004fff;');
     expect(first.get('index.css')).not.toContain('--gt-primitive-brand-');
     expect(first.get('index.css')).toContain(
@@ -855,8 +693,6 @@ describe('artifact generation', () => {
     expect(
       JSON.parse(first.get('tokens.json')).primitive.color['primary-200'],
     ).toBe('#bad0ff');
-    expect(first.get('theme.css')).toContain('@theme inline');
-    expect(first.get('theme.css')).toContain('--font-weight-gt-medium:');
     expect(first.get('index.d.ts')).not.toContain('Record<string');
     expect(first.get('derive.js')).toBe(
       fs.readFileSync(path.join(packageDirectory, 'src', 'derive.mjs'), 'utf8'),
@@ -887,16 +723,6 @@ describe('artifact generation', () => {
     });
   });
 
-  it('emits animation keyframes and the Tailwind animation mapping', () => {
-    const input = withAnimation(copySource());
-    const themeCss = generateArtifacts(input, JSON.stringify(input)).get(
-      'theme.css',
-    );
-
-    expect(themeCss).toContain('--animate-gt-fade-in:');
-    expect(themeCss).toContain('@keyframes gt-fade-in');
-  });
-
   it('performs an atomic build with no stale temporary output', async () => {
     await import('../build.mjs');
     const expected = generateArtifacts(copySource(), sourceText);
@@ -920,6 +746,86 @@ describe('artifact generation', () => {
       pathToFileURL(path.join(packageDirectory, 'dist', 'derive.js')).href
     );
     expect(Object.keys(shipped)).toEqual(['BRAND_MIXES', 'deriveBrand']);
+  });
+
+  it('declares only the shadcn variables, the status pairs, the seeds, and the palette', () => {
+    const css = fs.readFileSync(
+      path.join(packageDirectory, 'dist', 'index.css'),
+      'utf8',
+    );
+    const shadcn = [
+      'radius',
+      'font-sans',
+      'background',
+      'foreground',
+      'card',
+      'card-foreground',
+      'popover',
+      'popover-foreground',
+      'primary',
+      'primary-foreground',
+      'secondary',
+      'secondary-foreground',
+      'muted',
+      'muted-foreground',
+      'accent',
+      'accent-foreground',
+      'destructive',
+      'destructive-foreground',
+      'border',
+      'input',
+      'ring',
+      'chart-1',
+      'chart-2',
+      'chart-3',
+      'chart-4',
+      'chart-5',
+      'sidebar',
+      'sidebar-foreground',
+      'sidebar-primary',
+      'sidebar-primary-foreground',
+      'sidebar-accent',
+      'sidebar-accent-foreground',
+      'sidebar-border',
+      'sidebar-ring',
+    ];
+    const status = [
+      'success',
+      'success-foreground',
+      'warning',
+      'warning-foreground',
+      'info',
+      'info-foreground',
+    ];
+    const seeds = [
+      'primary',
+      'secondary',
+      'tertiary',
+      'surface-light',
+      'surface-dark',
+      'primary-foreground',
+      'secondary-foreground',
+      'tertiary-foreground',
+      'radius',
+      'font-sans',
+    ];
+    const declared = [...parseCssVariables(css, ':root').keys()];
+    const palette = declared.filter((name) =>
+      name.startsWith('--gt-primitive-'),
+    );
+
+    expect(palette).toHaveLength(118);
+    expect(declared.filter((name) => !palette.includes(name)).sort()).toEqual(
+      [
+        ...[...shadcn, ...status].map((name) => `--${name}`),
+        ...seeds.map((name) => `--brand-${name}`),
+      ].sort(),
+    );
+    /* One :root block and the neutral @supports block; no dark-mode block. */
+    expect(css.match(/^\S.*\{$/gmu)).toEqual([
+      ':root {',
+      expect.stringMatching(/^@supports /u),
+    ]);
   });
 
   it('keeps the built JS, JSON, CSS, declarations, and source maps in parity', async () => {
@@ -955,22 +861,14 @@ describe('artifact generation', () => {
     expect(runtimeModule.designTokens).toEqual(json);
     expect(runtimeModule.default).toBe(runtimeModule.designTokens);
     expect(Object.isFrozen(runtimeModule.designTokens)).toBe(true);
-    expect(
-      Object.isFrozen(runtimeModule.designTokens.modes.dark.component.toast),
-    ).toBe(true);
+    expect(Object.isFrozen(runtimeModule.designTokens.primitive.color)).toBe(
+      true,
+    );
     const expectedVariables = runtimeCssVariables(json);
     const baseVariables = parseCssVariables(css, ':root');
     expect(sortedObject(resolveCssVariables(baseVariables))).toEqual(
-      sortedObject(expectedVariables.base),
+      sortedObject(expectedVariables),
     );
-    expect(
-      sortedObject(
-        resolveCssVariables(
-          parseCssVariables(css, ':is(.dark, [data-theme="dark"])'),
-          baseVariables,
-        ),
-      ),
-    ).toEqual(sortedObject(expectedVariables.dark));
     const derivedVariables = parseCssVariables(
       css,
       '@supports (color: rgb(from red calc(r - 1) g b)) and (width: round(1px, 1px))',
@@ -982,7 +880,7 @@ describe('artifact generation', () => {
       sortedObject(
         [...derivedVariables.keys()].map((name) => [
           name,
-          expectedVariables.base.get(name),
+          expectedVariables.get(name),
         ]),
       ),
     );
@@ -992,21 +890,20 @@ describe('artifact generation', () => {
     expect(sourceMap.mappings).not.toBe('');
 
     const semanticOffset = sourceText.indexOf('"semantic"');
-    const darkOffset = sourceText.indexOf('"dark"', semanticOffset);
-    const tokenOffset = sourceText.indexOf('"background-surface"', darkOffset);
+    const tokenOffset = sourceText.indexOf('"background"', semanticOffset);
     const expectedSourceLine = sourceText
       .slice(0, tokenOffset)
       .split('\n').length;
     const declarationLine = declaration
       .split('\n')
-      .findIndex((line) => line.includes('"background-surface"'));
+      .findIndex((line) => line.includes('"background"'));
     const javascript = fs.readFileSync(
       path.join(packageDirectory, 'dist', 'index.js'),
       'utf8',
     );
     const javascriptLine = javascript
       .split('\n')
-      .findIndex((line) => line.includes('\\"background-surface\\"'));
+      .findIndex((line) => line.includes('\\"background\\"'));
     expect(declarationLine).toBeGreaterThan(0);
     expect(javascriptLine).toBeGreaterThan(0);
     expect(

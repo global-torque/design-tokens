@@ -28,7 +28,7 @@ Description
 
 Resolved, deeply frozen neutral design tokens.
 
-Values are generated from the package's DTCG 2025.10 source. Use `modes.light` or `modes.dark` explicitly; the runtime never detects a preferred mode.
+Values are generated from the package's DTCG 2025.10 source. `primitive` holds the palette and scales; `semantic` holds the shadcn variables and the success, warning and info pairs, keyed by their CSS custom property names without the leading dashes.
 
 
 </td></tr>
@@ -48,17 +48,6 @@ Description
 
 </th></tr></thead>
 <tbody><tr><td>
-
-[DesignTokenMode](./design-tokens.designtokenmode.md)
-
-
-</td><td>
-
-Supported explicit color modes.
-
-
-</td></tr>
-<tr><td>
 
 [ResolvedDesignTokens](./design-tokens.resolveddesigntokens.md)
 

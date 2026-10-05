@@ -49,7 +49,6 @@ try {
   for (const [model, expected] of [
     ['root', 'api'],
     ['css', 'api-css'],
-    ['theme', 'api-theme'],
   ]) {
     const output = path.join(temporaryDirectory, model);
     run([

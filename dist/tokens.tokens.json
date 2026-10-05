@@ -1411,365 +1411,166 @@
     }
   },
   "semantic": {
-    "$description": "Host-facing meaning with explicit light and dark modes.",
-    "light": {
-      "color": {
-        "$type": "color",
-        "background-canvas": {
-          "$value": "{primitive.color.neutral-25}"
-        },
-        "background-surface": {
-          "$value": "{primitive.color.neutral-25}"
-        },
-        "background-subtle": {
-          "$value": "{primitive.color.grey-100}"
-        },
-        "background-elevated": {
-          "$value": "{primitive.color.neutral-25}"
-        },
-        "background-overlay": {
-          "$value": "{primitive.color.overlay}"
-        },
-        "background-sidebar": {
-          "$value": "{primitive.color.grey-100}"
-        },
-        "foreground-default": {
-          "$value": "{primitive.color.neutral-950}"
-        },
-        "foreground-muted": {
-          "$value": "{primitive.color.grey-600}"
-        },
-        "foreground-disabled": {
-          "$value": "{primitive.color.neutral-600}"
-        },
-        "border-default": {
-          "$value": "{primitive.color.grey-200}"
-        },
-        "border-input": {
-          "$value": "{primitive.color.grey-300}"
-        },
-        "border-focus": {
-          "$value": "{primitive.color.primary-500}"
-        },
-        "accent-background": {
-          "$value": "{primitive.color.primary-500}"
-        },
-        "accent-background-hover": {
-          "$value": "{primitive.color.primary-600}"
-        },
-        "accent-foreground": {
-          "$value": "{primitive.color.primary-foreground}"
-        },
-        "accent-secondary-background": {
-          "$value": "{primitive.color.secondary-500}"
-        },
-        "accent-secondary-foreground": {
-          "$value": "{primitive.color.secondary-foreground}"
-        },
-        "accent-subtle": {
-          "$value": "{primitive.color.primary-50}"
-        },
-        "accent-subtle-foreground": {
-          "$value": "{primitive.color.primary-500}"
-        },
-        "positive-background": {
-          "$value": "{primitive.color.green-50}"
-        },
-        "positive-foreground": {
-          "$value": "{primitive.color.green-800}"
-        },
-        "positive-border": {
-          "$value": "{primitive.color.green-700}"
-        },
-        "negative-background": {
-          "$value": "{primitive.color.red-50}"
-        },
-        "negative-foreground": {
-          "$value": "{primitive.color.red-800}"
-        },
-        "negative-border": {
-          "$value": "{primitive.color.red-800}"
-        },
-        "negative-solid": {
-          "$value": "{primitive.color.scarlet-400}"
-        },
-        "negative-solid-foreground": {
-          "$value": "{primitive.color.white}"
-        },
-        "neutral-background": {
-          "$value": "{primitive.color.neutral-50}"
-        },
-        "neutral-foreground": {
-          "$value": "{primitive.color.neutral-700}"
-        },
-        "warning-background": {
-          "$value": "{primitive.color.amber-50}"
-        },
-        "warning-foreground": {
-          "$value": "{primitive.color.amber-800}"
-        },
-        "warning-border": {
-          "$value": "{primitive.color.amber-800}"
-        },
-        "chart-1": {
-          "$value": "{primitive.color.primary-500}"
-        },
-        "chart-2": {
-          "$value": "{primitive.color.secondary-500}"
-        },
-        "chart-3": {
-          "$value": "{primitive.color.gold-500}"
-        },
-        "chart-4": {
-          "$value": "{primitive.color.grape-500}"
-        },
-        "chart-5": {
-          "$value": "{primitive.color.scarlet-500}"
-        }
-      }
+    "$description": "The standard shadcn variables and the success, warning and info pairs, each an alias of a primitive, emitted as --<name> custom properties.",
+    "radius": {
+      "$type": "dimension",
+      "$value": "{primitive.radius.md}"
     },
-    "dark": {
-      "color": {
-        "$type": "color",
-        "background-canvas": {
-          "$value": "{primitive.color.neutral-950}"
-        },
-        "background-surface": {
-          "$value": "{primitive.color.navy-900}"
-        },
-        "background-subtle": {
-          "$value": "{primitive.color.grey-800}"
-        },
-        "background-elevated": {
-          "$value": "{primitive.color.navy-900}"
-        },
-        "background-overlay": {
-          "$value": "{primitive.color.overlay}"
-        },
-        "background-sidebar": {
-          "$value": "{primitive.color.navy-900}"
-        },
-        "foreground-default": {
-          "$value": "{primitive.color.grey-100}"
-        },
-        "foreground-muted": {
-          "$value": "{primitive.color.grey-500}"
-        },
-        "foreground-disabled": {
-          "$value": "{primitive.color.neutral-400}"
-        },
-        "border-default": {
-          "$value": "{primitive.color.grey-800}"
-        },
-        "border-input": {
-          "$value": "{primitive.color.grey-700}"
-        },
-        "border-focus": {
-          "$value": "{primitive.color.primary-500}"
-        },
-        "accent-background": {
-          "$value": "{primitive.color.primary-500}"
-        },
-        "accent-background-hover": {
-          "$value": "{primitive.color.primary-200}"
-        },
-        "accent-foreground": {
-          "$value": "{primitive.color.primary-foreground}"
-        },
-        "accent-secondary-background": {
-          "$value": "{primitive.color.secondary-500}"
-        },
-        "accent-secondary-foreground": {
-          "$value": "{primitive.color.secondary-foreground}"
-        },
-        "accent-subtle": {
-          "$value": "{primitive.color.navy-800}"
-        },
-        "accent-subtle-foreground": {
-          "$value": "{primitive.color.primary-50}"
-        },
-        "positive-background": {
-          "$value": "{primitive.color.green-950}"
-        },
-        "positive-foreground": {
-          "$value": "{primitive.color.green-300}"
-        },
-        "positive-border": {
-          "$value": "{primitive.color.green-300}"
-        },
-        "negative-background": {
-          "$value": "{primitive.color.red-950}"
-        },
-        "negative-foreground": {
-          "$value": "{primitive.color.red-300}"
-        },
-        "negative-border": {
-          "$value": "{primitive.color.red-300}"
-        },
-        "negative-solid": {
-          "$value": "{primitive.color.scarlet-500}"
-        },
-        "negative-solid-foreground": {
-          "$value": "{primitive.color.white}"
-        },
-        "neutral-background": {
-          "$value": "{primitive.color.neutral-800}"
-        },
-        "neutral-foreground": {
-          "$value": "{primitive.color.neutral-100}"
-        },
-        "warning-background": {
-          "$value": "{primitive.color.amber-950}"
-        },
-        "warning-foreground": {
-          "$value": "{primitive.color.amber-200}"
-        },
-        "warning-border": {
-          "$value": "{primitive.color.amber-200}"
-        },
-        "chart-1": {
-          "$value": "{primitive.color.primary-500}"
-        },
-        "chart-2": {
-          "$value": "{primitive.color.secondary-500}"
-        },
-        "chart-3": {
-          "$value": "{primitive.color.gold-500}"
-        },
-        "chart-4": {
-          "$value": "{primitive.color.grape-500}"
-        },
-        "chart-5": {
-          "$value": "{primitive.color.scarlet-500}"
-        }
-      }
-    }
-  },
-  "component": {
-    "$description": "Component and state aliases. They never introduce product-specific values.",
-    "light": {
-      "button": {
-        "$type": "color",
-        "primary-background": {
-          "$value": "{semantic.light.color.accent-background}"
-        },
-        "primary-background-hover": {
-          "$value": "{semantic.light.color.accent-background-hover}"
-        },
-        "primary-foreground": {
-          "$value": "{semantic.light.color.accent-foreground}"
-        },
-        "disabled-background": {
-          "$value": "{semantic.light.color.background-subtle}"
-        },
-        "disabled-foreground": {
-          "$value": "{semantic.light.color.foreground-disabled}"
-        },
-        "focus-ring": {
-          "$value": "{semantic.light.color.border-focus}"
-        }
-      },
-      "input": {
-        "$type": "color",
-        "border": {
-          "$value": "{semantic.light.color.border-input}"
-        }
-      },
-      "dialog": {
-        "$type": "color",
-        "background": {
-          "$value": "{semantic.light.color.background-elevated}"
-        },
-        "foreground": {
-          "$value": "{semantic.light.color.foreground-default}"
-        },
-        "overlay": {
-          "$value": "{semantic.light.color.background-overlay}"
-        }
-      },
-      "toast": {
-        "$type": "color",
-        "positive-background": {
-          "$value": "{semantic.light.color.positive-background}"
-        },
-        "positive-foreground": {
-          "$value": "{semantic.light.color.positive-foreground}"
-        },
-        "negative-background": {
-          "$value": "{semantic.light.color.negative-background}"
-        },
-        "negative-foreground": {
-          "$value": "{semantic.light.color.negative-foreground}"
-        },
-        "neutral-background": {
-          "$value": "{semantic.light.color.neutral-background}"
-        },
-        "neutral-foreground": {
-          "$value": "{semantic.light.color.neutral-foreground}"
-        }
-      }
+    "font-sans": {
+      "$type": "fontFamily",
+      "$value": "{primitive.font-family.sans}"
     },
-    "dark": {
-      "button": {
-        "$type": "color",
-        "primary-background": {
-          "$value": "{semantic.dark.color.accent-background}"
-        },
-        "primary-background-hover": {
-          "$value": "{semantic.dark.color.accent-background-hover}"
-        },
-        "primary-foreground": {
-          "$value": "{semantic.dark.color.accent-foreground}"
-        },
-        "disabled-background": {
-          "$value": "{semantic.dark.color.background-subtle}"
-        },
-        "disabled-foreground": {
-          "$value": "{semantic.dark.color.foreground-disabled}"
-        },
-        "focus-ring": {
-          "$value": "{semantic.dark.color.border-focus}"
-        }
-      },
-      "input": {
-        "$type": "color",
-        "border": {
-          "$value": "{semantic.dark.color.border-input}"
-        }
-      },
-      "dialog": {
-        "$type": "color",
-        "background": {
-          "$value": "{semantic.dark.color.background-elevated}"
-        },
-        "foreground": {
-          "$value": "{semantic.dark.color.foreground-default}"
-        },
-        "overlay": {
-          "$value": "{semantic.dark.color.background-overlay}"
-        }
-      },
-      "toast": {
-        "$type": "color",
-        "positive-background": {
-          "$value": "{semantic.dark.color.positive-background}"
-        },
-        "positive-foreground": {
-          "$value": "{semantic.dark.color.positive-foreground}"
-        },
-        "negative-background": {
-          "$value": "{semantic.dark.color.negative-background}"
-        },
-        "negative-foreground": {
-          "$value": "{semantic.dark.color.negative-foreground}"
-        },
-        "neutral-background": {
-          "$value": "{semantic.dark.color.neutral-background}"
-        },
-        "neutral-foreground": {
-          "$value": "{semantic.dark.color.neutral-foreground}"
-        }
-      }
+    "background": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral-25}"
+    },
+    "foreground": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral-950}"
+    },
+    "card": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral-25}"
+    },
+    "card-foreground": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral-950}"
+    },
+    "popover": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral-25}"
+    },
+    "popover-foreground": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral-950}"
+    },
+    "primary": {
+      "$type": "color",
+      "$value": "{primitive.color.primary-500}"
+    },
+    "primary-foreground": {
+      "$type": "color",
+      "$value": "{primitive.color.primary-foreground}"
+    },
+    "secondary": {
+      "$type": "color",
+      "$value": "{primitive.color.secondary-500}"
+    },
+    "secondary-foreground": {
+      "$type": "color",
+      "$value": "{primitive.color.secondary-foreground}"
+    },
+    "muted": {
+      "$type": "color",
+      "$value": "{primitive.color.grey-100}"
+    },
+    "muted-foreground": {
+      "$type": "color",
+      "$value": "{primitive.color.grey-600}"
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "{primitive.color.primary-50}"
+    },
+    "accent-foreground": {
+      "$type": "color",
+      "$value": "{primitive.color.primary-500}"
+    },
+    "destructive": {
+      "$type": "color",
+      "$value": "{primitive.color.scarlet-400}"
+    },
+    "destructive-foreground": {
+      "$type": "color",
+      "$value": "{primitive.color.white}"
+    },
+    "border": {
+      "$type": "color",
+      "$value": "{primitive.color.grey-200}"
+    },
+    "input": {
+      "$type": "color",
+      "$value": "{primitive.color.grey-300}"
+    },
+    "ring": {
+      "$type": "color",
+      "$value": "{primitive.color.primary-500}"
+    },
+    "chart-1": {
+      "$type": "color",
+      "$value": "{primitive.color.primary-500}"
+    },
+    "chart-2": {
+      "$type": "color",
+      "$value": "{primitive.color.secondary-500}"
+    },
+    "chart-3": {
+      "$type": "color",
+      "$value": "{primitive.color.gold-500}"
+    },
+    "chart-4": {
+      "$type": "color",
+      "$value": "{primitive.color.grape-500}"
+    },
+    "chart-5": {
+      "$type": "color",
+      "$value": "{primitive.color.scarlet-500}"
+    },
+    "sidebar": {
+      "$type": "color",
+      "$value": "{primitive.color.grey-100}"
+    },
+    "sidebar-foreground": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral-950}"
+    },
+    "sidebar-primary": {
+      "$type": "color",
+      "$value": "{primitive.color.primary-500}"
+    },
+    "sidebar-primary-foreground": {
+      "$type": "color",
+      "$value": "{primitive.color.primary-foreground}"
+    },
+    "sidebar-accent": {
+      "$type": "color",
+      "$value": "{primitive.color.primary-50}"
+    },
+    "sidebar-accent-foreground": {
+      "$type": "color",
+      "$value": "{primitive.color.primary-500}"
+    },
+    "sidebar-border": {
+      "$type": "color",
+      "$value": "{primitive.color.grey-200}"
+    },
+    "sidebar-ring": {
+      "$type": "color",
+      "$value": "{primitive.color.primary-500}"
+    },
+    "success": {
+      "$type": "color",
+      "$value": "{primitive.color.mint-500}"
+    },
+    "success-foreground": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral-950}"
+    },
+    "warning": {
+      "$type": "color",
+      "$value": "{primitive.color.gold-500}"
+    },
+    "warning-foreground": {
+      "$type": "color",
+      "$value": "{primitive.color.neutral-950}"
+    },
+    "info": {
+      "$type": "color",
+      "$value": "{primitive.color.grape-500}"
+    },
+    "info-foreground": {
+      "$type": "color",
+      "$value": "{primitive.color.white}"
     }
   }
 }
