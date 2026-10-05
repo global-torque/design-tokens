@@ -1,10 +1,10 @@
 # @global-torque/design-tokens
 
-> **Stable release:** `0.4.0` emits the standard shadcn variables and the
-> success, warning, and info pairs in place of the `--gt-color-*` roles and the
-> `--gt-component-*` tokens, and removes the dark set and the `./theme` entry
-> point, so it does not drop in over `0.3.0`. The
-> [changelog](./CHANGELOG.md) maps every removed name.
+> **Next release:** `0.4.0` is not published yet, so hosts pin a git commit.
+> It emits the standard shadcn variables and the success, warning, and info
+> pairs in place of the `--gt-color-*` roles and the `--gt-component-*` tokens,
+> and removes the dark set and the `./theme` entry point, so it does not drop in
+> over `0.3.0`. The [changelog](./CHANGELOG.md) maps every removed name.
 
 Neutral institutional design tokens for administrative and content interfaces.
 One DTCG 2025.10 source generates the typed JavaScript API, declarations,
@@ -25,7 +25,7 @@ activation, routes, environment reads, or private URLs.
 ## Install
 
 ```sh
-pnpm add @global-torque/design-tokens@0.4.0
+pnpm add github:global-torque/design-tokens#<commit-sha>
 ```
 
 Required and release-candidate CI run on Node 24.x.
@@ -55,23 +55,24 @@ Import the variable definitions once:
 `--success`, `--warning`, and `--info` pairs, the `--brand-*` seeds, and the
 `--gt-primitive-*` palette. There is one set of values and no dark mode.
 
-Both this stylesheet and `@global-torque/ui-primitives/styles/theme` declare
-the shadcn variables on `:root` outside any cascade layer, so the later import
-wins. Import the ui-primitives theme first and this package second; a tenant
-stylesheet that sets only the `--brand-*` seeds goes last:
+## Tailwind CSS v4
+
+`@global-torque/design-tokens/css` is the only source of these values.
+`@global-torque/ui-primitives/styles/theme` maps them for Tailwind and declares
+none, so the two can be imported in either order. A tenant stylesheet that sets
+only the `--brand-*` seeds goes last.
 
 ```css
+@import 'tailwindcss';
 @import '@global-torque/ui-primitives/styles/theme';
 @import '@global-torque/design-tokens/css';
 ```
 
-## Tailwind CSS v4
-
 The package ships no Tailwind entry point. A shadcn host maps the shadcn
 variables in its own `@theme inline` block, for example
-`--color-primary: var(--primary)`, and `@global-torque/ui-primitives/styles/theme`
-maps the standard set. Map the status pairs the same way when the theme does
-not:
+`--color-primary: var(--primary)`. `@global-torque/ui-primitives/styles/theme`
+maps the standard set and the status pairs; a host without it maps the status
+pairs the same way:
 
 ```css
 @theme inline {

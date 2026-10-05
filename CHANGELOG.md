@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.0 - 2026-10-05
+## 0.4.0 - Unreleased
 
 This release includes the unreleased `0.3.1` changes. It does not drop in over
 `0.3.0`.
@@ -35,7 +35,7 @@ This release includes the unreleased `0.3.1` changes. It does not drop in over
 - Changed the typed and JSON shape to `{ primitive, semantic }`. `semantic` is
   flat and keyed by variable name, for example `designTokens.semantic.background`
   and `designTokens.semantic['chart-1']`; `./tokens.json` and `./source` follow.
-  `ResolvedDesignTokens` is unchanged.
+  `ResolvedDesignTokens` keeps its name and now types `{ primitive, semantic }`.
 - Kept the ten `--brand-*` seeds and the 118 `--gt-primitive-*` palette values.
 - Derived the grey, neutral, steel, slate, navy, and charcoal steps from the
   surface seeds: the generated CSS re-declares each step, inside an `@supports`
@@ -66,7 +66,10 @@ This release includes the unreleased `0.3.1` changes. It does not drop in over
 - Removed the Tailwind compatibility tooling with `./theme`: the `tailwindcss`
   development dependency, the `test:tailwind:current` script, and its fixture.
   The generator no longer accepts typography or animation tokens; the source
-  has neither, and only `./theme` emitted the animation keyframes.
+  has neither, and only `./theme` emitted the animation keyframes. It also no
+  longer accepts the `breakpoint`, `letter-spacing`, `line-height`, and
+  `opacity` categories, which have had no tokens since `0.3.0`, or the `number`
+  type that only they used. Semantic tokens may alias only primitive tokens.
 
 ### Migration
 

@@ -583,7 +583,7 @@
         }
       },
       "coral-500": {
-        "$description": "coral-500, citrine-500, chartreuse-500 and jade-500 are the four steps of the password-strength meter.",
+        "$description": "coral-500, citrine-500, chartreuse-500 and jade-500 are kept for hosts; ui-kit 0.1.x used them for the password-strength meter.",
         "$value": {
           "colorSpace": "srgb",
           "components": [1, 0.3216, 0.3216]
