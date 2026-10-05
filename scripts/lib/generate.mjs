@@ -27,7 +27,6 @@ const KNOWN_TYPES = new Set([
   'duration',
   'fontFamily',
   'fontWeight',
-  'number',
   'shadow',
 ]);
 const GROUP_PROPERTIES = new Set([
@@ -228,9 +227,6 @@ const validateTypedValue = (type, value, label) => {
         throw new Error(`${label} must be a valid DTCG font weight.`);
       }
       return;
-    case 'number':
-      assertFiniteNumber(value, label);
-      return;
     case 'duration':
       if (!isRecord(value)) {
         throw new Error(`${label} must be a DTCG duration object.`);
@@ -335,9 +331,8 @@ const resolveTokens = (tokens) => {
     const [sourceLayer] = source.path;
     const [targetLayer] = target.path;
     const allowed =
-      (sourceLayer === 'primitive' && targetLayer === 'primitive') ||
-      (sourceLayer === 'semantic' &&
-        (targetLayer === 'primitive' || targetLayer === 'semantic'));
+      targetLayer === 'primitive' &&
+      (sourceLayer === 'primitive' || sourceLayer === 'semantic');
     if (!allowed) {
       throw new Error(
         `${source.path.join('.')} cannot reference ${target.path.join('.')} across token layer boundaries.`,
@@ -420,8 +415,6 @@ const resolveTokens = (tokens) => {
   return resolved;
 };
 
-const formatNumber = (value) => (Object.is(value, -0) ? '0' : String(value));
-
 /* The byte channels the stylesheet writes for a DTCG sRGB color. */
 const colorChannels = (value) =>
   value.components.map((component) => Math.round(component * 255));
@@ -429,13 +422,13 @@ const colorChannels = (value) =>
 const colorToCss = (value) => {
   const channels = colorChannels(value);
   if (value.alpha !== undefined && value.alpha < 1) {
-    return `rgb(${channels.join(' ')} / ${formatNumber(value.alpha)})`;
+    return `rgb(${channels.join(' ')} / ${value.alpha})`;
   }
   return `#${channels.map((channel) => channel.toString(16).padStart(2, '0')).join('')}`;
 };
 
 const dimensionToCss = (value) =>
-  value.value === 0 ? '0px' : `${formatNumber(value.value)}${value.unit}`;
+  value.value === 0 ? '0px' : `${value.value}${value.unit}`;
 
 const fontFamilyToCss = (value) => {
   const families = Array.isArray(value) ? value : [value];
@@ -487,16 +480,12 @@ export const toCssValue = (type, value) => {
         'extra-black': 950,
         'ultra-black': 950,
       };
-      return typeof value === 'number'
-        ? formatNumber(value)
-        : formatNumber(namedWeights[value]);
+      return String(typeof value === 'number' ? value : namedWeights[value]);
     }
-    case 'number':
-      return typeof value === 'number' ? formatNumber(value) : value;
     case 'duration':
-      return `${formatNumber(value.value)}${value.unit}`;
+      return `${value.value}${value.unit}`;
     case 'cubicBezier':
-      return `cubic-bezier(${value.map(formatNumber).join(', ')})`;
+      return `cubic-bezier(${value.join(', ')})`;
     case 'shadow':
       return (Array.isArray(value) ? value : [value])
         .map(shadowPartToCss)
@@ -590,16 +579,12 @@ const assertNoOutputCollisions = (resolved) => {
 
 const assertPrimitiveOutputTypes = (resolved) => {
   const expectedTypes = {
-    breakpoint: 'dimension',
     color: 'color',
     duration: 'duration',
     easing: 'cubicBezier',
     'font-family': 'fontFamily',
     'font-size': 'dimension',
     'font-weight': 'fontWeight',
-    'letter-spacing': 'dimension',
-    'line-height': 'number',
-    opacity: 'number',
     radius: 'dimension',
     shadow: 'shadow',
     spacing: 'dimension',
@@ -632,24 +617,10 @@ const assertPrimitiveOutputTypes = (resolved) => {
         `${token.path.join('.')} must use ${expected} for generated output, received ${token.type}.`,
       );
     }
-    if (
-      category === 'opacity' &&
-      (typeof token.value !== 'number' || token.value < 0 || token.value > 1)
-    ) {
-      throw new Error(
-        `${token.path.join('.')} opacity must be between 0 and 1.`,
-      );
-    }
     if (['radius', 'spacing'].includes(category) && token.value.value < 0) {
       throw new Error(`${token.path.join('.')} must be non-negative.`);
     }
-    if (
-      ['breakpoint', 'font-size'].includes(category) &&
-      token.value.value <= 0
-    ) {
-      throw new Error(`${token.path.join('.')} must be greater than zero.`);
-    }
-    if (category === 'line-height' && token.value <= 0) {
+    if (category === 'font-size' && token.value.value <= 0) {
       throw new Error(`${token.path.join('.')} must be greater than zero.`);
     }
     if (category === 'shadow') {
@@ -833,12 +804,6 @@ const literalType = (value, depth = 0) => {
   const indent = '  '.repeat(depth);
   const childIndent = '  '.repeat(depth + 1);
   if (typeof value === 'string') return JSON.stringify(value);
-  if (typeof value === 'number' || typeof value === 'boolean')
-    return String(value);
-  if (value === null) return 'null';
-  if (Array.isArray(value)) {
-    return `readonly [${value.map((item) => literalType(item, depth + 1)).join(', ')}]`;
-  }
   return `{\n${sortedEntries(value)
     .map(
       ([key, child]) =>
@@ -973,18 +938,12 @@ const offsetPosition = (text, offset) => {
   return { line: lines.length - 1, column: lines.at(-1)?.length ?? 0 };
 };
 
-/* The runtime tree keeps the source's primitive/semantic paths. */
+/* The runtime tree keeps the source's primitive/semantic paths, so every path
+   names a source node; a line without a path maps to the root. */
 const sourcePosition = (tree, sourceText, runtimePath) => {
-  const path = [...runtimePath];
-  while (path.length > 0) {
-    const node = findNodeAtLocation(tree, path);
-    if (node) {
-      const mappedNode = node.parent?.type === 'property' ? node.parent : node;
-      return offsetPosition(sourceText, mappedNode.offset);
-    }
-    path.pop();
-  }
-  return { line: 0, column: 0 };
+  const node = findNodeAtLocation(tree, runtimePath);
+  const mappedNode = node.parent?.type === 'property' ? node.parent : node;
+  return offsetPosition(sourceText, mappedNode.offset);
 };
 
 const makeSourceMap = (

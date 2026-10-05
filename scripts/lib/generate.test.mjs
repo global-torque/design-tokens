@@ -145,9 +145,7 @@ const literalTypeValue = (node) => {
         if (
           !ts.isPropertySignature(member) ||
           !member.type ||
-          (!ts.isStringLiteral(member.name) &&
-            !ts.isIdentifier(member.name) &&
-            !ts.isNumericLiteral(member.name))
+          !ts.isStringLiteral(member.name)
         ) {
           throw new Error(
             'Generated declaration contains a non-literal member.',
@@ -157,18 +155,8 @@ const literalTypeValue = (node) => {
       }),
     );
   }
-  if (ts.isTupleTypeNode(node)) {
-    return node.elements.map(literalTypeValue);
-  }
-  if (ts.isLiteralTypeNode(node)) {
-    if (ts.isStringLiteral(node.literal) || ts.isNumericLiteral(node.literal)) {
-      return ts.isNumericLiteral(node.literal)
-        ? Number(node.literal.text)
-        : node.literal.text;
-    }
-    if (node.literal.kind === ts.SyntaxKind.TrueKeyword) return true;
-    if (node.literal.kind === ts.SyntaxKind.FalseKeyword) return false;
-    if (node.literal.kind === ts.SyntaxKind.NullKeyword) return null;
+  if (ts.isLiteralTypeNode(node) && ts.isStringLiteral(node.literal)) {
+    return node.literal.text;
   }
   throw new Error(`Unsupported generated declaration node ${node.kind}.`);
 };
@@ -443,12 +431,11 @@ describe('DTCG validation and resolution', () => {
 
   it('rejects cross-type aliases, output-unsafe names, and CSS collisions', () => {
     const crossType = copySource();
-    crossType.primitive['line-height'] = {
-      $type: 'number',
-      normal: { $value: '{primitive.font-weight.medium}' },
+    crossType.primitive.spacing['5'] = {
+      $value: '{primitive.font-weight.medium}',
     };
     expect(() => validateAndResolveDtcg(crossType)).toThrow(
-      /declares number but references fontWeight/u,
+      /declares dimension but references fontWeight/u,
     );
 
     const fontInjection = copySource();
@@ -457,30 +444,13 @@ describe('DTCG validation and resolution', () => {
     const fontRuntime = validateAndResolveDtcg(fontInjection).runtime;
     expect(fontRuntime.primitive['font-family'].sans).toBe('"Inter;color:red"');
 
-    const wrongBreakpointType = copySource();
-    wrongBreakpointType.primitive.breakpoint = {
-      md: { $type: 'number', $value: 48 },
-    };
-    expect(() => validateAndResolveDtcg(wrongBreakpointType)).toThrow(
-      /must use dimension for generated output/u,
-    );
-
-    const unnamedBreakpoint = copySource();
-    unnamedBreakpoint.primitive.breakpoint = {
+    const unnamedPrimitive = copySource();
+    unnamedPrimitive.primitive.gap = {
       $type: 'dimension',
-      $value: { value: 48, unit: 'rem' },
+      $value: { value: 1, unit: 'rem' },
     };
-    expect(() => validateAndResolveDtcg(unnamedBreakpoint)).toThrow(
+    expect(() => validateAndResolveDtcg(unnamedPrimitive)).toThrow(
       /must be a named primitive token below its category/u,
-    );
-
-    const invalidOpacity = copySource();
-    invalidOpacity.primitive.opacity = {
-      $type: 'number',
-      disabled: { $value: 2 },
-    };
-    expect(() => validateAndResolveDtcg(invalidOpacity)).toThrow(
-      /opacity must be between 0 and 1/u,
     );
 
     const wrongSemanticType = copySource();
@@ -566,7 +536,9 @@ describe('DTCG validation and resolution', () => {
     [
       'unknown primitive category',
       (input) => {
-        input.primitive.custom = { value: { $type: 'number', $value: 1 } };
+        input.primitive.custom = {
+          value: { $type: 'dimension', $value: { value: 1, unit: 'rem' } },
+        };
       },
       /unsupported primitive output category/u,
     ],
@@ -592,32 +564,9 @@ describe('DTCG validation and resolution', () => {
       /must be greater than zero/u,
     ],
     [
-      'zero breakpoint',
+      'non-finite dimension',
       (input) => {
-        input.primitive.breakpoint = {
-          $type: 'dimension',
-          md: { $value: { value: 0, unit: 'rem' } },
-        };
-      },
-      /must be greater than zero/u,
-    ],
-    [
-      'zero line height',
-      (input) => {
-        input.primitive['line-height'] = {
-          $type: 'number',
-          normal: { $value: 0 },
-        };
-      },
-      /must be greater than zero/u,
-    ],
-    [
-      'non-finite number',
-      (input) => {
-        input.primitive['line-height'] = {
-          $type: 'number',
-          normal: { $value: Number.NaN },
-        };
+        at(input, ['primitive', 'spacing', '1']).$value.value = Number.NaN;
       },
       /finite number/u,
     ],
@@ -974,7 +923,6 @@ describe('artifact generation', () => {
     expect(toCssValue('dimension', { value: 0.00001, unit: 'rem' })).toBe(
       '0.00001rem',
     );
-    expect(toCssValue('number', -0)).toBe('0');
     expect(toCssValue('cubicBezier', [0.123456, 0, 0.987654, 1])).toBe(
       'cubic-bezier(0.123456, 0, 0.987654, 1)',
     );
