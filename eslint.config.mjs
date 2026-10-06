@@ -2,10 +2,10 @@ import js from '@eslint/js';
 
 export default [
   {
-    ignores: ['coverage/**', 'dist/**', 'docs/api/**', 'temp/**'],
+    ignores: ['coverage/**'],
   },
   {
-    files: ['scripts/**/*.mjs', 'src/**/*.mjs', 'vitest.config.mjs'],
+    files: ['src/**/*.mjs', 'vitest.config.mjs'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',

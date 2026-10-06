@@ -2,8 +2,8 @@
 
 Review date: 2026-07-11
 
-This stable source applies the OSPS baseline proportionately to a small
-ESM-only TypeScript library.
+This source repository applies the OSPS baseline proportionately to a small
+design-token library.
 
 Implemented controls:
 
@@ -14,11 +14,7 @@ Implemented controls:
 - Node 24 required CI;
 - dependency review, Dependabot, secret scanning, push protection, and
   private vulnerability reporting;
-- explicit package contents, API reports, coverage thresholds, source maps,
-  clean-room verification, SHA-512 manifests, and build provenance.
+- source-only formatting, linting, TypeScript checks, and tests.
 
-The package's exact named-consumer gate and reviewed candidate release issue
-were completed before stable GitHub promotion. npm trusted publishing and
-registry provenance remain blocked until the organization owner configures npm
-access. No exception permits publishing a registry version without those
-controls.
+GitHub Releases retain published archives. Generated build output and API
+reports are intentionally not committed to this repository.
