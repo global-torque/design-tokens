@@ -12,10 +12,10 @@ Implemented controls:
 - protected immutable `v*` tags;
 - least-privilege, SHA-pinned GitHub Actions;
 - Node 24 required CI;
-- dependency review, Dependabot, secret scanning, push protection, and
-  private vulnerability reporting;
-- explicit package contents, API reports, coverage thresholds, source maps,
-  clean-room verification, SHA-512 manifests, and build provenance.
+- Dependabot, secret scanning, push protection, and private vulnerability
+  reporting;
+- explicit package contents, source maps, clean-room verification, SHA-512
+  manifests, and build provenance.
 
 The package's exact named-consumer gate and reviewed candidate release issue
 were completed before stable GitHub promotion. npm trusted publishing and

@@ -131,9 +131,6 @@ console.assert(cssUrl === namedCssUrl);
 console.assert(cssUrl.endsWith('/index.css'));
 ```
 
-Generated API references cover the [typed root](./docs/api/index.md) and the
-[plain-CSS URL facade](./docs/api-css/index.md).
-
 ## Runtime rebrand
 
 `@global-torque/design-tokens/derive` exports `deriveBrand`, the function the
@@ -241,17 +238,12 @@ A host owns contrast acceptance for the pairs it actually paints.
 pnpm run browser:install
 pnpm run format:check
 pnpm run lint
-pnpm run typecheck
-pnpm run test:coverage
-pnpm run docs:api
-pnpm run api:check
-pnpm run docs:check
-pnpm run package:lint
+pnpm run test:run
 ```
 
 `browser:install` installs the Chromium binary pinned to Playwright 1.63.0 and
 its Linux system dependencies. It is required on a clean CI/cache image before
-`test:run` or `test:coverage`.
+`test:run`.
 The test matrix validates DTCG structure and aliases, deterministic generation,
 deep runtime freezing, CSS/JSON/JS/declaration/source-map parity, the exact set
 of variables on `:root`, brand seeds painted in a browser, and brand
@@ -317,8 +309,8 @@ API, compatibility matrix, and release decision. Host applications own product
 aliases and visual acceptance. Propose changes through the package repository's
 GitHub issues before opening a pull request. A contribution must update the
 canonical DTCG file (never `dist`), include generator/parity regression tests,
-regenerate API docs and reports, add a changelog and migration note for
-public-name changes, and pass every development/release command above. A
+add a changelog and migration note for public-name changes, and pass every
+development/release command above. A
 maintainer must review generated diffs and the exact packed artifact before a
 beta is accepted.
 

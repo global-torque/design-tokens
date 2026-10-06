@@ -1,7 +1,5 @@
-/coverage/
 /node_modules/
 /release/
-/temp/
 /.django-venv/
 .DS_Store
 .env

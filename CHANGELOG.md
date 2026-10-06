@@ -70,6 +70,8 @@ This release includes the unreleased `0.3.1` changes. It does not drop in over
   longer accepts the `breakpoint`, `letter-spacing`, `line-height`, and
   `opacity` categories, which have had no tokens since `0.3.0`, or the `number`
   type that only they used. Semantic tokens may alias only primitive tokens.
+- Removed the API reports (`etc/*.api.md`) and the generated API docs
+  (`docs/api`, `docs/api-css`) from the package.
 
 ### Migration
 

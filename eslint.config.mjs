@@ -2,7 +2,7 @@ import js from '@eslint/js';
 
 export default [
   {
-    ignores: ['coverage/**', 'dist/**', 'docs/api/**', 'temp/**'],
+    ignores: ['dist/**'],
   },
   {
     files: ['scripts/**/*.mjs', 'src/**/*.mjs', 'vitest.config.mjs'],
