@@ -5,7 +5,7 @@ The active public milestone is
 
 Promotion order:
 
-1. Merge reviewed source and governance on protected `main`.
+1. Merge reviewed source and governance on protected `master`.
 2. Create one clean, attested beta candidate and retain its exact bytes.
 3. Pass npm/pnpm clean rooms and the named real-consumer gate.
 4. Publish the immutable GitHub prerelease and validate downloaded bytes.
