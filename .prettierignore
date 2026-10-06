@@ -1,0 +1,2 @@
+# pnpm owns the generated lockfile; CI validates it with --frozen-lockfile.
+pnpm-lock.yaml
