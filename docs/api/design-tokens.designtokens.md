@@ -6,7 +6,7 @@
 
 Resolved, deeply frozen neutral design tokens.
 
-Values are generated from the package's DTCG 2025.10 source. Use `modes.light` or `modes.dark` explicitly; the runtime never detects a preferred mode.
+Values are generated from the package's DTCG 2025.10 source. Use`modes.light` or `modes.dark` explicitly; the runtime never detects a preferred mode.
 
 **Signature:**
 
