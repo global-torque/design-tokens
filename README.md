@@ -123,9 +123,8 @@ console.assert(cssUrl.endsWith('/index.css'));
 console.assert(themeUrl.endsWith('/theme.css'));
 ```
 
-Generated API references cover the [typed root](./docs/api/index.md),
-[plain-CSS URL facade](./docs/api-css/index.md), and
-[Tailwind-theme URL facade](./docs/api-theme/index.md).
+The source tokens, CSS variables, and token helpers live in [`src/`](./src/).
+Published GitHub Release archives preserve the built artifacts for each release.
 
 ## Runtime rebrand
 
@@ -216,8 +215,8 @@ A handful of derived steps are held as fixed values and carry a `$description`
 saying so; a rebrand does not move them.
 
 Light and dark semantic/component token paths must have exact type parity. The
-generator rejects any missing counterpart. Generated files live only in
-`dist`; edit `src/tokens.tokens.json`, never a generated representation.
+generator rejects any missing counterpart. Edit `src/tokens.tokens.json`
+directly; this repository does not commit generated build output.
 
 ## Contrast
 
@@ -225,103 +224,22 @@ The build does not gate contrast. The generator checks structure, references,
 modes, and typed values only, and carries the fixed system colors as written.
 A host owns contrast acceptance for the pairs it actually paints.
 
-## Development and release checks
+## Development
 
 ```sh
-pnpm run browser:install
-pnpm run format:check
-pnpm run lint
-pnpm run typecheck
-pnpm run test:coverage
-pnpm run test:tailwind:current
-pnpm run docs:api
-pnpm run api:check
-pnpm run docs:check
-pnpm run package:lint
+pnpm run ci
 ```
 
-`browser:install` installs the Chromium binary pinned to Playwright 1.63.0 and
-its Linux system dependencies. It is required on a clean CI/cache image before
-`test:run` or `test:coverage`.
-`test:tailwind:current` performs a mutable npm lookup and is intentionally
-limited to the scheduled informational compatibility workflow; release gates
-use only the exact lockfile dependency.
-The test matrix validates DTCG structure and aliases, deterministic generation,
-deep runtime freezing, CSS/JSON/JS/declaration/source-map parity, both explicit
-modes, browser theme activation, brand derivation, and real Tailwind
-compilation against both supported targets. Release automation must
-build once and use the same immutable tarball bytes for npm and pnpm clean
-rooms, admin consumer validation, and publication.
-
-The packed clean-room smoke test is intentionally executable:
-
-```js clean-room
-import assert from 'node:assert/strict';
-import cssUrl from '@global-torque/design-tokens/css';
-import designTokens, {
-  designTokens as namedTokens,
-} from '@global-torque/design-tokens';
-import sourceTokens from '@global-torque/design-tokens/source' with { type: 'json' };
-import resolvedTokens from '@global-torque/design-tokens/tokens.json' with { type: 'json' };
-import themeUrl from '@global-torque/design-tokens/theme';
-
-assert.equal(designTokens, namedTokens);
-assert.equal(Object.isFrozen(designTokens), true);
-assert.equal(Object.isFrozen(designTokens.modes.dark.semantic.color), true);
-assert.equal(
-  designTokens.modes.dark.semantic.color['background-surface'],
-  '#1a202d',
-);
-assert.equal(
-  resolvedTokens.modes.dark.semantic.color['background-surface'],
-  '#1a202d',
-);
-assert.match(sourceTokens.$description, /Neutral institutional/u);
-assert.match(cssUrl, /\/index\.css$/u);
-assert.match(themeUrl, /\/theme\.css$/u);
-```
-
-## Migration and rollback
-
-The 0.1 beta intentionally replaces the earlier handwritten maps and variable
-catalog. Concrete common mappings are:
-
-| Before                          | 0.1 beta replacement                                            |
-| ------------------------------- | --------------------------------------------------------------- |
-| `colorTokens.surface`           | `designTokens.modes.light.semantic.color['background-surface']` |
-| `colorTokens.text`              | `designTokens.modes.light.semantic.color['foreground-default']` |
-| `spacingTokens.lg`              | `designTokens.primitive.spacing['4']`                           |
-| `radiusTokens.md`               | `designTokens.primitive.radius.md`                              |
-| `typographyTokens.weightMedium` | `designTokens.primitive['font-weight'].medium`                  |
-| Type `DesignTokens`             | Type `ResolvedDesignTokens`                                     |
-| `--gt-color-surface`            | `--gt-color-background-surface`                                 |
-| `--gt-color-text`               | `--gt-color-foreground-default`                                 |
-| `--gt-space-lg`                 | `--gt-primitive-spacing-4`                                      |
-| Tailwind `bg-gt-surface`        | `bg-gt-background-surface`                                      |
-| Tailwind `text-gt-text`         | `text-gt-foreground-default`                                    |
-| Tailwind `@theme` import        | `@global-torque/design-tokens/theme` (`@theme inline`)          |
-
-For dark mode, select `designTokens.modes.dark` and activate either `.dark` or
-`[data-theme="dark"]` in CSS. Product aliases belong in the host stylesheet,
-not this package.
-
-During beta, pin the exact artifact digest. To roll back, restore the last
-known-good tarball or exact npm version, revert only the consumer token import,
-and publish a new beta for any correction; never replace or retag failed bytes.
-CSS variables and JSON paths are public API and receive the same breaking-change
-treatment as TypeScript names.
+The CI command checks source formatting, linting, TypeScript, and tests.
+GitHub Releases retain the published archives for released versions.
+Source changes should include focused tests when behavior changes. Generated
+files, API reports, browser checks, and package verification are not maintained
+in this repository.
 
 ## Ownership and contributing
 
-The Global Torque Design Systems maintainers own the schema, generator, public
-API, compatibility matrix, and release decision. Host applications own product
-aliases and visual acceptance. Propose changes through the package repository's
-GitHub issues before opening a pull request. A contribution must update the
-canonical DTCG file (never `dist`), include generator/parity regression tests,
-regenerate API docs and reports, add a changelog and migration note for
-public-name changes, and pass every development/release command above. A
-maintainer must review generated diffs and the exact packed artifact before a
-beta is accepted.
+Global Torque Design Systems maintain the source tokens. Propose changes in
+GitHub issues or pull requests and run `pnpm run ci` before review.
 
 ## Security and support
 
