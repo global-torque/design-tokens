@@ -38,9 +38,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+          git fetch --no-tags origin +refs/heads/master:refs/remotes/origin/master
           test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
-          test "$(git rev-parse origin/main)" = "${GITHUB_SHA}"
+          test "$(git rev-parse origin/master)" = "${GITHUB_SHA}"
           test "v$(node -p "require('./package.json').version")" = "${GITHUB_REF_NAME}"
           pnpm --config.ignore-pnpmfile=true install --frozen-lockfile --ignore-scripts
       - name: Install browser test runtime

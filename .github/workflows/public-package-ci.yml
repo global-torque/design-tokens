@@ -400,9 +400,9 @@ jobs:
 
           VERIFY_TAG_COMMANDS = (
               "set -euo pipefail",
-              "git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main",
+               "git fetch --no-tags origin +refs/heads/master:refs/remotes/origin/master",
               'test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"',
-              'test "$(git rev-parse origin/main)" = "${GITHUB_SHA}"',
+               'test "$(git rev-parse origin/master)" = "${GITHUB_SHA}"',
               'test "v$(node -p "require(\'./package.json\').version")" = "${GITHUB_REF_NAME}"',
               "pnpm --config.ignore-pnpmfile=true install --frozen-lockfile --ignore-scripts",
           )
@@ -836,7 +836,7 @@ jobs:
           dead_step_decoy["jobs"]["build"]["steps"].append(
               {
                   "name": "Policy marker decoy",
-                  "run": "echo 'git fetch origin/main; gh attestation verify --deny-self-hosted-runners'",
+                   "run": "echo 'git fetch origin/master; gh attestation verify --deny-self-hosted-runners'",
               }
           )
           expect_candidate_rejected(dead_step_decoy, "an unrelated marker echo step")

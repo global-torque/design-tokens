@@ -7,7 +7,7 @@ ESM-only TypeScript library.
 
 Implemented controls:
 
-- protected `main` with pull-request, CODEOWNERS, conversation-resolution,
+- protected `master` with pull-request, CODEOWNERS, conversation-resolution,
   linear-history, no-force-push, and no-deletion rules;
 - protected immutable `v*` tags;
 - least-privilege, SHA-pinned GitHub Actions;
