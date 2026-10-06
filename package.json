@@ -4,8 +4,10 @@
   "version": "0.0.0",
   "license": "MIT",
   "type": "module",
+  "packageManager": "pnpm@11.21.0",
   "scripts": {
-    "build": "node scripts/build.mjs && tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json && cp src/index.css src/theme.css src/tokens.json dist/",
+    "check": "pnpm typecheck && pnpm test:run && pnpm build",
     "test:run": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
@@ -26,7 +28,17 @@
     "url": "https://github.com/global-torque/design-tokens/issues"
   },
   "files": [
-    "dist",
+    "dist/index.js",
+    "dist/index.js.map",
+    "dist/index.d.ts",
+    "dist/index.d.ts.map",
+    "dist/tokens.js",
+    "dist/tokens.js.map",
+    "dist/tokens.d.ts",
+    "dist/tokens.d.ts.map",
+    "dist/index.css",
+    "dist/theme.css",
+    "dist/tokens.json",
     "README.md",
     "LICENSE",
     "NOTICE.md",

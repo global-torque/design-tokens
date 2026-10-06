@@ -2,3 +2,5 @@ node_modules/
 coverage/
 .turbo/
 *.tgz
+dist/
+release/

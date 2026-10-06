@@ -46,6 +46,13 @@ Tailwind output.
 Prepare-next. Do not publish to npm until package-specific contracts,
 attribution, admin consumer validation, and visual verification gates pass.
 
+To publish a GitHub-only tarball, update the version in `package.json` and push
+a branch named `vX.Y.Z` matching that version (for example, `v0.0.0`). The
+release workflow runs `pnpm check`, packs the allowlisted build outputs with
+`pnpm pack`, and attaches the tarball, SHA-512 checksum, and attestation to a
+GitHub release tagged at the branch commit. It does not publish to npm. Use a
+new version/branch for the next release; existing releases are not rebuilt.
+
 ## Support
 
 Use GitHub issues on `global-torque/design-tokens` for token naming, export
