@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.0 - Unreleased
+## 0.4.0 - 2026-10-07
 
 This release includes the unreleased `0.3.1` changes. It does not drop in over
 `0.3.0`.

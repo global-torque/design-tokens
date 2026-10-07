@@ -169,6 +169,51 @@ saying so; a rebrand does not move them.
 Edit `src/tokens.tokens.json` directly; this repository does not commit
 generated build output.
 
+## Variables
+
+The `--brand-*` seeds are the inputs a tenant sets. Every other variable aliases
+a palette value in `src/tokens.tokens.json`, so it either follows a seed or
+stays fixed when the brand changes. Grey steps follow a surface seed through the
+offsets that [Runtime rebrand](#runtime-rebrand) describes.
+
+| Seed                           | What it sets                                                                                                                                                        | Default                   |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| `--brand-primary`              | `--primary`, `--accent`, `--accent-foreground`, `--ring`, `--chart-1`, `--sidebar-primary`, `--sidebar-accent`, `--sidebar-accent-foreground`, and `--sidebar-ring` | `#004fff`                 |
+| `--brand-primary-foreground`   | `--primary-foreground` and `--sidebar-primary-foreground`                                                                                                           | `--brand-surface-light`   |
+| `--brand-secondary`            | `--secondary` and `--chart-2`                                                                                                                                       | `#3ddc97`                 |
+| `--brand-secondary-foreground` | `--secondary-foreground`                                                                                                                                            | `--brand-surface-dark`    |
+| `--brand-tertiary`             | Only the `tertiary-*` palette steps. No variable below reads it.                                                                                                    | `#5b55d6`                 |
+| `--brand-tertiary-foreground`  | Only the `tertiary-foreground` palette step                                                                                                                         | `--brand-surface-light`   |
+| `--brand-surface-light`        | `--background`, `--card`, `--popover`, and the grey steps behind `--muted`, `--muted-foreground`, `--border`, `--input`, `--sidebar`, and `--sidebar-border`        | `#ffffff`                 |
+| `--brand-surface-dark`         | `--foreground`, `--card-foreground`, `--popover-foreground`, `--sidebar-foreground`, `--success-foreground`, and `--warning-foreground`                             | `#12161f`                 |
+| `--brand-radius`               | `--radius`                                                                                                                                                          | `0.5rem`                  |
+| `--brand-font-sans`            | `--font-sans`                                                                                                                                                       | Avenir, then system fonts |
+
+| Variable                                                                                                                                     | What it is for                                                      | Follows                                                                                   |
+| -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `--background` / `--foreground`                                                                                                              | Page background and default text                                    | The surface seeds                                                                         |
+| `--card` / `--card-foreground`                                                                                                               | Card surface and its text                                           | The surface seeds                                                                         |
+| `--popover` / `--popover-foreground`                                                                                                         | Menus, dropdowns, popovers, and dialogs, and their text             | The surface seeds                                                                         |
+| `--primary` / `--primary-foreground`                                                                                                         | Main fill, such as a primary button, and its text                   | `--brand-primary` / `--brand-primary-foreground`                                          |
+| `--secondary` / `--secondary-foreground`                                                                                                     | Second fill, such as a secondary button, and its text               | `--brand-secondary` / `--brand-secondary-foreground`                                      |
+| `--muted` / `--muted-foreground`                                                                                                             | Quiet surface, and secondary text such as captions and placeholders | `--brand-surface-light`                                                                   |
+| `--accent` / `--accent-foreground`                                                                                                           | Hover and selected backgrounds, such as menu items, and their text  | `--brand-primary`                                                                         |
+| `--destructive` / `--destructive-foreground`                                                                                                 | Errors and destructive actions, and text on that fill               | Fixed: `scarlet-400` and white                                                            |
+| `--border`                                                                                                                                   | Borders and dividers                                                | `--brand-surface-light`                                                                   |
+| `--input`                                                                                                                                    | Form field borders                                                  | `--brand-surface-light`                                                                   |
+| `--ring`                                                                                                                                     | Focus ring                                                          | `--brand-primary`                                                                         |
+| `--chart-1` to `--chart-5`                                                                                                                   | Chart series colors                                                 | `--brand-primary`, `--brand-secondary`, then fixed `gold-500`, `grape-500`, `scarlet-500` |
+| `--sidebar` / `--sidebar-foreground`                                                                                                         | Sidebar surface and its text                                        | The surface seeds                                                                         |
+| `--sidebar-primary`, `--sidebar-primary-foreground`, `--sidebar-accent`, `--sidebar-accent-foreground`, `--sidebar-border`, `--sidebar-ring` | The sidebar's own `--primary`, `--accent`, `--border`, and `--ring` | The same seeds as those variables                                                         |
+| `--radius`                                                                                                                                   | Base corner radius. A host scales its radius steps from it.         | `--brand-radius`                                                                          |
+| `--font-sans`                                                                                                                                | Base font family                                                    | `--brand-font-sans`                                                                       |
+| `--success` / `--success-foreground`                                                                                                         | Success fill, such as a badge or an alert, and its text             | Fixed `mint-500` / `--brand-surface-dark`                                                 |
+| `--warning` / `--warning-foreground`                                                                                                         | Warning fill and its text                                           | Fixed `gold-500` / `--brand-surface-dark`                                                 |
+| `--info` / `--info-foreground`                                                                                                               | Info fill and its text                                              | Fixed: `grape-500` and white                                                              |
+
+Put text on a fill in that fill's `-foreground` variable. Do not use a fill
+color, such as `--success`, as a text color, because it fails contrast.
+
 ## Contrast
 
 The build does not gate contrast. It checks only that every reference names an
