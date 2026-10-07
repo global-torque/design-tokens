@@ -15,13 +15,27 @@
     "node": ">=22"
   },
   "packageManager": "pnpm@10.34.5",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": ["./dist/*.css"],
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./tokens": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./css": "./dist/index.css",
+    "./theme": "./dist/theme.css",
+    "./derive": { "types": "./dist/derive.d.ts", "import": "./dist/derive.mjs" },
+    "./tokens.json": "./dist/tokens.json",
+    "./source": "./dist/tokens.tokens.json"
+  },
   "scripts": {
+    "build": "tsc -p tsconfig.build.json && cp src/index.css src/theme.css src/tokens.json src/tokens.tokens.json src/derive.mjs src/derive.d.ts dist/",
+    "prepack": "pnpm run build",
     "lint": "eslint --max-warnings=0 src vitest.config.mjs",
     "format:check": "prettier --check \"src/**/*.{json,yaml,yml}\"",
     "format:write": "prettier --write \"src/**/*.{json,yaml,yml}\"",
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "ci": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test"
+    "ci": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && pnpm pack --pack-destination release"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -43,7 +57,7 @@
     "access": "public"
   },
   "files": [
-    "src",
+    "dist",
     "README.md",
     "LICENSE",
     "NOTICE.md",
