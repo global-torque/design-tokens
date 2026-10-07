@@ -14,7 +14,7 @@ Implemented controls:
 - Node 24 required CI;
 - dependency review, Dependabot, secret scanning, push protection, and
   private vulnerability reporting;
-- source-only formatting, linting, TypeScript checks, and tests.
+- source formatting and build-script linting checks.
 
 GitHub Releases retain published archives. Generated build output and API
 reports are intentionally not committed to this repository.

@@ -1,8 +1,8 @@
 # Contributing
 
 Use an issue or RFC before making a public API change. Keep pull requests
-focused, add tests for changed behavior, update user-facing documentation, and
-record compatibility or security impact explicitly.
+focused, update user-facing documentation, and record compatibility or security
+impact explicitly.
 
 ## Developer Certificate of Origin
 
