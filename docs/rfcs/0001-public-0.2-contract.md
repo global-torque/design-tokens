@@ -3,6 +3,7 @@
 - Status: Accepted
 - Target: `0.2.0`
 - Last updated: 2026-08-31
+- Superseded in part by `0.4.0`: the package ships only the `./css` stylesheet, and the light/dark semantic pairs are removed; see `CHANGELOG.md`.
 
 ## External problem
 
