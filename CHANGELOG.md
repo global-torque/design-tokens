@@ -1,5 +1,68 @@
 # Changelog
 
+## 0.5.0 - Unreleased
+
+This release removes palette values. It does not drop in for a host that reads
+a removed `--gt-primitive-*` value directly.
+
+- Added 50 purpose names to `:root` for product uses that the shadcn variables
+  do not cover. Each one except `--radius-control` aliases a `0.4.0` palette
+  value, so it resolves to the same value as that palette value at any seeds.
+  The [Variables](./README.md#variables) tables say what each name is for and
+  which seed it follows.
+- Added the neutral text and border names `--body-foreground`,
+  `--meta-foreground`, `--disabled-foreground`, `--border-strong`,
+  `--upload-foreground`, and `--upload-border`. They follow the surface seeds.
+- Added 26 names for multi-step flows: `--flow-foreground`,
+  `--flow-description`, `--flow-muted-foreground`, `--flow-label`,
+  `--flow-pending-foreground`, `--flow-border`, `--flow-accent`,
+  `--flow-accent-foreground`, `--flow-accent-strong`, `--flow-accent-subtle`,
+  `--flow-ring`, `--flow-info`, `--flow-illustration`,
+  `--flow-illustration-dark`, `--flow-success`, `--flow-success-foreground`,
+  `--flow-success-tint`, `--flow-success-background`, `--flow-success-border`,
+  `--flow-error-foreground`, `--flow-otp-error-foreground`,
+  `--flow-error-border`, `--flow-warning-background`, `--flow-warning-border`,
+  `--flow-warning-foreground`, and `--flow-card-shadow`. The text and border
+  names follow the surface seeds, and the accent names follow
+  `--brand-tertiary`. The success, error, warning, and shadow names are fixed.
+- Added the status names `--error-foreground`, `--error-background`,
+  `--error-border`, `--positive-foreground`, `--positive-background`, and
+  `--warning-background`. They are fixed system colors.
+- Added the risk names `--risk-low`, `--risk-moderate`, `--risk-high`, and
+  `--risk-info` for the levels of a four-step risk rating. They alias the fixed
+  `emerald-500`, `yellow-500`, `red-500`, and `blue-500`.
+- Added the fixed effects `--scrim`, `--row-shadow`, and `--notice-shadow`.
+- Added `--chart-6` to `--chart-9`. They alias the fixed `scarlet-400` and
+  `gold-400`, then `primary-600` and `secondary-600`, which follow
+  `--brand-primary` and `--brand-secondary`.
+- Added `--radius-control`, a fixed `2px`, and the `radius-xs` palette value
+  behind it.
+- Removed 40 `--gt-primitive-*` values that no variable reads, directly or
+  through another palette value. A host that reads one of them directly breaks.
+  Read a variable instead, or stay on `0.4.0` and ask for a name in an issue.
+  The removed values are:
+  - 27 colors, each `--gt-primitive-color-<step>`: `navy-800`, `steel-200`,
+    `slate-200`, `slate-950`, `neutral-100`, `neutral-400`, `neutral-600`,
+    `neutral-800`, `green-300`, `green-950`, `red-50`, `red-300`, `red-800`,
+    `red-950`, `amber-200`, `amber-950`, `overlay`, `primary-200`,
+    `secondary-50`, `iris-tint`, `azure-tint-100`, `azure-tint-200`,
+    `coral-500`, `citrine-500`, `chartreuse-500`, `jade-500`, and `mint-600`.
+  - `--gt-primitive-duration-fast` and `--gt-primitive-easing-standard`.
+  - `--gt-primitive-shadow-sheet` and `--gt-primitive-shadow-badge`.
+  - 9 values that are no longer read by any consumer:
+    `--gt-primitive-spacing-1`, `--gt-primitive-spacing-2`,
+    `--gt-primitive-spacing-3`, `--gt-primitive-spacing-4`,
+    `--gt-primitive-font-size-sm`, `--gt-primitive-font-weight-medium`,
+    `--gt-primitive-radius-full`, `--gt-primitive-shadow-sm`, and
+    `--gt-primitive-shadow-md`.
+- Kept the ten `--brand-*` seeds, the 40 variables of `0.4.0`, and the other
+  78 palette values. Their declarations are unchanged. The kept values include
+  some that no variable reads but hosts still read directly, such as
+  `--gt-primitive-color-navy-900`.
+- Removed the `color-mix()` steps of the removed `primary-200` and
+  `secondary-50`, and the `duration`, `cubicBezier`, and `fontWeight`
+  formatters of the removed values, from `scripts/build.mjs`.
+
 ## 0.4.0 - 2026-10-07
 
 This release includes the unreleased `0.3.1` changes. It does not drop in over
