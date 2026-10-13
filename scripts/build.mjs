@@ -6,8 +6,8 @@ const SOURCE = 'src/tokens.tokens.json';
 // The sRGB mix behind each derived accent step: a tint is the seed's share in
 // the light surface, a shade is black's share in the seed.
 const BRAND_MIXES = {
-  primary: { 50: { tint: 0.06 }, 200: { tint: 0.269 }, 600: { shade: 0.167 } },
-  secondary: { 50: { tint: 0.06 }, 100: { tint: 0.163 }, 600: { shade: 0.13 } },
+  primary: { 50: { tint: 0.06 }, 600: { shade: 0.167 } },
+  secondary: { 100: { tint: 0.163 }, 600: { shade: 0.13 } },
   tertiary: {
     50: { tint: 0.06 },
     100: { tint: 0.1 },
@@ -74,10 +74,7 @@ const shadowLayer = (layer) =>
 const FORMAT = {
   color,
   dimension,
-  duration: dimension,
   fontFamily: (families) => families.map(quote).join(', '),
-  fontWeight: String,
-  cubicBezier: (points) => `cubic-bezier(${points.join(', ')})`,
   // A shadow token holds one shadow or a list of them.
   shadow: (value) => [value].flat().map(shadowLayer).join(', '),
 };

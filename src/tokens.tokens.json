@@ -135,13 +135,6 @@
           "components": [0.2039, 0.2275, 0.251]
         }
       },
-      "navy-800": {
-        "$description": "navy-800 and navy-900 are dark surfaces. In the stylesheet they follow the dark surface seed, each at its fixed offset from the default seed.",
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.1412, 0.1882, 0.2745]
-        }
-      },
       "navy-900": {
         "$value": {
           "colorSpace": "srgb",
@@ -153,12 +146,6 @@
         "$value": {
           "colorSpace": "srgb",
           "components": [0.8863, 0.902, 0.9373]
-        }
-      },
-      "steel-200": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.7843, 0.7961, 0.8157]
         }
       },
       "steel-300": {
@@ -191,19 +178,6 @@
           "components": [0.0902, 0.1373, 0.2353]
         }
       },
-      "slate-200": {
-        "$description": "slate-200 and slate-950 carry the sRGB values of Tailwind's slate steps, used for navigation rules and overlays. In the stylesheet slate-200 follows the light surface seed and slate-950 the dark one, each at its fixed offset from the default seed.",
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.8863, 0.9098, 0.9412]
-        }
-      },
-      "slate-950": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.0078, 0.0235, 0.0941]
-        }
-      },
       "neutral-25": {
         "$description": "neutral-25 and neutral-950 are the light and dark surface seeds. In the stylesheet neutral-50 to neutral-500 follow the light seed and neutral-600 to neutral-800 the dark one, each at its fixed offset from the default seed.",
         "$value": "{primitive.brand.surface-light}"
@@ -212,18 +186,6 @@
         "$value": {
           "colorSpace": "srgb",
           "components": [0.9804, 0.9804, 0.9804]
-        }
-      },
-      "neutral-100": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9255, 0.9255, 0.9294]
-        }
-      },
-      "neutral-400": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.6392, 0.6471, 0.6627]
         }
       },
       "neutral-450": {
@@ -238,22 +200,10 @@
           "components": [0.4588, 0.4588, 0.4588]
         }
       },
-      "neutral-600": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.3176, 0.3333, 0.3608]
-        }
-      },
       "neutral-700": {
         "$value": {
           "colorSpace": "srgb",
           "components": [0.2314, 0.2471, 0.2824]
-        }
-      },
-      "neutral-800": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.1373, 0.1529, 0.1882]
         }
       },
       "neutral-950": {
@@ -272,12 +222,6 @@
           "components": [0.9255, 0.9922, 0.9608]
         }
       },
-      "green-300": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.5255, 0.9373, 0.6745]
-        }
-      },
       "green-700": {
         "$value": {
           "colorSpace": "srgb",
@@ -290,40 +234,10 @@
           "components": [0.0863, 0.3961, 0.2039]
         }
       },
-      "green-950": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.0196, 0.1804, 0.0863]
-        }
-      },
-      "red-50": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9961, 0.949, 0.949]
-        }
-      },
-      "red-300": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9882, 0.6471, 0.6471]
-        }
-      },
       "red-500": {
         "$value": {
           "colorSpace": "srgb",
           "components": [0.9373, 0.2667, 0.2667]
-        }
-      },
-      "red-800": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.6, 0.1059, 0.1059]
-        }
-      },
-      "red-950": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.2706, 0.0392, 0.0392]
         }
       },
       "amber-50": {
@@ -332,22 +246,10 @@
           "components": [1, 0.9843, 0.9216]
         }
       },
-      "amber-200": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9922, 0.902, 0.5412]
-        }
-      },
       "amber-800": {
         "$value": {
           "colorSpace": "srgb",
           "components": [0.5725, 0.251, 0.0549]
-        }
-      },
-      "amber-950": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.2706, 0.102, 0.0118]
         }
       },
       "emerald-500": {
@@ -369,13 +271,6 @@
           "components": [0.2314, 0.5098, 0.9647]
         }
       },
-      "overlay": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0, 0, 0],
-          "alpha": 0.64
-        }
-      },
       "scrim": {
         "$description": "Translucent black for a loading layer over an image.",
         "$value": {
@@ -390,12 +285,6 @@
           "components": [0.9412, 0.9569, 1]
         }
       },
-      "primary-200": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.7294, 0.8157, 1]
-        }
-      },
       "primary-500": {
         "$value": "{primitive.brand.primary}"
       },
@@ -407,12 +296,6 @@
       },
       "primary-foreground": {
         "$value": "{primitive.brand.primary-foreground}"
-      },
-      "secondary-50": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9529, 0.9922, 0.9765]
-        }
       },
       "secondary-100": {
         "$value": {
@@ -559,36 +442,6 @@
           "components": [0.5176, 0.1686, 0.1686]
         }
       },
-      "iris-tint": {
-        "$description": "Translucent tint for a text highlight.",
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.2667, 0.3098, 0.898],
-          "alpha": 0.1255
-        }
-      },
-      "azure-tint-100": {
-        "$description": "azure-tint-100 and azure-tint-200 are the translucent blue tints of the loading shimmer. Fixed values; not derived from the brand seeds.",
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9216, 0.9529, 1],
-          "alpha": 0.34
-        }
-      },
-      "azure-tint-200": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.8118, 0.8588, 1],
-          "alpha": 0.34
-        }
-      },
-      "coral-500": {
-        "$description": "coral-500, citrine-500, chartreuse-500 and jade-500 are kept for hosts; ui-kit 0.1.x used them for the password-strength meter.",
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [1, 0.3216, 0.3216]
-        }
-      },
       "citrine-50": {
         "$value": {
           "colorSpace": "srgb",
@@ -601,22 +454,10 @@
           "components": [0.8471, 0.8314, 0.6471]
         }
       },
-      "citrine-500": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.9333, 0.7647, 0.1765]
-        }
-      },
       "citrine-800": {
         "$value": {
           "colorSpace": "srgb",
           "components": [0.3843, 0.3647, 0.1294]
-        }
-      },
-      "chartreuse-500": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.651, 0.8039, 0.0471]
         }
       },
       "jade-50": {
@@ -637,12 +478,6 @@
           "components": [0.6627, 0.8667, 0.7882]
         }
       },
-      "jade-500": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0, 0.8275, 0.5843]
-        }
-      },
       "jade-600": {
         "$value": {
           "colorSpace": "srgb",
@@ -656,7 +491,7 @@
         }
       },
       "mint-100": {
-        "$description": "mint-100, mint-500 and mint-600 are the tint, fill and strong shade of success states. Fixed values; not derived from the brand seeds.",
+        "$description": "mint-100 and mint-500 are the tint and fill of success states. Fixed values; not derived from the brand seeds.",
         "$value": {
           "colorSpace": "srgb",
           "components": [0.8745, 0.9765, 0.9333]
@@ -667,51 +502,18 @@
           "colorSpace": "srgb",
           "components": [0.2392, 0.8627, 0.5922]
         }
-      },
-      "mint-600": {
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [0.2078, 0.749, 0.5137]
-        }
       }
-    },
-    "spacing": {
-      "1": {
-        "$value": {
-          "value": 0.25,
-          "unit": "rem"
-        }
-      },
-      "2": {
-        "$value": {
-          "value": 0.5,
-          "unit": "rem"
-        }
-      },
-      "3": {
-        "$value": {
-          "value": 0.75,
-          "unit": "rem"
-        }
-      },
-      "4": {
-        "$value": {
-          "value": 1,
-          "unit": "rem"
-        }
-      },
-      "$type": "dimension"
     },
     "radius": {
       "$type": "dimension",
-      "md": {
-        "$value": "{primitive.brand.radius}"
-      },
-      "full": {
+      "xs": {
         "$value": {
-          "value": 9999,
+          "value": 2,
           "unit": "px"
         }
+      },
+      "md": {
+        "$value": "{primitive.brand.radius}"
       }
     },
     "font-family": {
@@ -720,113 +522,8 @@
         "$value": "{primitive.brand.font-sans}"
       }
     },
-    "font-size": {
-      "$type": "dimension",
-      "sm": {
-        "$value": {
-          "value": 0.875,
-          "unit": "rem"
-        }
-      }
-    },
-    "font-weight": {
-      "$type": "fontWeight",
-      "medium": {
-        "$value": 500
-      }
-    },
-    "duration": {
-      "$type": "duration",
-      "fast": {
-        "$value": {
-          "value": 120,
-          "unit": "ms"
-        }
-      }
-    },
-    "easing": {
-      "$type": "cubicBezier",
-      "standard": {
-        "$value": [0.2, 0, 0, 1]
-      }
-    },
     "shadow": {
       "$type": "shadow",
-      "sm": {
-        "$value": {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [0.0588, 0.0902, 0.1647],
-            "alpha": 0.12
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 1,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 2,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        }
-      },
-      "md": {
-        "$value": [
-          {
-            "color": {
-              "colorSpace": "srgb",
-              "components": [0.0588, 0.0902, 0.1647],
-              "alpha": 0.12
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 4,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 12,
-              "unit": "px"
-            },
-            "spread": {
-              "value": -2,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "srgb",
-              "components": [0.0588, 0.0902, 0.1647],
-              "alpha": 0.08
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 2,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 4,
-              "unit": "px"
-            },
-            "spread": {
-              "value": -1,
-              "unit": "px"
-            }
-          }
-        ]
-      },
       "card": {
         "$description": "card, row and notice are the elevations of dashboard cards, table rows and inline notices.",
         "$value": {
@@ -927,62 +624,11 @@
             "unit": "px"
           }
         }
-      },
-      "sheet": {
-        "$description": "sheet and badge are fixed black elevations for overlay sheets and badges; they do not follow the surface ink.",
-        "$value": {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [0, 0, 0],
-            "alpha": 0.25
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 25,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 50,
-            "unit": "px"
-          },
-          "spread": {
-            "value": -12,
-            "unit": "px"
-          }
-        }
-      },
-      "badge": {
-        "$value": {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [0, 0, 0],
-            "alpha": 0.15
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 2,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 4,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        }
       }
     }
   },
   "semantic": {
-    "$description": "The standard shadcn variables and the success, warning and info pairs, each an alias of a primitive, emitted as --<name> custom properties.",
+    "$description": "The standard shadcn variables, the success, warning and info pairs, and the purpose names of product surfaces, each an alias of a primitive, emitted as --<name> custom properties.",
     "radius": {
       "$type": "dimension",
       "$value": "{primitive.radius.md}"
@@ -1142,6 +788,256 @@
     "info-foreground": {
       "$type": "color",
       "$value": "{primitive.color.white}"
+    },
+    "body-foreground": {
+      "$description": "Strong body text.",
+      "$type": "color",
+      "$value": "{primitive.color.grey-800}"
+    },
+    "meta-foreground": {
+      "$description": "Metadata and secondary detail text.",
+      "$type": "color",
+      "$value": "{primitive.color.grey-700}"
+    },
+    "disabled-foreground": {
+      "$description": "Disabled text.",
+      "$type": "color",
+      "$value": "{primitive.color.grey-500}"
+    },
+    "border-strong": {
+      "$description": "Stronger border, such as a dashed field or a divider.",
+      "$type": "color",
+      "$value": "{primitive.color.grey-400}"
+    },
+    "upload-foreground": {
+      "$description": "Text of a file upload field.",
+      "$type": "color",
+      "$value": "{primitive.color.neutral-500}"
+    },
+    "upload-border": {
+      "$description": "Border of a file upload field.",
+      "$type": "color",
+      "$value": "{primitive.color.neutral-450}"
+    },
+    "flow-foreground": {
+      "$description": "Text of a multi-step flow, such as a crypto investment or a wallet upgrade.",
+      "$type": "color",
+      "$value": "{primitive.color.steel-700}"
+    },
+    "flow-description": {
+      "$description": "Description text of a flow.",
+      "$type": "color",
+      "$value": "{primitive.color.steel-600}"
+    },
+    "flow-muted-foreground": {
+      "$description": "Muted flow text, such as help text, captions, and subtitles.",
+      "$type": "color",
+      "$value": "{primitive.color.steel-500}"
+    },
+    "flow-label": {
+      "$description": "Detail labels of a flow.",
+      "$type": "color",
+      "$value": "{primitive.color.steel-400}"
+    },
+    "flow-pending-foreground": {
+      "$description": "Text of a pending flow step.",
+      "$type": "color",
+      "$value": "{primitive.color.steel-300}"
+    },
+    "flow-border": {
+      "$description": "Flow borders, step connectors, and code field borders.",
+      "$type": "color",
+      "$value": "{primitive.color.steel-100}"
+    },
+    "flow-accent": {
+      "$description": "Accent fill of a flow.",
+      "$type": "color",
+      "$value": "{primitive.color.tertiary-500}"
+    },
+    "flow-accent-foreground": {
+      "$description": "Text on the flow accent fill.",
+      "$type": "color",
+      "$value": "{primitive.color.tertiary-foreground}"
+    },
+    "flow-accent-strong": {
+      "$description": "Stronger flow accent for link text, action fills, and spinners.",
+      "$type": "color",
+      "$value": "{primitive.color.tertiary-600}"
+    },
+    "flow-accent-subtle": {
+      "$description": "Light flow accent for spinner tracks, info borders, and captions on the accent fill.",
+      "$type": "color",
+      "$value": "{primitive.color.tertiary-200}"
+    },
+    "flow-ring": {
+      "$description": "Ring around the active flow step.",
+      "$type": "color",
+      "$value": "{primitive.color.tertiary-100}"
+    },
+    "flow-info": {
+      "$description": "Background of a flow info panel.",
+      "$type": "color",
+      "$value": "{primitive.color.tertiary-50}"
+    },
+    "flow-illustration": {
+      "$description": "Accent of a flow illustration.",
+      "$type": "color",
+      "$value": "{primitive.color.tertiary-300}"
+    },
+    "flow-illustration-dark": {
+      "$description": "Dark start of the flow illustration gradient.",
+      "$type": "color",
+      "$value": "{primitive.color.tertiary-800}"
+    },
+    "flow-success": {
+      "$description": "Success accent of a flow, such as a completed step.",
+      "$type": "color",
+      "$value": "{primitive.color.jade-600}"
+    },
+    "flow-success-foreground": {
+      "$description": "Text of a completed flow step.",
+      "$type": "color",
+      "$value": "{primitive.color.jade-700}"
+    },
+    "flow-success-tint": {
+      "$description": "Background of a completed flow step.",
+      "$type": "color",
+      "$value": "{primitive.color.jade-100}"
+    },
+    "flow-success-background": {
+      "$description": "Background of a flow success panel.",
+      "$type": "color",
+      "$value": "{primitive.color.jade-50}"
+    },
+    "flow-success-border": {
+      "$description": "Border of a flow success panel.",
+      "$type": "color",
+      "$value": "{primitive.color.jade-300}"
+    },
+    "flow-error-foreground": {
+      "$description": "Error text of a flow.",
+      "$type": "color",
+      "$value": "{primitive.color.scarlet-900}"
+    },
+    "flow-otp-error-foreground": {
+      "$description": "Error text of a flow one-time code field.",
+      "$type": "color",
+      "$value": "{primitive.color.scarlet-800}"
+    },
+    "flow-error-border": {
+      "$description": "Border of a flow error panel.",
+      "$type": "color",
+      "$value": "{primitive.color.scarlet-300}"
+    },
+    "flow-warning-background": {
+      "$description": "Background of a flow warning panel.",
+      "$type": "color",
+      "$value": "{primitive.color.citrine-50}"
+    },
+    "flow-warning-border": {
+      "$description": "Border of a flow warning panel.",
+      "$type": "color",
+      "$value": "{primitive.color.citrine-300}"
+    },
+    "flow-warning-foreground": {
+      "$description": "Text of a flow warning panel.",
+      "$type": "color",
+      "$value": "{primitive.color.citrine-800}"
+    },
+    "flow-card-shadow": {
+      "$description": "Elevation of a flow card.",
+      "$type": "shadow",
+      "$value": "{primitive.shadow.card}"
+    },
+    "error-foreground": {
+      "$description": "Error text outside flows, such as a failed upload.",
+      "$type": "color",
+      "$value": "{primitive.color.scarlet-700}"
+    },
+    "error-background": {
+      "$description": "Background of an error panel or notice.",
+      "$type": "color",
+      "$value": "{primitive.color.scarlet-50}"
+    },
+    "error-border": {
+      "$description": "Border of an error panel, such as a failed wallet sign-in.",
+      "$type": "color",
+      "$value": "{primitive.color.scarlet-600}"
+    },
+    "positive-foreground": {
+      "$description": "Text of a positive value, such as a gain.",
+      "$type": "color",
+      "$value": "{primitive.color.green-800}"
+    },
+    "positive-background": {
+      "$description": "Tint behind a positive status.",
+      "$type": "color",
+      "$value": "{primitive.color.mint-100}"
+    },
+    "warning-background": {
+      "$description": "Tint behind a warning status.",
+      "$type": "color",
+      "$value": "{primitive.color.gold-50}"
+    },
+    "scrim": {
+      "$description": "Translucent layer over an image while it loads.",
+      "$type": "color",
+      "$value": "{primitive.color.scrim}"
+    },
+    "row-shadow": {
+      "$description": "Elevation of a table row.",
+      "$type": "shadow",
+      "$value": "{primitive.shadow.row}"
+    },
+    "notice-shadow": {
+      "$description": "Elevation of an inline notice.",
+      "$type": "shadow",
+      "$value": "{primitive.shadow.notice}"
+    },
+    "chart-6": {
+      "$description": "Sixth chart series color.",
+      "$type": "color",
+      "$value": "{primitive.color.scarlet-400}"
+    },
+    "chart-7": {
+      "$description": "Seventh chart series color.",
+      "$type": "color",
+      "$value": "{primitive.color.gold-400}"
+    },
+    "chart-8": {
+      "$description": "Eighth chart series color.",
+      "$type": "color",
+      "$value": "{primitive.color.primary-600}"
+    },
+    "chart-9": {
+      "$description": "Ninth chart series color.",
+      "$type": "color",
+      "$value": "{primitive.color.secondary-600}"
+    },
+    "radius-control": {
+      "$description": "Small corner radius of controls.",
+      "$type": "dimension",
+      "$value": "{primitive.radius.xs}"
+    },
+    "risk-low": {
+      "$description": "Low level of a risk rating.",
+      "$type": "color",
+      "$value": "{primitive.color.emerald-500}"
+    },
+    "risk-moderate": {
+      "$description": "Moderate level of a risk rating.",
+      "$type": "color",
+      "$value": "{primitive.color.yellow-500}"
+    },
+    "risk-high": {
+      "$description": "High level of a risk rating.",
+      "$type": "color",
+      "$value": "{primitive.color.red-500}"
+    },
+    "risk-info": {
+      "$description": "Informational level of a risk rating.",
+      "$type": "color",
+      "$value": "{primitive.color.blue-500}"
     }
   }
 }
